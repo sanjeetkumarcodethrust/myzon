@@ -1,0 +1,48 @@
+import asyncHandler from "express-async-handler";
+import Product from "../models/Product.js";
+
+// @desc    Create/update review
+// @route   POST /api/reviews/:productId
+// @access  Private
+export const createReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+  const product = await Product.findById(req.params.productId);
+  if (!product) { res.status(404); throw new Error("Product not found"); }
+
+  const alreadyReviewed = product.reviews.find(
+    (r) => r.user.toString() === req.user._id.toString()
+  );
+  if (alreadyReviewed) { res.status(400); throw new Error("Product already reviewed"); }
+
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+  product.reviews.push(review);
+  product.numReviews = product.reviews.length;
+  product.rating = product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length;
+  await product.save();
+  res.status(201).json({ success: true, message: "Review added" });
+});
+
+// @desc    Delete review
+// @route   DELETE /api/reviews/:productId/:reviewId
+// @access  Private
+export const deleteReview = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.productId);
+  if (!product) { res.status(404); throw new Error("Product not found"); }
+  const review = product.reviews.id(req.params.reviewId);
+  if (!review) { res.status(404); throw new Error("Review not found"); }
+  if (review.user.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+    res.status(403); throw new Error("Not authorized");
+  }
+  product.reviews = product.reviews.filter((r) => r._id.toString() !== req.params.reviewId);
+  product.numReviews = product.reviews.length;
+  product.rating = product.reviews.length
+    ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length
+    : 0;
+  await product.save();
+  res.json({ success: true, message: "Review deleted" });
+});
