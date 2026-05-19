@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, 
-  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2
+  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star
 } from 'lucide-react';
 
 const categories = [
