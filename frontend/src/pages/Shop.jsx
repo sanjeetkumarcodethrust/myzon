@@ -47,6 +47,31 @@ const products = [
     id: 9, brand: 'LG', title: '32 inch UltraGear Monitor', category: 'electronics',
     price: 24500, originalPrice: 35000, discount: '-30%', rating: 4.6, reviews: '800',
     image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=300&h=300'
+  },
+  {
+    id: 10, brand: 'L\'Oreal', title: 'Revitalift Hyaluronic Acid Serum', category: 'beauty-health',
+    price: 899, originalPrice: 999, discount: '-10%', rating: 4.5, reviews: '3.2k',
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=300&h=300'
+  },
+  {
+    id: 11, brand: 'Philips', title: 'Air Fryer HD9200/90', category: 'home-kitchen',
+    price: 6999, originalPrice: 9995, discount: '-30%', rating: 4.6, reviews: '5k+',
+    image: 'https://images.unsplash.com/photo-1626200419188-f5619ebc5740?auto=format&fit=crop&q=80&w=300&h=300'
+  },
+  {
+    id: 12, brand: 'LEGO', title: 'Star Wars Millennium Falcon', category: 'toys-games',
+    price: 14500, originalPrice: 16999, discount: '-14%', rating: 4.9, reviews: '850',
+    image: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&q=80&w=300&h=300'
+  },
+  {
+    id: 13, brand: 'Nivia', title: 'Storm Football - Size 5', category: 'sports-outdoors',
+    price: 450, originalPrice: 850, discount: '-47%', rating: 4.3, reviews: '2.1k',
+    image: 'https://images.unsplash.com/photo-1614632537190-23e4146777db?auto=format&fit=crop&q=80&w=300&h=300'
+  },
+  {
+    id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery',
+    price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+',
+    image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300'
   }
 ];
 
