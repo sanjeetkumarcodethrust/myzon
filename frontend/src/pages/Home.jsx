@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { 
   Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, 
   BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star
@@ -83,6 +84,14 @@ const cartItems = [
 ];
 
 export const Home = () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get('q') || '';
+
+  const filteredProducts = bestSelling.filter(product => 
+    product.title.toLowerCase().includes(query.toLowerCase()) || 
+    product.brand.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-6">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -182,40 +191,51 @@ export const Home = () => {
           {/* Best Selling Products */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">Best Selling Products <span className="text-orange-500">🔥</span></h3>
-              <button className="text-orange-500 text-sm font-bold border border-orange-200 bg-orange-50 px-4 py-1.5 rounded hover:bg-orange-100 transition-colors">View All</button>
+              <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                {query ? `Search Results for "${query}"` : 'Best Selling Products'} 
+                {!query && <span className="text-orange-500">🔥</span>}
+              </h3>
+              {!query && <button className="text-orange-500 text-sm font-bold border border-orange-200 bg-orange-50 px-4 py-1.5 rounded hover:bg-orange-100 transition-colors">View All</button>}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {bestSelling.map(product => (
-                <div key={product.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative">
-                  <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
-                    {product.discount}
-                  </div>
-                  <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
-                    <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                  </div>
-                  <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
-                  <h4 className="font-bold text-gray-900 text-sm mb-2 h-10 line-clamp-2">{product.title}</h4>
-                  <div className="flex items-center gap-1 mb-3">
-                    <div className="flex text-orange-400 text-xs">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'} />
-                      ))}
+            
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredProducts.map(product => (
+                  <div key={product.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative">
+                    <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
+                      {product.discount}
                     </div>
-                    <span className="text-xs text-gray-400">({product.reviews})</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
-                      <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                    <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
+                      <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
                     </div>
-                    <button className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors">
-                      <ShoppingCart size={14} />
-                    </button>
+                    <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
+                    <h4 className="font-bold text-gray-900 text-sm mb-2 h-10 line-clamp-2">{product.title}</h4>
+                    <div className="flex items-center gap-1 mb-3">
+                      <div className="flex text-orange-400 text-xs">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'} />
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-400">({product.reviews})</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
+                        <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                      </div>
+                      <button className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors">
+                        <ShoppingCart size={14} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 text-center bg-white border border-gray-100 rounded-xl">
+                <p className="text-gray-500 text-lg mb-2">No products found matching "{query}"</p>
+                <button onClick={() => window.location.href = '/'} className="text-orange-500 font-bold hover:underline">Clear Search</button>
+              </div>
+            )}
           </div>
           
           {/* Bottom Features */}

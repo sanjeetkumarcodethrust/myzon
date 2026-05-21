@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, ShoppingCart, Search, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
 export const Header = () => {
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setQuery(searchParams.get('q') || '');
+  }, [searchParams]);
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/?q=${encodeURIComponent(query.trim())}`);
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="bg-white py-4 border-b border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between gap-8">
@@ -12,16 +29,18 @@ export const Header = () => {
         </Link>
 
         {/* Search Bar */}
-        <div className="flex-1 max-w-3xl flex items-center bg-gray-50 rounded-md border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-orange-500 transition-shadow">
+        <form onSubmit={handleSearch} className="flex-1 max-w-3xl flex items-center bg-gray-50 rounded-md border border-gray-200 overflow-hidden focus-within:ring-2 focus-within:ring-orange-500 transition-shadow">
           <input 
             type="text" 
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for products, brands and more..." 
             className="w-full bg-transparent py-2.5 px-4 text-sm focus:outline-none text-gray-700"
           />
-          <button className="bg-orange-500 hover:bg-orange-600 text-white p-2.5 px-6 transition-colors">
+          <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white p-2.5 px-6 transition-colors">
             <Search size={20} />
           </button>
-        </div>
+        </form>
 
         {/* Actions */}
         <div className="flex items-center gap-6">
