@@ -4,47 +4,47 @@ import { useSearchParams } from 'react-router-dom';
 
 const products = [
   {
-    id: 1, brand: 'Noise', title: 'ColorFit Pulse 3 Smartwatch',
+    id: 1, brand: 'Noise', title: 'ColorFit Pulse 3 Smartwatch', category: 'electronics',
     price: 1999, originalPrice: 2699, discount: '-25%', rating: 4.5, reviews: '1.2k',
     image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 2, brand: 'boAt', title: 'Rockerz 450 Bluetooth Headphones',
+    id: 2, brand: 'boAt', title: 'Rockerz 450 Bluetooth Headphones', category: 'electronics',
     price: 1599, originalPrice: 1999, discount: '-20%', rating: 4.4, reviews: '892',
     image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 3, brand: 'Nike', title: 'Men\'s Air Max Running Shoes',
+    id: 3, brand: 'Nike', title: 'Men\'s Air Max Running Shoes', category: 'fashion',
     price: 3399, originalPrice: 3999, discount: '-15%', rating: 4.7, reviews: '1.5k',
     image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 4, brand: 'Canon', title: 'EOS 200D II DSLR Camera',
+    id: 4, brand: 'Canon', title: 'EOS 200D II DSLR Camera', category: 'electronics',
     price: 34999, originalPrice: 49999, discount: '-30%', rating: 4.8, reviews: '980',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 5, brand: 'Apple', title: 'AirPods Pro (2nd Generation)',
+    id: 5, brand: 'Apple', title: 'AirPods Pro (2nd Generation)', category: 'electronics',
     price: 24900, originalPrice: 26900, discount: '-7%', rating: 4.9, reviews: '5k+',
     image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 6, brand: 'Samsung', title: 'Galaxy S23 Ultra 5G',
+    id: 6, brand: 'Samsung', title: 'Galaxy S23 Ultra 5G', category: 'electronics',
     price: 104999, originalPrice: 124999, discount: '-16%', rating: 4.7, reviews: '2.1k',
     image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 7, brand: 'Sony', title: 'PlayStation 5 Console',
+    id: 7, brand: 'Sony', title: 'PlayStation 5 Console', category: 'toys-games',
     price: 49990, originalPrice: 54990, discount: '-9%', rating: 4.9, reviews: '3.4k',
     image: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 8, brand: 'Puma', title: 'Unisex Backpack',
+    id: 8, brand: 'Puma', title: 'Unisex Backpack', category: 'fashion',
     price: 899, originalPrice: 1999, discount: '-55%', rating: 4.2, reviews: '450',
     image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=300&h=300'
   },
   {
-    id: 9, brand: 'LG', title: '32 inch UltraGear Monitor',
+    id: 9, brand: 'LG', title: '32 inch UltraGear Monitor', category: 'electronics',
     price: 24500, originalPrice: 35000, discount: '-30%', rating: 4.6, reviews: '800',
     image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=300&h=300'
   }
@@ -56,11 +56,13 @@ const priceRanges = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹20,
 export const Shop = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
-  const [activeCategory, setActiveCategory] = useState(null);
+  const categoryParam = searchParams.get('category') || '';
+  const [activeCategory, setActiveCategory] = useState(categoryParam);
 
   const filteredProducts = products.filter(product => {
-    const matchesQuery = product.title.toLowerCase().includes(query.toLowerCase()) || product.brand.toLowerCase().includes(query.toLowerCase());
-    return matchesQuery;
+    const matchesQuery = query === '' || product.title.toLowerCase().includes(query.toLowerCase()) || product.brand.toLowerCase().includes(query.toLowerCase());
+    const matchesCategory = categoryParam === '' || product.category === categoryParam;
+    return matchesQuery && matchesCategory;
   });
 
   return (
@@ -119,8 +121,15 @@ export const Shop = () => {
         {/* Product Grid */}
         <div className="flex-1">
           {query && (
-            <div className="mb-4 bg-orange-50 text-orange-800 p-3 rounded-lg border border-orange-100">
-              Showing results for: <strong>"{query}"</strong>
+            <div className="mb-4 bg-orange-50 text-orange-800 p-3 rounded-lg border border-orange-100 flex items-center justify-between">
+              <span>Showing results for search: <strong>"{query}"</strong></span>
+              <button onClick={() => window.location.href = '/shop'} className="text-orange-500 hover:underline text-sm font-bold">Clear</button>
+            </div>
+          )}
+          {categoryParam && (
+            <div className="mb-4 bg-purple-50 text-purple-800 p-3 rounded-lg border border-purple-100 flex items-center justify-between">
+              <span>Showing category: <strong className="capitalize">{categoryParam.replace('-', ' ')}</strong></span>
+              <button onClick={() => window.location.href = '/shop'} className="text-purple-600 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
 

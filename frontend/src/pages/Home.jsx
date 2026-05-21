@@ -1,20 +1,20 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { 
   Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, 
   BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star
 } from 'lucide-react';
 
 const categories = [
-  { name: 'Electronics', icon: <Laptop size={18} /> },
-  { name: 'Fashion', icon: <Shirt size={18} /> },
-  { name: 'Home & Kitchen', icon: <HomeIcon size={18} /> },
-  { name: 'Beauty & Health', icon: <HeartPulse size={18} /> },
-  { name: 'Sports & Outdoors', icon: <Dumbbell size={18} /> },
-  { name: 'Books & Stationery', icon: <BookOpen size={18} /> },
-  { name: 'Toys & Games', icon: <Puzzle size={18} /> },
-  { name: 'Automotive', icon: <Car size={18} /> },
-  { name: 'More Categories', icon: <Grid size={18} /> },
+  { name: 'Electronics', icon: <Laptop size={18} />, slug: 'electronics' },
+  { name: 'Fashion', icon: <Shirt size={18} />, slug: 'fashion' },
+  { name: 'Home & Kitchen', icon: <HomeIcon size={18} />, slug: 'home-kitchen' },
+  { name: 'Beauty & Health', icon: <HeartPulse size={18} />, slug: 'beauty-health' },
+  { name: 'Sports & Outdoors', icon: <Dumbbell size={18} />, slug: 'sports-outdoors' },
+  { name: 'Books & Stationery', icon: <BookOpen size={18} />, slug: 'books-stationery' },
+  { name: 'Toys & Games', icon: <Puzzle size={18} />, slug: 'toys-games' },
+  { name: 'Automotive', icon: <Car size={18} />, slug: 'automotive' },
+  { name: 'More Categories', icon: <Grid size={18} />, slug: 'all' },
 ];
 
 const bestSelling = [
@@ -106,13 +106,13 @@ export const Home = () => {
             <ul className="py-2">
               {categories.map((cat, idx) => (
                 <li key={idx}>
-                  <a href="#" className="flex items-center justify-between px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors">
+                  <Link to={cat.slug === 'all' ? '/categories' : `/shop?category=${cat.slug}`} className="flex items-center justify-between px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500 transition-colors">
                     <div className="flex items-center gap-3">
                       <span className="text-gray-400">{cat.icon}</span>
                       <span className="font-medium">{cat.name}</span>
                     </div>
                     <ChevronRight size={16} className="text-gray-300" />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
