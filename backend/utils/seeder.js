@@ -150,7 +150,84 @@ const products = [
     numReviews: 95,
     tags: ["books", "self-help", "habits"],
   },
+  {
+    name: "Apple Watch Series 10",
+    description: "The most advanced Apple Watch yet with a brighter display and advanced health tracking.",
+    richDescription: "Monitor your health, stay connected, and track your workouts with the new Series 10.",
+    images: ["https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=600"],
+    brand: "Apple",
+    category: "Electronics",
+    price: 39900,
+    discountPrice: 37900,
+    countInStock: 50,
+    isFeatured: true,
+    rating: 4.9,
+    numReviews: 120,
+    tags: ["apple", "watch", "smartwatch", "wearable"],
+    specifications: [
+      { key: "Display", value: "Always-On Retina" },
+      { key: "Battery", value: "Up to 18 hours" },
+    ],
+  },
+  {
+    name: "Ray-Ban Meta Smart Glasses",
+    description: "Iconic Ray-Ban style with built-in camera, open-ear audio, and Meta AI.",
+    images: ["https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=600"],
+    brand: "Meta",
+    category: "Electronics",
+    price: 29900,
+    discountPrice: 28900,
+    countInStock: 30,
+    isFeatured: true,
+    rating: 4.6,
+    numReviews: 45,
+    tags: ["meta", "ray-ban", "smart glasses", "wearable"],
+  },
+  {
+    name: "Sony WF-1000XM5 Earbuds",
+    description: "The best truly wireless noise canceling earbuds from Sony.",
+    images: ["https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600"],
+    brand: "Sony",
+    category: "Electronics",
+    price: 24900,
+    discountPrice: 21900,
+    countInStock: 60,
+    isFeatured: true,
+    rating: 4.8,
+    numReviews: 85,
+    tags: ["sony", "earbuds", "audio", "noise-canceling"],
+  },
+  {
+    name: "DJI Osmo Pocket 3",
+    description: "Compact 3-axis gimbal camera for content creators with a 1-inch CMOS sensor.",
+    images: ["https://images.unsplash.com/photo-1502982720700-baf979f21f39?w=600"],
+    brand: "DJI",
+    category: "Electronics",
+    price: 45900,
+    discountPrice: 43900,
+    countInStock: 25,
+    isFeatured: false,
+    rating: 4.9,
+    numReviews: 60,
+    tags: ["dji", "camera", "vlogging", "gimbal"],
+  },
+  {
+    name: "Amazon Fire TV Stick 4K Max",
+    description: "The most powerful streaming stick with Wi-Fi 6E support and ambient experience.",
+    images: ["https://images.unsplash.com/photo-1540829016269-e05670f88adb?w=600"],
+    brand: "Amazon",
+    category: "Electronics",
+    price: 5990,
+    discountPrice: 4490,
+    countInStock: 150,
+    isFeatured: false,
+    rating: 4.7,
+    numReviews: 320,
+    tags: ["amazon", "streaming", "fire-tv", "4k"],
+  },
 ];
+
+import slugify from "slugify";
 
 const importData = async () => {
   try {
@@ -160,7 +237,12 @@ const importData = async () => {
     await User.deleteMany();
     const createdUsers = await User.insertMany(users);
     console.log(`✅ ${createdUsers.length} users seeded`);
-    const createdProducts = await Product.insertMany(products);
+    
+    const productsWithSlugs = products.map(p => ({
+      ...p,
+      slug: slugify(p.name, { lower: true, strict: true })
+    }));
+    const createdProducts = await Product.insertMany(productsWithSlugs);
     console.log(`✅ ${createdProducts.length} products seeded`);
     console.log("🎉 Data imported successfully!");
     process.exit(0);

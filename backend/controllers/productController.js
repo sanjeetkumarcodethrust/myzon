@@ -16,6 +16,7 @@ export const getProducts = asyncHandler(async (req, res) => {
       { name: { $regex: req.query.search, $options: "i" } },
       { description: { $regex: req.query.search, $options: "i" } },
       { brand: { $regex: req.query.search, $options: "i" } },
+      { category: { $regex: req.query.search, $options: "i" } },
     ];
   }
   if (req.query.category) query.category = req.query.category;
