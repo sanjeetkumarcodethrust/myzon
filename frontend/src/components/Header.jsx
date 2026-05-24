@@ -14,9 +14,9 @@ export const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (query.trim()) {
-      navigate(`/?q=${encodeURIComponent(query.trim())}`);
+      navigate(`/shop?q=${encodeURIComponent(query.trim())}`);
     } else {
-      navigate('/');
+      navigate('/shop');
     }
   };
 

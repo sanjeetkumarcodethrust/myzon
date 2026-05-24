@@ -75,19 +75,22 @@ const products = [
   }
 ];
 
-const categories = ['Electronics', 'Fashion', 'Home & Kitchen', 'Beauty', 'Sports'];
+
 const priceRanges = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹20,000', 'Over ₹20,000'];
 
 export const Shop = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
-  const [activeCategory, setActiveCategory] = useState(categoryParam);
 
-  const filteredProducts = products.filter(product => {
-    const matchesQuery = query === '' || product.title.toLowerCase().includes(query.toLowerCase()) || product.brand.toLowerCase().includes(query.toLowerCase());
-    const matchesCategory = categoryParam === '' || product.category === categoryParam;
-    return matchesQuery && matchesCategory;
+  const productsMatchingQuery = products.filter(product => {
+    return query === '' || product.title.toLowerCase().includes(query.toLowerCase()) || product.brand.toLowerCase().includes(query.toLowerCase());
+  });
+
+  const dynamicCategories = Array.from(new Set(productsMatchingQuery.map(p => p.category)));
+
+  const filteredProducts = productsMatchingQuery.filter(product => {
+    return categoryParam === '' || product.category === categoryParam;
   });
 
   return (
@@ -113,10 +116,25 @@ export const Shop = () => {
                 Categories <ChevronDown size={16} className="text-gray-400" />
               </h3>
               <div className="flex flex-col gap-2">
-                {categories.map((cat, idx) => (
+                {dynamicCategories.map((catSlug, idx) => (
                   <label key={idx} className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
-                    <span className="text-sm text-gray-600 group-hover:text-orange-500">{cat}</span>
+                    <input 
+                      type="checkbox" 
+                      checked={categoryParam === catSlug}
+                      onChange={() => {
+                        const newParams = new URLSearchParams(searchParams);
+                        if (categoryParam === catSlug) {
+                          newParams.delete('category');
+                        } else {
+                          newParams.set('category', catSlug);
+                        }
+                        setSearchParams(newParams);
+                      }}
+                      className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+                    />
+                    <span className="text-sm text-gray-600 group-hover:text-orange-500">
+                      {catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' & ')}
+                    </span>
                   </label>
                 ))}
               </div>
@@ -137,7 +155,10 @@ export const Shop = () => {
               </div>
             </div>
             
-            <button className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors">
+            <button 
+              onClick={() => setSearchParams({})}
+              className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors"
+            >
               Clear All Filters
             </button>
           </div>
