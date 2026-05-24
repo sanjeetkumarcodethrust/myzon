@@ -133,8 +133,9 @@ export const Home = () => {
                 Shop Now
               </button>
             </div>
-            {/* Banner Image Placeholder */}
-            <div className="absolute right-0 bottom-0 h-[110%] w-1/2 bg-[url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800')] bg-cover bg-left z-0 mask-image-gradient"></div>
+            {/* Banner Images */}
+            <div className="absolute right-[25%] md:right-[35%] lg:right-[40%] bottom-0 h-full w-1/3 md:w-1/4 bg-[url('/man_pic.png')] bg-cover bg-top z-0 rounded-tl-2xl mask-image-gradient" style={{ WebkitMaskImage: 'linear-gradient(to top, transparent, black 20%)', maskImage: 'linear-gradient(to top, transparent, black 20%)' }}></div>
+            <div className="absolute right-0 bottom-0 h-[110%] w-1/2 md:w-[40%] bg-[url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800')] bg-cover bg-left z-0 mask-image-gradient"></div>
 
 
             {/* Features overlay inside banner */}
