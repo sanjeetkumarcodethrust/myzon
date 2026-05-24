@@ -24,8 +24,9 @@ export const Header = () => {
     <div className="bg-white py-4 border-b border-gray-100">
       <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between gap-8">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-1">
-          <span className="text-3xl font-black tracking-tight text-gray-900">My<span className="text-orange-500">zon</span></span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/logo.png" alt="Myzon Logo" className="h-10 w-10 object-cover rounded-lg shadow-sm border border-gray-100" />
+          <span className="text-3xl font-black tracking-tight text-gray-900 hidden md:block">My<span className="text-orange-500">zon</span></span>
         </Link>
 
         {/* Search Bar */}
