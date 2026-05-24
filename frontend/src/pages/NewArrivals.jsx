@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ShoppingCart, Star } from 'lucide-react';
+import { Sparkles, ShoppingCart, Star, Clock } from 'lucide-react';
 
 const newArrivals = [
   {
