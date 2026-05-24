@@ -135,12 +135,7 @@ export const Home = () => {
             </div>
             {/* Banner Image Placeholder */}
             <div className="absolute right-0 bottom-0 h-[110%] w-1/2 bg-[url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=800')] bg-cover bg-left z-0 mask-image-gradient"></div>
-            {/* 50% Off Badge */}
-            <div className="absolute top-8 right-12 bg-red-500 text-white rounded-full h-24 w-24 flex flex-col items-center justify-center shadow-xl rotate-12 z-20 border-4 border-white">
-              <span className="text-xs font-bold uppercase">Up to</span>
-              <span className="text-2xl font-black leading-none">50%</span>
-              <span className="text-xs font-bold uppercase">Off</span>
-            </div>
+
 
             {/* Features overlay inside banner */}
             <div className="absolute bottom-6 left-8 bg-white/90 backdrop-blur-sm rounded-lg p-3 flex items-center gap-6 shadow-sm border border-gray-100 z-20">
