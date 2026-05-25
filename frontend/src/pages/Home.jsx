@@ -2,8 +2,9 @@ import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { 
   Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, 
-  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star
+  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star, Heart
 } from 'lucide-react';
+import { useCartStore, useWishlistStore } from '../store/useStore';
 
 const categories = [
   { name: 'Electronics', icon: <Laptop size={18} />, slug: 'electronics' },
@@ -64,28 +65,13 @@ const bestSelling = [
   }
 ];
 
-const cartItems = [
-  {
-    id: 1,
-    title: 'Nike Air Max Running Shoes',
-    variant: 'Size: 9 | Black',
-    price: 3399,
-    qty: 1,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=100&h=100'
-  },
-  {
-    id: 2,
-    title: 'boAt Rockerz 450',
-    variant: 'Black',
-    price: 1599,
-    qty: 1,
-    image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=100&h=100'
-  }
-];
-
 export const Home = () => {
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
+  const { cartItems, addToCart, removeFromCart, updateQuantity } = useCartStore();
+  const { wishlistItems, addToWishlist } = useWishlistStore();
+
+  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
 
   const filteredProducts = bestSelling.filter(product => 
     product.title.toLowerCase().includes(query.toLowerCase()) || 
@@ -201,6 +187,14 @@ export const Home = () => {
                     <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
                       {product.discount}
                     </div>
+                    <div className="absolute top-3 right-3 z-10">
+                      <button 
+                        onClick={() => addToWishlist(product)}
+                        className={`h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-sm hover:text-red-500 transition-colors ${wishlistItems.find(i => i.id === product.id) ? 'text-red-500' : 'text-gray-400'}`}
+                      >
+                        <Heart size={16} className={wishlistItems.find(i => i.id === product.id) ? 'fill-current text-red-500' : ''} />
+                      </button>
+                    </div>
                     <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
                       <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
                     </div>
@@ -219,7 +213,7 @@ export const Home = () => {
                         <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
                         <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
                       </div>
-                      <button className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors">
+                      <button onClick={() => addToCart(product)} className="h-8 w-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors">
                         <ShoppingCart size={14} />
                       </button>
                     </div>
@@ -284,26 +278,29 @@ export const Home = () => {
                   <div className="flex-1 flex flex-col justify-between">
                     <div>
                       <h4 className="text-xs font-bold text-gray-900 line-clamp-1">{item.title}</h4>
-                      <p className="text-[10px] text-gray-500">{item.variant}</p>
+                      <p className="text-[10px] text-gray-500">{item.brand}</p>
                     </div>
                     <div className="font-black text-sm text-gray-900">₹{item.price.toLocaleString()}</div>
                   </div>
                   <div className="flex flex-col items-end justify-between">
-                    <button className="text-gray-400 hover:text-red-500"><Trash2 size={14} /></button>
+                    <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500"><Trash2 size={14} /></button>
                     <div className="flex items-center gap-2 bg-gray-50 rounded px-1.5 py-0.5 border border-gray-200">
-                      <button className="text-gray-500 hover:text-orange-500 text-xs">-</button>
+                      <button onClick={() => updateQuantity(item.id, item.qty - 1)} className="text-gray-500 hover:text-orange-500 text-xs">-</button>
                       <span className="text-xs font-medium">{item.qty}</span>
-                      <button className="text-gray-500 hover:text-orange-500 text-xs">+</button>
+                      <button onClick={() => updateQuantity(item.id, item.qty + 1)} className="text-gray-500 hover:text-orange-500 text-xs">+</button>
                     </div>
                   </div>
                 </div>
               ))}
+              {cartItems.length === 0 && (
+                <div className="text-center text-sm text-gray-500 py-4">Your cart is empty</div>
+              )}
             </div>
 
             <div className="border-t border-gray-100 pt-4 mb-4">
               <div className="flex justify-between text-sm mb-2">
                 <span className="text-gray-500">Subtotal</span>
-                <span className="font-bold text-gray-900">₹4,998</span>
+                <span className="font-bold text-gray-900">₹{cartTotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm mb-4">
                 <span className="text-gray-500">Shipping</span>
@@ -311,7 +308,7 @@ export const Home = () => {
               </div>
               <div className="flex justify-between text-base font-black">
                 <span className="text-gray-900">Total</span>
-                <span className="text-gray-900">₹4,998</span>
+                <span className="text-gray-900">₹{cartTotal.toLocaleString()}</span>
               </div>
             </div>
 

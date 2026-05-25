@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, ShoppingCart, Search, ChevronDown } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCartStore, useWishlistStore } from '../store/useStore';
 
 export const Header = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const navigate = useNavigate();
+  const { cartItems } = useCartStore();
+  const { wishlistItems } = useWishlistStore();
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');
@@ -48,7 +51,7 @@ export const Header = () => {
           <Link to="/wishlist" className="flex items-center gap-2 text-gray-700 hover:text-orange-500 transition-colors">
             <div className="relative">
               <Heart size={24} />
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">3</span>
+              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">{wishlistItems.length}</span>
             </div>
             <span className="text-sm font-medium hidden lg:block">Wishlist</span>
           </Link>
@@ -56,7 +59,7 @@ export const Header = () => {
           <Link to="/cart" className="flex items-center gap-2 text-gray-700 hover:text-orange-500 transition-colors">
             <div className="relative">
               <ShoppingCart size={24} />
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">2</span>
+              <span className="absolute -top-1.5 -right-1.5 bg-orange-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">{cartItems.length}</span>
             </div>
             <span className="text-sm font-medium hidden lg:block">Cart</span>
           </Link>
