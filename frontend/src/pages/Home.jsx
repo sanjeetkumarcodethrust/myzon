@@ -312,12 +312,12 @@ export const Home = () => {
               </div>
             </div>
 
-            <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-md transition-colors mb-2">
+            <Link to="/cart" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-md transition-colors mb-2 block text-center">
               Checkout
-            </button>
-            <button className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold py-2.5 rounded-md transition-colors">
+            </Link>
+            <Link to="/cart" className="w-full bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold py-2.5 rounded-md transition-colors block text-center">
               View Cart
-            </button>
+            </Link>
           </div>
 
           {/* Exclusive Offers Widget */}

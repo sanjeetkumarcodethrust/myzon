@@ -10,7 +10,8 @@ import { Deals } from './pages/Deals';
 import { Brands } from './pages/Brands';
 import { NewArrivals } from './pages/NewArrivals';
 import { TrackOrder } from './pages/TrackOrder';
-
+import { Cart } from './pages/Cart';
+import { Wishlist } from './pages/Wishlist';
 function App() {
   return (
     <Router>
@@ -28,6 +29,8 @@ function App() {
             <Route path="/brands" element={<Brands />} />
             <Route path="/new-arrivals" element={<NewArrivals />} />
             <Route path="/track-order" element={<TrackOrder />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="*" element={<div className="p-8 text-center">Page Not Found</div>} />
           </Routes>
         </main>
