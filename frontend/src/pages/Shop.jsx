@@ -5,10 +5,15 @@ import { useSearchParams } from 'react-router-dom';
 import productsData from '../data/products.json';
 const products = productsData;
 
-
-const priceRanges = ['Under ₹1,000', '₹1,000 - ₹5,000', '₹5,000 - ₹20,000', 'Over ₹20,000'];
+const priceRanges = [
+  { label: 'Under ₹1,000',       min: 0,     max: 999 },
+  { label: '₹1,000 - ₹5,000',   min: 1000,  max: 5000 },
+  { label: '₹5,000 - ₹20,000',  min: 5000,  max: 20000 },
+  { label: 'Over ₹20,000',       min: 20001, max: Infinity },
+];
 
 export const Shop = () => {
+  const [selectedPrice, setSelectedPrice] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
@@ -20,7 +25,10 @@ export const Shop = () => {
   const dynamicCategories = Array.from(new Set(productsMatchingQuery.map(p => p.category)));
 
   const filteredProducts = productsMatchingQuery.filter(product => {
-    return categoryParam === '' || product.category === categoryParam;
+    const categoryMatch = categoryParam === '' || product.category === categoryParam;
+    const priceMatch = selectedPrice === null ||
+      (product.price >= selectedPrice.min && product.price <= selectedPrice.max);
+    return categoryMatch && priceMatch;
   });
 
   return (
@@ -78,15 +86,25 @@ export const Shop = () => {
               <div className="flex flex-col gap-2">
                 {priceRanges.map((range, idx) => (
                   <label key={idx} className="flex items-center gap-2 cursor-pointer group">
-                    <input type="radio" name="price" className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500" />
-                    <span className="text-sm text-gray-600 group-hover:text-orange-500">{range}</span>
+                    <input
+                      type="radio"
+                      name="price"
+                      checked={selectedPrice?.label === range.label}
+                      onChange={() => setSelectedPrice(range)}
+                      className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500"
+                    />
+                    <span className={`text-sm transition-colors ${
+                      selectedPrice?.label === range.label
+                        ? 'text-orange-500 font-bold'
+                        : 'text-gray-600 group-hover:text-orange-500'
+                    }`}>{range.label}</span>
                   </label>
                 ))}
               </div>
             </div>
             
             <button 
-              onClick={() => setSearchParams({})}
+              onClick={() => { setSearchParams({}); setSelectedPrice(null); }}
               className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors"
             >
               Clear All Filters
