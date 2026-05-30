@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Star, ShoppingCart, Filter, ChevronDown } from 'lucide-react';
+import { Star, ShoppingCart, Filter, ChevronDown, Heart } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { useCartStore, useWishlistStore } from '../store/useStore';
 
 import productsData from '../data/products.json';
 const products = productsData;
@@ -14,6 +15,8 @@ const priceRanges = [
 
 export const Shop = () => {
   const [selectedPrice, setSelectedPrice] = useState(null);
+  const { addToCart, cartItems } = useCartStore();
+  const { addToWishlist, wishlistItems } = useWishlistStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
@@ -142,35 +145,62 @@ export const Shop = () => {
 
           {filteredProducts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map(product => (
-                <div key={product.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col h-full">
-                  <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
-                    {product.discount}
-                  </div>
-                  <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
-                    <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                  </div>
-                  <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
-                  <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px]">{product.title}</h4>
-                  <div className="flex items-center gap-1 mb-3 mt-auto">
-                    <div className="flex text-orange-400 text-xs">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'} />
-                      ))}
+              {filteredProducts.map(product => {
+                const inCart = cartItems.find(i => i.id === product.id);
+                const inWishlist = wishlistItems.find(i => i.id === product.id);
+                return (
+                  <div key={product.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col h-full">
+                    {/* Discount badge */}
+                    <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
+                      {product.discount}
                     </div>
-                    <span className="text-xs text-gray-400">({product.reviews})</span>
-                  </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-baseline gap-2 flex-wrap">
-                      <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
-                      <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
-                    </div>
-                    <button className="h-9 w-9 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors flex-shrink-0">
-                      <ShoppingCart size={16} />
+                    {/* Wishlist button */}
+                    <button
+                      onClick={() => addToWishlist(product)}
+                      className={`absolute top-3 right-3 z-10 h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-sm transition-colors ${
+                        inWishlist ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                      }`}
+                    >
+                      <Heart size={15} className={inWishlist ? 'fill-current' : ''} />
                     </button>
+                    {/* Product image */}
+                    <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
+                      <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                    </div>
+                    <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
+                    <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px]">{product.title}</h4>
+                    <div className="flex items-center gap-1 mb-3 mt-auto">
+                      <div className="flex text-orange-400 text-xs">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'} />
+                        ))}
+                      </div>
+                      <span className="text-xs text-gray-400">({product.reviews})</span>
+                    </div>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
+                        <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
+                      </div>
+                      <button
+                        onClick={() => addToCart(product)}
+                        className={`relative h-9 w-9 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${
+                          inCart
+                            ? 'bg-orange-500 text-white'
+                            : 'bg-orange-50 text-orange-500 hover:bg-orange-500 hover:text-white'
+                        }`}
+                      >
+                        <ShoppingCart size={16} />
+                        {inCart && (
+                          <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                            {inCart.qty}
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="py-20 text-center bg-white border border-gray-100 rounded-xl">
