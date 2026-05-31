@@ -222,12 +222,9 @@ export const Home = () => {
               </div>
             ) : (
               <div className="py-12 text-center bg-white border border-gray-100 rounded-xl">
-                <p className="text-gray-500 text-lg mb-4">No match product on your criteria</p>
+                <p className="text-gray-500 text-lg mb-4">No match product on your criteria. Please add the item in it.</p>
                 <div className="flex justify-center items-center gap-6">
                   <button onClick={() => window.location.href = '/'} className="text-orange-500 font-bold hover:underline">Clear Search</button>
-                  <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-md transition-colors shadow-sm">
-                    Please add the item in it
-                  </button>
                 </div>
               </div>
             )}

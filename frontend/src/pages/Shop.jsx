@@ -204,7 +204,7 @@ export const Shop = () => {
             </div>
           ) : (
             <div className="py-20 text-center bg-white border border-gray-100 rounded-xl">
-              <p className="text-gray-500 text-xl mb-4">No products found matching your criteria</p>
+              <p className="text-gray-500 text-xl mb-4">No match product on your criteria. Please add the item in it.</p>
               <button onClick={() => window.location.href = '/shop'} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
                 View All Products
               </button>
