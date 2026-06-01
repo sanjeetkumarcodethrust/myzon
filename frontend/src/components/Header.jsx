@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, ShoppingCart, Search, ChevronDown } from 'lucide-react';
-import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCartStore, useWishlistStore } from '../store/useStore';
 
 export const Header = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const navigate = useNavigate();
-  const location = useLocation();
   const { cartItems } = useCartStore();
   const { wishlistItems } = useWishlistStore();
 
@@ -18,17 +17,9 @@ export const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (query.trim()) {
-      if (location.pathname === '/') {
-        navigate(`/?q=${encodeURIComponent(query.trim())}`);
-      } else {
-        navigate(`/shop?q=${encodeURIComponent(query.trim())}`);
-      }
+      navigate(`/shop?q=${encodeURIComponent(query.trim())}`);
     } else {
-      if (location.pathname === '/') {
-        navigate('/');
-      } else {
-        navigate('/shop');
-      }
+      navigate('/shop');
     }
   };
 

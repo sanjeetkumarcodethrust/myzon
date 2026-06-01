@@ -22,7 +22,35 @@ export const Shop = () => {
   const categoryParam = searchParams.get('category') || '';
 
   const productsMatchingQuery = products.filter(product => {
-    return query === '' || product.title.toLowerCase().includes(query.toLowerCase()) || product.brand.toLowerCase().includes(query.toLowerCase());
+    if (!query) return true;
+    const q = query.toLowerCase();
+    
+    if (product.title.toLowerCase().includes(q)) return true;
+    if (product.brand.toLowerCase().includes(q)) return true;
+    if (product.category.toLowerCase().includes(q.replace('-', ' '))) return true;
+    
+    const isFashionQuery = ['cloth', 'wear', 'apparel', 'shirt', 'dress', 'shoe', 'fashion'].some(syn => q.includes(syn));
+    if (isFashionQuery && product.category === 'fashion') return true;
+    
+    const isTechQuery = ['tech', 'phone', 'computer', 'gadget', 'device', 'laptop', 'electronic'].some(syn => q.includes(syn));
+    if (isTechQuery && product.category === 'electronics') return true;
+    
+    const isToyQuery = ['toy', 'game', 'play', 'kid'].some(syn => q.includes(syn));
+    if (isToyQuery && product.category === 'toys-games') return true;
+    
+    const isBeautyQuery = ['beauty', 'health', 'makeup', 'skin', 'face', 'cosmetic'].some(syn => q.includes(syn));
+    if (isBeautyQuery && product.category === 'beauty-health') return true;
+
+    const isHomeQuery = ['home', 'kitchen', 'appliance', 'furniture', 'cook'].some(syn => q.includes(syn));
+    if (isHomeQuery && product.category === 'home-kitchen') return true;
+
+    const isSportsQuery = ['sport', 'outdoor', 'gym', 'fitness', 'exercise'].some(syn => q.includes(syn));
+    if (isSportsQuery && product.category === 'sports-outdoors') return true;
+
+    const isBookQuery = ['book', 'stationery', 'read', 'write', 'pen', 'paper'].some(syn => q.includes(syn));
+    if (isBookQuery && product.category === 'books-stationery') return true;
+
+    return false;
   });
 
   const dynamicCategories = Array.from(new Set(productsMatchingQuery.map(p => p.category)));
