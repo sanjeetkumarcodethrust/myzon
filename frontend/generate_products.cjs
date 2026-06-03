@@ -15,7 +15,9 @@ const existingProducts = [
   { id: 11, brand: 'Philips', title: 'Air Fryer HD9200/90', category: 'home-kitchen', price: 6999, originalPrice: 9995, discount: '-30%', rating: 4.6, reviews: '5k+', image: 'https://images.unsplash.com/photo-1626200419188-f5619ebc5740?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 12, brand: 'LEGO', title: 'Star Wars Millennium Falcon', category: 'toys-games', price: 14500, originalPrice: 16999, discount: '-14%', rating: 4.9, reviews: '850', image: 'https://images.unsplash.com/photo-1585366119957-e9730b6d0f60?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 13, brand: 'Nivia', title: 'Storm Football - Size 5', category: 'sports-outdoors', price: 450, originalPrice: 850, discount: '-47%', rating: 4.3, reviews: '2.1k', image: 'https://images.unsplash.com/photo-1614632537190-23e4146777db?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery', price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300' }
+  { id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery', price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 15, brand: 'Apple', title: 'iPhone 15 Mobile Phone', category: 'electronics', price: 79900, originalPrice: 79900, discount: '0%', rating: 4.8, reviews: '12k+', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 16, brand: 'Samsung', title: 'Galaxy S23 Mobile', category: 'electronics', price: 74999, originalPrice: 89999, discount: '-17%', rating: 4.6, reviews: '8.5k+', image: 'https://images.unsplash.com/photo-1610945265064-3234dac1fbd0?auto=format&fit=crop&q=80&w=300&h=300' }
 ];
 
 const categoryConfig = {
@@ -59,7 +61,7 @@ const categoryConfig = {
   'electronics': {
     brands: ['Sony', 'Samsung', 'Apple', 'LG', 'Bose', 'Dell', 'HP', 'Lenovo', 'Asus', 'Acer'],
     adjs: ['Smart', 'Wireless', 'Bluetooth', 'Portable', 'High-Speed', 'Ultra HD', 'Noise Cancelling', 'Compact', 'Pro', 'Gaming'],
-    nouns: ['Headphones', 'Speaker', 'Monitor', 'Keyboard', 'Mouse', 'Tablet', 'Laptop', 'Earbuds', 'Webcam', 'Router'],
+    nouns: ['Headphones', 'Speaker', 'Monitor', 'Keyboard', 'Mouse', 'Tablet', 'Laptop', 'Earbuds', 'Webcam', 'Router', 'Mobile'],
     images: [
       'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300&h=300',
