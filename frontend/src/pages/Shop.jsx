@@ -15,6 +15,7 @@ const priceRanges = [
 
 export const Shop = () => {
   const [selectedPrice, setSelectedPrice] = useState(null);
+  const [sortOption, setSortOption] = useState('Featured');
   const { addToCart, cartItems } = useCartStore();
   const { addToWishlist, wishlistItems } = useWishlistStore();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,13 +57,21 @@ export const Shop = () => {
 
   const dynamicCategories = Array.from(new Set(productsMatchingQuery.map(p => p.category)));
 
-  const filteredProducts = productsMatchingQuery.filter(product => {
+  let filteredProducts = productsMatchingQuery.filter(product => {
     const categoryMatch = categoryParam === '' || product.category === categoryParam;
     const brandMatch = brandParam === '' || product.brand.toLowerCase() === brandParam.toLowerCase();
     const priceMatch = selectedPrice === null ||
       (product.price >= selectedPrice.min && product.price <= selectedPrice.max);
     return categoryMatch && brandMatch && priceMatch;
   });
+
+  if (sortOption === 'Price: Low to High') {
+    filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sortOption === 'Price: High to Low') {
+    filteredProducts.sort((a, b) => b.price - a.price);
+  } else if (sortOption === 'Avg. Customer Review') {
+    filteredProducts.sort((a, b) => b.rating - a.rating);
+  }
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-8">
@@ -170,7 +179,11 @@ export const Shop = () => {
             <span className="text-sm text-gray-500">Showing {filteredProducts.length} results</span>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600">Sort by:</span>
-              <select className="text-sm border-gray-200 rounded-md focus:border-orange-500 focus:ring-orange-500">
+              <select 
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="text-sm border-gray-200 rounded-md focus:border-orange-500 focus:ring-orange-500"
+              >
                 <option>Featured</option>
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
