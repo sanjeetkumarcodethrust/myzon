@@ -14,14 +14,15 @@ const priceRanges = [
 ];
 
 export const Shop = () => {
-  const [selectedPrice, setSelectedPrice] = useState(null);
-  const [sortOption, setSortOption] = useState('Featured');
   const { addToCart, cartItems } = useCartStore();
   const { addToWishlist, wishlistItems } = useWishlistStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
   const brandParam = searchParams.get('brand') || '';
+  const priceParam = searchParams.get('price') || '';
+  const sortOption = searchParams.get('sort') || 'Featured';
+  const selectedPrice = priceRanges.find(r => r.label === priceParam) || null;
 
   const productsMatchingQuery = products.filter(product => {
     if (!query) return true;
@@ -131,8 +132,12 @@ export const Shop = () => {
                     <input
                       type="radio"
                       name="price"
-                      checked={selectedPrice?.label === range.label}
-                      onChange={() => setSelectedPrice(range)}
+                      checked={priceParam === range.label}
+                      onChange={() => {
+                        const newParams = new URLSearchParams(searchParams);
+                        newParams.set('price', range.label);
+                        setSearchParams(newParams);
+                      }}
                       className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500"
                     />
                     <span className={`text-sm transition-colors ${
@@ -146,7 +151,7 @@ export const Shop = () => {
             </div>
             
             <button 
-              onClick={() => { setSearchParams({}); setSelectedPrice(null); setSortOption('Featured'); }}
+              onClick={() => setSearchParams({})}
               className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors"
             >
               Clear All Filters
@@ -186,6 +191,16 @@ export const Shop = () => {
               }} className="text-blue-600 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
+          {priceParam && (
+            <div className="mb-4 bg-green-50 text-green-800 p-3 rounded-lg border border-green-100 flex items-center justify-between">
+              <span>Showing price: <strong className="capitalize">{priceParam}</strong></span>
+              <button onClick={() => {
+                const params = new URLSearchParams(searchParams);
+                params.delete('price');
+                setSearchParams(params);
+              }} className="text-green-600 hover:underline text-sm font-bold">Clear</button>
+            </div>
+          )}
 
           <div className="flex justify-between items-center mb-6 bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
             <span className="text-sm text-gray-500">Showing {filteredProducts.length} results</span>
@@ -193,7 +208,15 @@ export const Shop = () => {
               <span className="text-sm text-gray-600">Sort by:</span>
               <select 
                 value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
+                onChange={(e) => {
+                  const newParams = new URLSearchParams(searchParams);
+                  if (e.target.value === 'Featured') {
+                    newParams.delete('sort');
+                  } else {
+                    newParams.set('sort', e.target.value);
+                  }
+                  setSearchParams(newParams);
+                }}
                 className="text-sm border-gray-200 rounded-md focus:border-orange-500 focus:ring-orange-500"
               >
                 <option>Featured</option>
@@ -266,7 +289,7 @@ export const Shop = () => {
           ) : (
             <div className="py-20 text-center bg-white border border-gray-100 rounded-xl">
               <p className="text-gray-500 text-xl mb-4">No match product on your criteria. Please add the item in it.</p>
-              <button onClick={() => { setSearchParams({}); setSelectedPrice(null); setSortOption('Featured'); }} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
+              <button onClick={() => setSearchParams({})} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
                 View All Products
               </button>
             </div>
