@@ -20,6 +20,7 @@ export const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
+  const brandParam = searchParams.get('brand') || '';
 
   const productsMatchingQuery = products.filter(product => {
     if (!query) return true;
@@ -57,9 +58,10 @@ export const Shop = () => {
 
   const filteredProducts = productsMatchingQuery.filter(product => {
     const categoryMatch = categoryParam === '' || product.category === categoryParam;
+    const brandMatch = brandParam === '' || product.brand.toLowerCase() === brandParam.toLowerCase();
     const priceMatch = selectedPrice === null ||
       (product.price >= selectedPrice.min && product.price <= selectedPrice.max);
-    return categoryMatch && priceMatch;
+    return categoryMatch && brandMatch && priceMatch;
   });
 
   return (
@@ -155,6 +157,12 @@ export const Shop = () => {
             <div className="mb-4 bg-purple-50 text-purple-800 p-3 rounded-lg border border-purple-100 flex items-center justify-between">
               <span>Showing category: <strong className="capitalize">{categoryParam.replace('-', ' ')}</strong></span>
               <button onClick={() => window.location.href = '/shop'} className="text-purple-600 hover:underline text-sm font-bold">Clear</button>
+            </div>
+          )}
+          {brandParam && (
+            <div className="mb-4 bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100 flex items-center justify-between">
+              <span>Showing brand: <strong className="capitalize">{brandParam}</strong></span>
+              <button onClick={() => window.location.href = '/shop'} className="text-blue-600 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
 
