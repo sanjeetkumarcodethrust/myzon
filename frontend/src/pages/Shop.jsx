@@ -146,7 +146,7 @@ export const Shop = () => {
             </div>
             
             <button 
-              onClick={() => { setSearchParams({}); setSelectedPrice(null); }}
+              onClick={() => { setSearchParams({}); setSelectedPrice(null); setSortOption('Featured'); }}
               className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors"
             >
               Clear All Filters
@@ -159,19 +159,31 @@ export const Shop = () => {
           {query && (
             <div className="mb-4 bg-orange-50 text-orange-800 p-3 rounded-lg border border-orange-100 flex items-center justify-between">
               <span>Showing results for search: <strong>"{query}"</strong></span>
-              <button onClick={() => window.location.href = '/shop'} className="text-orange-500 hover:underline text-sm font-bold">Clear</button>
+              <button onClick={() => {
+                const params = new URLSearchParams(searchParams);
+                params.delete('q');
+                setSearchParams(params);
+              }} className="text-orange-500 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
           {categoryParam && (
             <div className="mb-4 bg-purple-50 text-purple-800 p-3 rounded-lg border border-purple-100 flex items-center justify-between">
               <span>Showing category: <strong className="capitalize">{categoryParam.replace('-', ' ')}</strong></span>
-              <button onClick={() => window.location.href = '/shop'} className="text-purple-600 hover:underline text-sm font-bold">Clear</button>
+              <button onClick={() => {
+                const params = new URLSearchParams(searchParams);
+                params.delete('category');
+                setSearchParams(params);
+              }} className="text-purple-600 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
           {brandParam && (
             <div className="mb-4 bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100 flex items-center justify-between">
               <span>Showing brand: <strong className="capitalize">{brandParam}</strong></span>
-              <button onClick={() => window.location.href = '/shop'} className="text-blue-600 hover:underline text-sm font-bold">Clear</button>
+              <button onClick={() => {
+                const params = new URLSearchParams(searchParams);
+                params.delete('brand');
+                setSearchParams(params);
+              }} className="text-blue-600 hover:underline text-sm font-bold">Clear</button>
             </div>
           )}
 
@@ -254,7 +266,7 @@ export const Shop = () => {
           ) : (
             <div className="py-20 text-center bg-white border border-gray-100 rounded-xl">
               <p className="text-gray-500 text-xl mb-4">No match product on your criteria. Please add the item in it.</p>
-              <button onClick={() => window.location.href = '/shop'} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
+              <button onClick={() => { setSearchParams({}); setSelectedPrice(null); setSortOption('Featured'); }} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
                 View All Products
               </button>
             </div>
