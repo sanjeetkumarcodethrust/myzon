@@ -45,7 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close cart dropdown when clicking outside
     document.addEventListener('click', (event) => {
-        if (!cartIcon.contains(event.target) && !cartDropdown.contains(event.target)) {
+        const clickedCartIcon = cartIcon.contains(event.target);
+        const clickedCartDropdown = cartDropdown.contains(event.target);
+        const clickedAddToCart = event.target.closest('.add-to-cart-btn');
+        
+        if (!clickedCartIcon && !clickedCartDropdown && !clickedAddToCart) {
             cartDropdown.classList.remove('active');
         }
     });
