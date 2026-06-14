@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, ShoppingCart, Search, ChevronDown } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useCartStore, useWishlistStore } from '../store/useStore';
+import { useCartStore, useWishlistStore, useAuthStore } from '../store/useStore';
 
 export const Header = () => {
   const [searchParams] = useSearchParams();
@@ -9,6 +9,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const { cartItems } = useCartStore();
   const { wishlistItems } = useWishlistStore();
+  const { user, login, logout } = useAuthStore();
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');
@@ -65,13 +66,30 @@ export const Header = () => {
           </Link>
 
           <div className="flex items-center gap-3 border-l border-gray-200 pl-6 cursor-pointer group">
-            <div className="flex flex-col items-end">
-              <span className="text-sm font-bold text-gray-900">Hi, Sanjeet</span>
-              <span className="text-xs text-gray-500 group-hover:text-orange-500 transition-colors">My Account</span>
-            </div>
-            <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden border border-gray-200">
-              <img src="https://ui-avatars.com/api/?name=Sanjeet&background=ff9900&color=fff" alt="User Avatar" className="h-full w-full object-cover" />
-            </div>
+            {user ? (
+              <>
+                <div className="flex flex-col items-end">
+                  <span className="text-sm font-bold text-gray-900">Hi, {user.name}</span>
+                  <button onClick={() => logout()} className="text-xs text-gray-500 hover:text-orange-500 transition-colors">Logout</button>
+                </div>
+                <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden border border-gray-200">
+                  <img src={`https://ui-avatars.com/api/?name=${user.name}&background=ff9900&color=fff`} alt="User Avatar" className="h-full w-full object-cover" />
+                </div>
+              </>
+            ) : (
+              <div className="flex flex-col items-end">
+                <button 
+                  onClick={() => {
+                    const name = prompt("Enter your name to login:");
+                    if(name && name.trim()) login({ name: name.trim() });
+                  }} 
+                  className="text-sm font-bold text-gray-900 hover:text-orange-500 transition-colors"
+                >
+                  Login / Register
+                </button>
+                <span className="text-xs text-gray-500">My Account</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
