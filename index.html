@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyZon - E-Commerce</title>
+    <meta name="description" content="MyZon - Your premium destination for all products.">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">MyZon</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#automotive" class="active">Automotive</a></li>
+                <li><a href="#">Electronics</a></li>
+                <li><a href="#">Fashion</a></li>
+            </ul>
+        </nav>
+        <div class="cart">
+            <span>🛒 Cart (<span id="cart-count">0</span>)</span>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Welcome to MyZon</h1>
+            <p>Discover premium products curated just for you.</p>
+        </section>
+
+        <section id="automotive" class="category-section">
+            <h2>Automotive Accessories</h2>
+            <div class="product-grid" id="product-list">
+                <!-- Automotive item will be populated here by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MyZon. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
