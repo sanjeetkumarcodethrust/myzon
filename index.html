@@ -19,8 +19,21 @@
                 <li><a href="#">Fashion</a></li>
             </ul>
         </nav>
-        <div class="cart">
+        <div class="cart" id="cart-icon">
             <span>🛒 Cart (<span id="cart-count">0</span>)</span>
+        </div>
+        
+        <!-- Cart Dropdown -->
+        <div class="cart-dropdown" id="cart-dropdown">
+            <h3>Your Cart</h3>
+            <div class="cart-items" id="cart-items-container">
+                <p class="empty-cart">Your cart is empty.</p>
+            </div>
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+            <button class="checkout-btn">Checkout</button>
         </div>
     </header>
 
