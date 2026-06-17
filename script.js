@@ -26,6 +26,33 @@ document.addEventListener('DOMContentLoaded', () => {
             image: "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=600&q=80",
             category: "automotive",
             isNew: true
+        },
+        {
+            id: 4,
+            title: "Sonic Pulse Electric Toothbrush",
+            description: "Advanced sonic technology provides 40,000 micro-brushes per minute for a powerful dynamic cleaning action. Keeps your teeth and gums healthy.",
+            price: 79.99,
+            image: "assets/premium_toothbrush_1781708835758.png",
+            category: "beauty and home",
+            isNew: true
+        },
+        {
+            id: 5,
+            title: "Organic Mint Whitening Toothpaste",
+            description: "Premium fluoride-free toothpaste formulated with natural ingredients and pure mint extract for a refreshing, brilliant smile every morning.",
+            price: 12.50,
+            image: "assets/premium_toothpaste_1781708851671.png",
+            category: "beauty and home",
+            isNew: true
+        },
+        {
+            id: 6,
+            title: "Luxury Egyptian Cotton Bath Towels",
+            description: "Experience spa-like comfort at home with our ultra-soft, highly absorbent 100% Egyptian cotton towel set. Durable and elegant.",
+            price: 45.00,
+            image: "assets/luxury_bath_towels_1781708867588.png",
+            category: "beauty and home",
+            isNew: true
         }
     ];
 
