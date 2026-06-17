@@ -78,9 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function renderProducts() {
+    function renderProducts(itemsToRender = products) {
         productList.innerHTML = '';
-        products.forEach(product => {
+        if (itemsToRender.length === 0) {
+            productList.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); font-size: 1.2rem; margin-top: 2rem;">No products found matching your search.</p>';
+            return;
+        }
+        itemsToRender.forEach(product => {
             const card = document.createElement('div');
             card.className = 'product-card';
             
@@ -200,6 +204,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 toast.style.display = 'none';
             }, 300);
         }, 3000);
+    }
+
+    // Search Functionality
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredProducts = products.filter(p => 
+                p.title.toLowerCase().includes(searchTerm) || 
+                p.description.toLowerCase().includes(searchTerm) ||
+                p.category.toLowerCase().includes(searchTerm)
+            );
+            renderProducts(filteredProducts);
+        });
     }
 
     renderProducts();
