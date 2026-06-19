@@ -112,7 +112,7 @@ export const Home = () => {
           <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 relative overflow-hidden min-h-[360px] flex flex-col justify-center">
             <div className="relative z-10 max-w-md">
               <span className="text-red-500 font-bold tracking-wider text-sm uppercase mb-2 block">Summer Sale</span>
-              <h1 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-2">Trendy Collection</h1>
+
               <h2 className="text-4xl md:text-5xl font-black text-red-500 mb-4">For Everyone</h2>
               <p className="text-gray-600 mb-8 max-w-sm">Explore top deals on electronics, fashion, home appliances and more.</p>
               <button className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-md font-bold transition-colors shadow-lg">
