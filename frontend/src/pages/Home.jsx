@@ -18,52 +18,9 @@ const categories = [
   { name: 'More Categories', icon: <Grid size={18} />, slug: 'all' },
 ];
 
-const bestSelling = [
-  {
-    id: 1,
-    brand: 'Noise',
-    title: 'ColorFit Pulse 3 Smartwatch',
-    price: 1999,
-    originalPrice: 2699,
-    discount: '-25%',
-    rating: 4.5,
-    reviews: '1.2k',
-    image: 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?auto=format&fit=crop&q=80&w=200&h=200'
-  },
-  {
-    id: 2,
-    brand: 'boAt',
-    title: 'Rockerz 450 Bluetooth Headphones',
-    price: 1599,
-    originalPrice: 1999,
-    discount: '-20%',
-    rating: 4.4,
-    reviews: '892',
-    image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=200&h=200'
-  },
-  {
-    id: 3,
-    brand: 'Nike',
-    title: 'Men\'s Air Max Running Shoes',
-    price: 3399,
-    originalPrice: 3999,
-    discount: '-15%',
-    rating: 4.7,
-    reviews: '1.5k',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200&h=200'
-  },
-  {
-    id: 4,
-    brand: 'Canon',
-    title: 'EOS 200D II DSLR Camera',
-    price: 34999,
-    originalPrice: 49999,
-    discount: '-30%',
-    rating: 4.8,
-    reviews: '980',
-    image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=200&h=200'
-  }
-];
+import productsData from '../data/products.json';
+
+const bestSelling = productsData.slice(0, 12);
 
 export const Home = () => {
   const [searchParams] = useSearchParams();
@@ -73,10 +30,12 @@ export const Home = () => {
 
   const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
 
-  const filteredProducts = bestSelling.filter(product => 
-    product.title.toLowerCase().includes(query.toLowerCase()) || 
-    product.brand.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredProducts = query 
+    ? productsData.filter(product => 
+        product.title.toLowerCase().includes(query.toLowerCase()) || 
+        product.brand.toLowerCase().includes(query.toLowerCase())
+      ).slice(0, 20)
+    : bestSelling;
 
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-6">
