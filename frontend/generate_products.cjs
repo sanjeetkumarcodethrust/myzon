@@ -307,7 +307,15 @@ for (const cat of categoriesToGenerate) {
     const adj = config.adjs[Math.floor(Math.random() * config.adjs.length)];
     const noun = config.nouns[Math.floor(Math.random() * config.nouns.length)];
     
-    const originalPrice = Math.floor(Math.random() * 4000) + 500;
+    let originalPrice;
+    const priceCategory = Math.random();
+    if (priceCategory < 0.3) {
+      originalPrice = Math.floor(Math.random() * 4000) + 500;
+    } else if (priceCategory < 0.7) {
+      originalPrice = Math.floor(Math.random() * 15000) + 6000;
+    } else {
+      originalPrice = Math.floor(Math.random() * 50000) + 25000;
+    }
     const discountPercent = Math.floor(Math.random() * 50) + 10; 
     const price = Math.floor(originalPrice * (1 - discountPercent / 100));
     
