@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 1,
             title: "Premium V8 Synthetic Motor Oil",
             description: "Advanced full synthetic motor oil designed to keep your engine running like new by providing exceptional wear protection, cleaning power and overall performance.",
+            explanation: "Formulated with anti-wear additives and detergents that provide optimal sludge protection and prevent deposits. Ideal for high-performance and turbocharged engines operating in extreme temperatures.",
+            ingredients: ["Synthetic base oils", "Anti-wear additives", "Detergents", "Dispersants", "Friction modifiers", "Viscosity index improvers"],
             price: 49.99,
             image: "https://images.unsplash.com/photo-1610484770281-9b76c8dbb510?auto=format&fit=crop&w=600&q=80",
             category: "automotive",
@@ -13,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 2,
             title: "Carbon Fiber Steering Wheel Cover",
             description: "High-quality sport-grip steering wheel cover. Enhances the interior of your vehicle while providing better control and comfort during your drive.",
+            explanation: "Designed to universally fit steering wheels from 14.5 to 15.25 inches. It features a breathable, anti-slip surface and protects your original steering wheel from wear and tear.",
+            ingredients: ["Polyurethane carbon fiber pattern", "Heavy-duty rubber inner ring", "Breathable mesh fabric accents", "Nylon stitching"],
             price: 29.50,
             image: "https://images.unsplash.com/photo-1590362891991-f7004f2d5ee1?auto=format&fit=crop&w=600&q=80",
             category: "automotive",
@@ -22,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 3,
             title: "Ultra-Bright LED Headlight Bulbs",
             description: "Super bright LED headlight conversion kit. 6000K cool white light, 300% brighter than standard halogen bulbs for safer night driving.",
+            explanation: "Features an aviation aluminum body with a high-speed turbo cooling fan that dissipates heat up to twice as fast as standard bulbs, ensuring a lifespan of over 50,000 hours.",
+            ingredients: ["CSP LED chips", "Aviation aluminum 6063 body", "Copper core board", "High-speed cooling fan (12,000 RPM)"],
             price: 89.99,
             image: "https://images.unsplash.com/photo-1541443131876-44b03de101c5?auto=format&fit=crop&w=600&q=80",
             category: "automotive",
@@ -31,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 4,
             title: "Sonic Pulse Electric Toothbrush",
             description: "Advanced sonic technology provides 40,000 micro-brushes per minute for a powerful dynamic cleaning action. Keeps your teeth and gums healthy.",
+            explanation: "Comes with 5 brushing modes (Clean, White, Polish, Massage, Sensitive) and a smart timer that pauses every 30 seconds to remind you to change brushing areas. Waterproof IPX7 design.",
+            ingredients: ["Food-grade ABS plastic handle", "DuPont nylon bristles", "Lithium-ion battery", "Copper wire motor assembly"],
             price: 79.99,
             image: "assets/premium_toothbrush_1781708835758.png",
             category: "beauty and home",
@@ -40,6 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 5,
             title: "Organic Mint Whitening Toothpaste",
             description: "Premium fluoride-free toothpaste formulated with natural ingredients and pure mint extract for a refreshing, brilliant smile every morning.",
+            explanation: "Utilizes hydrated silica for gentle stain removal without scratching enamel, while essential oils provide lasting fresh breath and help soothe gums naturally.",
+            ingredients: ["Vegetable Glycerin", "Hydrated Silica", "Purified Water", "Organic Peppermint Oil", "Baking Soda", "Tea Tree Oil", "Xylitol"],
             price: 12.50,
             image: "assets/premium_toothpaste_1781708851671.png",
             category: "beauty and home",
@@ -49,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 6,
             title: "Luxury Egyptian Cotton Bath Towels",
             description: "Experience spa-like comfort at home with our ultra-soft, highly absorbent 100% Egyptian cotton towel set. Durable and elegant.",
+            explanation: "Woven with long-staple cotton fibers that make them exceptionally plush, durable, and highly absorbent. These towels will get softer with every wash.",
+            ingredients: ["100% Long-staple Egyptian Cotton", "Eco-friendly fabric dyes"],
             price: 45.00,
             image: "assets/luxury_bath_towels_1781708867588.png",
             category: "beauty and home",
@@ -100,7 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p class="product-desc">${product.description}</p>
                     <div class="product-footer">
                         <span class="product-price">$${product.price.toFixed(2)}</span>
-                        <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
+                        <div class="product-footer-actions">
+                            <button class="view-details-btn" data-id="${product.id}">Details</button>
+                            <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -108,14 +123,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Add event listeners robustly using dataset
-        const btns = document.querySelectorAll('.add-to-cart-btn');
-        btns.forEach(btn => {
+        const cartBtns = document.querySelectorAll('.add-to-cart-btn');
+        cartBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = parseInt(e.currentTarget.getAttribute('data-id'));
                 addToCart(id);
             });
         });
+
+        const detailBtns = document.querySelectorAll('.view-details-btn');
+        detailBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(e.currentTarget.getAttribute('data-id'));
+                openProductModal(id);
+            });
+        });
     }
+
+    const modal = document.getElementById('product-modal');
+    const modalBody = document.getElementById('modal-body');
+    const closeModalBtn = document.querySelector('.close-modal');
+
+    function openProductModal(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        let ingredientsHtml = '';
+        if (product.ingredients && product.ingredients.length > 0) {
+            ingredientsHtml = `
+                <div class="modal-section">
+                    <h4>Ingredients / Materials</h4>
+                    <ul>
+                        ${product.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        let explanationHtml = '';
+        if (product.explanation) {
+            explanationHtml = `
+                <div class="modal-section">
+                    <h4>Detailed Explanation</h4>
+                    <p>${product.explanation}</p>
+                </div>
+            `;
+        }
+
+        modalBody.innerHTML = `
+            <h2>${product.title}</h2>
+            <img src="${product.image}" alt="${product.title}" class="modal-product-img" style="margin-top: 1rem;">
+            <p style="font-size: 1.1rem; color: var(--text-secondary);">${product.description}</p>
+            ${explanationHtml}
+            ${ingredientsHtml}
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">$${product.price.toFixed(2)}</span>
+                <button class="add-to-cart-btn" data-id="${product.id}" style="padding: 0.8rem 1.5rem;">Add to Cart</button>
+            </div>
+        `;
+
+        const modalAddToCartBtn = modalBody.querySelector('.add-to-cart-btn');
+        modalAddToCartBtn.addEventListener('click', () => {
+            addToCart(product.id);
+            modal.classList.remove('active');
+        });
+
+        modal.classList.add('active');
+    }
+
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+    }
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
 
     function updateCartUI() {
         cartCountElement.textContent = cartItems.length;
