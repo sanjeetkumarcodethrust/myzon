@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         itemsToRender.forEach(product => {
             const card = document.createElement('div');
             card.className = 'product-card';
+            card.style.cursor = 'pointer'; // Make it clear the card is clickable
             
             const newBadge = product.isNew ? `<span class="new-badge">New Arrival</span>` : '';
             
@@ -113,12 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="product-footer">
                         <span class="product-price">$${product.price.toFixed(2)}</span>
                         <div class="product-footer-actions">
-                            <button class="view-details-btn" data-id="${product.id}">Details</button>
                             <button class="add-to-cart-btn" data-id="${product.id}">Add to Cart</button>
                         </div>
                     </div>
                 </div>
             `;
+            
+            // Add click listener to the entire card
+            card.addEventListener('click', (e) => {
+                // Ignore if the click was on the Add to Cart button
+                if (!e.target.closest('.add-to-cart-btn')) {
+                    openProductModal(product.id);
+                }
+            });
+
             productList.appendChild(card);
         });
 
@@ -128,14 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btn.addEventListener('click', (e) => {
                 const id = parseInt(e.currentTarget.getAttribute('data-id'));
                 addToCart(id);
-            });
-        });
-
-        const detailBtns = document.querySelectorAll('.view-details-btn');
-        detailBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const id = parseInt(e.currentTarget.getAttribute('data-id'));
-                openProductModal(id);
             });
         });
     }
