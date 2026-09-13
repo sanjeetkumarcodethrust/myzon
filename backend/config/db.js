@@ -9,7 +9,7 @@ const connectDB = async () => {
   const localUri = `mongodb://127.0.0.1:27017/${dbName}`;
 
   const tryConnect = async (uri, label) => {
-    const conn = await mongoose.connect(uri, { dbName });
+    const conn = await mongoose.connect(uri, { dbName, serverSelectionTimeoutMS: 5000 });
     console.log(`✅ MongoDB Connected (${label}): ${conn.connection.host}`);
     return conn;
   };
@@ -29,7 +29,7 @@ const connectDB = async () => {
       try {
         return await tryConnect(atlasUri, "Atlas");
       } catch (atlasError) {
-        console.warn("⚠️ Atlas MongoDB connection failed. Retrying with local MongoDB...");
+        console.warn(`⚠️ Atlas MongoDB connection failed: ${atlasError.message}. Retrying with local MongoDB...`);
       }
     }
 
