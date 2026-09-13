@@ -171,15 +171,21 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
+        const newBadge = product.isNew ? `<span style="background: var(--accent); color: #0f172a; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold; margin-left: 10px; vertical-align: middle;">New Arrival</span>` : '';
+
         modalBody.innerHTML = `
-            <h2>${product.title}</h2>
-            <img src="${product.image}" alt="${product.title}" class="modal-product-img" style="margin-top: 1rem;">
-            <p style="font-size: 1.1rem; color: var(--text-secondary);">${product.description}</p>
+            <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                <span style="text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: var(--primary-color); font-weight: bold;">${product.category}</span>
+                ${newBadge}
+            </div>
+            <h2 style="margin-bottom: 0.5rem;">${product.title}</h2>
+            <img src="${product.image}" alt="${product.title}" class="modal-product-img" style="margin-top: 0.5rem;">
+            <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 1rem;">${product.description}</p>
             ${explanationHtml}
             ${ingredientsHtml}
-            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 1.5rem; font-weight: bold; color: var(--accent);">$${product.price.toFixed(2)}</span>
-                <button class="add-to-cart-btn" data-id="${product.id}" style="padding: 0.8rem 1.5rem;">Add to Cart</button>
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+                <span style="font-size: 1.8rem; font-weight: bold; color: var(--accent);">$${product.price.toFixed(2)}</span>
+                <button class="add-to-cart-btn" data-id="${product.id}" style="padding: 0.8rem 1.5rem; font-size: 1.1rem;">Add to Cart</button>
             </div>
         `;
 
