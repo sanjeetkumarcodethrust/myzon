@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+
+let memoryServer;
 
 const connectDB = async () => {
   const atlasUri = process.env.MONGO_URI;
   const dbName = process.env.MONGO_DB_NAME || "myzon";
-  const localUri = "mongodb://127.0.0.1:27017/myzon";
+  const localUri = `mongodb://127.0.0.1:27017/${dbName}`;
 
   const tryConnect = async (uri, label) => {
     const conn = await mongoose.connect(uri, { dbName });
@@ -11,34 +14,34 @@ const connectDB = async () => {
     return conn;
   };
 
-  try {
-    if (atlasUri) {
-      return await tryConnect(atlasUri, "Atlas");
+  const tryMemoryFallback = async () => {
+    if (memoryServer) {
+      return await tryConnect(memoryServer.getUri(), "InMemory");
     }
 
-    return await tryConnect(localUri, "Local");
-  } catch (error) {
-    const isAtlasFailure = Boolean(atlasUri) && (
-      error?.message?.includes("querySrv") ||
-      error?.message?.includes("ECONNREFUSED") ||
-      error?.message?.includes("ENOTFOUND") ||
-      error?.code === "ECONNREFUSED"
-    );
+    console.warn("⚠️ No MongoDB server detected. Starting an in-memory MongoDB instance for development...");
+    memoryServer = await MongoMemoryServer.create({ instance: { dbName } });
+    return await tryConnect(memoryServer.getUri(), "InMemory");
+  };
 
-    if (isAtlasFailure) {
-      console.warn("⚠️ Atlas MongoDB connection failed. Retrying with local MongoDB...");
+  try {
+    if (atlasUri) {
       try {
-        return await tryConnect(localUri, "Local fallback");
-      } catch (localError) {
-        console.error("❌ MongoDB Error: Atlas connection failed and local MongoDB is not available.");
-        console.error("Check your MongoDB Atlas username/password, allow your current IP in Atlas Network Access, or start MongoDB locally.");
-        console.error(localError.message);
-        process.exit(1);
+        return await tryConnect(atlasUri, "Atlas");
+      } catch (atlasError) {
+        console.warn("⚠️ Atlas MongoDB connection failed. Retrying with local MongoDB...");
       }
     }
 
+    try {
+      return await tryConnect(localUri, "Local");
+    } catch (localError) {
+      console.warn("⚠️ Local MongoDB connection failed. Falling back to in-memory MongoDB...");
+      return await tryMemoryFallback();
+    }
+  } catch (error) {
     console.error("❌ MongoDB Error:", error.message);
-    console.error("Check your MONGO_URI, username/password, or local MongoDB service status.");
+    console.error("Check your MONGO_URI, username/password, MongoDB service status, or your local environment.");
     process.exit(1);
   }
 };
