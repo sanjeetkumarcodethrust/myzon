@@ -7,7 +7,7 @@ import Order from "../models/Order.js";
 import Cart from "../models/Cart.js";
 
 dotenv.config();
-connectDB();
+await connectDB();
 
 const users = [
   { name: "Admin User", email: "admin@myzon.com", password: "admin123", role: "admin" },

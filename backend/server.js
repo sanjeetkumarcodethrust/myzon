@@ -16,7 +16,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
 dotenv.config();
-connectDB();
+await connectDB();
 
 const app = express();
 
