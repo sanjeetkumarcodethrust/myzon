@@ -32,25 +32,25 @@ export const Shop = () => {
     if (product.brand.toLowerCase().includes(q)) return true;
     if (product.category.toLowerCase().includes(q.replace('-', ' '))) return true;
     
-    const isFashionQuery = ['cloth', 'wear', 'apparel', 'shirt', 'dress', 'shoe', 'fashion'].some(syn => q.includes(syn));
+    const isFashionQuery = ['cloth', 'apparel', 'fashion', 'wear'].some(syn => q.includes(syn));
     if (isFashionQuery && product.category === 'fashion') return true;
     
-    const isTechQuery = ['tech', 'phone', 'computer', 'gadget', 'device', 'laptop', 'electronic'].some(syn => q.includes(syn));
+    const isTechQuery = ['tech', 'electronic', 'gadget', 'device'].some(syn => q.includes(syn));
     if (isTechQuery && product.category === 'electronics') return true;
     
-    const isToyQuery = ['toy', 'game', 'play', 'kid'].some(syn => q.includes(syn));
+    const isToyQuery = ['toy', 'game', 'kid', 'play'].some(syn => q.includes(syn));
     if (isToyQuery && product.category === 'toys-games') return true;
     
-    const isBeautyQuery = ['beauty', 'health', 'makeup', 'skin', 'face', 'cosmetic'].some(syn => q.includes(syn));
+    const isBeautyQuery = ['beauty', 'health', 'cosmetic', 'skincare'].some(syn => q.includes(syn));
     if (isBeautyQuery && product.category === 'beauty-health') return true;
 
-    const isHomeQuery = ['home', 'kitchen', 'appliance', 'furniture', 'cook'].some(syn => q.includes(syn));
+    const isHomeQuery = ['home', 'kitchen', 'appliance', 'furniture'].some(syn => q.includes(syn));
     if (isHomeQuery && product.category === 'home-kitchen') return true;
 
-    const isSportsQuery = ['sport', 'outdoor', 'gym', 'fitness', 'exercise'].some(syn => q.includes(syn));
+    const isSportsQuery = ['sport', 'outdoor', 'fitness', 'gym', 'exercise'].some(syn => q.includes(syn));
     if (isSportsQuery && product.category === 'sports-outdoors') return true;
 
-    const isBookQuery = ['book', 'stationery', 'read', 'write', 'pen', 'paper'].some(syn => q.includes(syn));
+    const isBookQuery = ['book', 'stationery', 'read', 'write'].some(syn => q.includes(syn));
     if (isBookQuery && product.category === 'books-stationery') return true;
 
     return false;
