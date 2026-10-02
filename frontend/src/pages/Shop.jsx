@@ -31,28 +31,8 @@ export const Shop = () => {
     if (product.title.toLowerCase().includes(q)) return true;
     if (product.brand.toLowerCase().includes(q)) return true;
     if (product.category.toLowerCase().includes(q.replace('-', ' '))) return true;
+    if (product.description && product.description.toLowerCase().includes(q)) return true;
     
-    const isFashionQuery = ['cloth', 'apparel', 'fashion', 'wear'].some(syn => q.includes(syn));
-    if (isFashionQuery && product.category === 'fashion') return true;
-    
-    const isTechQuery = ['tech', 'electronic', 'gadget', 'device'].some(syn => q.includes(syn));
-    if (isTechQuery && product.category === 'electronics') return true;
-    
-    const isToyQuery = ['toy', 'game', 'kid', 'play'].some(syn => q.includes(syn));
-    if (isToyQuery && product.category === 'toys-games') return true;
-    
-    const isBeautyQuery = ['beauty', 'health', 'cosmetic', 'skincare'].some(syn => q.includes(syn));
-    if (isBeautyQuery && product.category === 'beauty-health') return true;
-
-    const isHomeQuery = ['home', 'kitchen', 'appliance', 'furniture'].some(syn => q.includes(syn));
-    if (isHomeQuery && product.category === 'home-kitchen') return true;
-
-    const isSportsQuery = ['sport', 'outdoor', 'fitness', 'gym', 'exercise'].some(syn => q.includes(syn));
-    if (isSportsQuery && product.category === 'sports-outdoors') return true;
-
-    const isBookQuery = ['book', 'stationery', 'read', 'write'].some(syn => q.includes(syn));
-    if (isBookQuery && product.category === 'books-stationery') return true;
-
     return false;
   });
 
@@ -97,6 +77,22 @@ export const Shop = () => {
                 Categories <ChevronDown size={16} className="text-gray-400" />
               </h3>
               <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input 
+                    type="radio"
+                    name="categoryGroup"
+                    checked={categoryParam === ''}
+                    onChange={() => {
+                      const newParams = new URLSearchParams(searchParams);
+                      newParams.delete('category');
+                      setSearchParams(newParams);
+                    }}
+                    className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500" 
+                  />
+                  <span className={`text-sm transition-colors ${categoryParam === '' ? 'text-orange-500 font-bold' : 'text-gray-600 group-hover:text-orange-500'}`}>
+                    All Categories
+                  </span>
+                </label>
                 {dynamicCategories.map((catSlug, idx) => (
                   <label key={idx} className="flex items-center gap-2 cursor-pointer group">
                     <input 
@@ -127,6 +123,24 @@ export const Shop = () => {
                 Price <ChevronDown size={16} className="text-gray-400" />
               </h3>
               <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="price"
+                    checked={priceParam === ''}
+                    onChange={() => {
+                      const newParams = new URLSearchParams(searchParams);
+                      newParams.delete('price');
+                      setSearchParams(newParams);
+                    }}
+                    className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500"
+                  />
+                  <span className={`text-sm transition-colors ${
+                    priceParam === ''
+                      ? 'text-orange-500 font-bold'
+                      : 'text-gray-600 group-hover:text-orange-500'
+                  }`}>All Prices</span>
+                </label>
                 {priceRanges.map((range, idx) => (
                   <label key={idx} className="flex items-center gap-2 cursor-pointer group">
                     <input
