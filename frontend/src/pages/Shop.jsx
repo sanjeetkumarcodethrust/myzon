@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Star, ShoppingCart, Filter, ChevronDown, Heart } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { useCartStore, useWishlistStore } from '../store/useStore';
 
 import productsData from '../data/products.json';
@@ -262,11 +262,13 @@ export const Shop = () => {
                       <Heart size={15} className={inWishlist ? 'fill-current' : ''} />
                     </button>
                     {/* Product image */}
-                    <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
+                    <Link to={`/product/${product.id}`} className="block h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
                       <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                    </div>
+                    </Link>
                     <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
-                    <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px]">{product.title}</h4>
+                    <Link to={`/product/${product.id}`}>
+                      <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px] hover:text-orange-500 transition-colors">{product.title}</h4>
+                    </Link>
                     <div className="flex items-center gap-1 mb-3 mt-auto">
                       <div className="flex text-orange-400 text-xs">
                         {[...Array(5)].map((_, i) => (

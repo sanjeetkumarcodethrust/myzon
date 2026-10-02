@@ -34,13 +34,15 @@ export const Wishlist = () => {
                 </div>
               )}
               
-              <div className="h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50 flex-shrink-0 cursor-pointer">
+              <Link to={`/product/${product.id}`} className="block h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50 flex-shrink-0 cursor-pointer">
                 <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-              </div>
+              </Link>
               
               <div className="flex-1 flex flex-col">
                 <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
-                <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 cursor-pointer hover:text-orange-500 transition-colors">{product.title}</h4>
+                <Link to={`/product/${product.id}`}>
+                  <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 cursor-pointer hover:text-orange-500 transition-colors">{product.title}</h4>
+                </Link>
                 
                 <div className="flex items-center gap-1 mb-3 mt-auto">
                   <div className="flex text-orange-400 text-xs">

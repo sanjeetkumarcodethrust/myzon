@@ -31,11 +31,13 @@ export const Cart = () => {
                 {cartItems.map(item => (
                   <div key={item.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center">
                     <div className="col-span-1 md:col-span-6 flex gap-4">
-                      <div className="h-24 w-24 bg-gray-50 rounded-lg p-2 border border-gray-100 flex-shrink-0">
-                        <img src={item.image} alt={item.title} className="h-full w-full object-contain" />
-                      </div>
+                      <Link to={`/product/${item.id}`} className="h-24 w-24 bg-gray-50 rounded-lg p-2 border border-gray-100 flex-shrink-0 cursor-pointer">
+                        <img src={item.image} alt={item.title} className="h-full w-full object-contain hover:scale-105 transition-transform" />
+                      </Link>
                       <div className="flex flex-col justify-center">
-                        <h3 className="font-bold text-gray-900 line-clamp-2">{item.title}</h3>
+                        <Link to={`/product/${item.id}`}>
+                          <h3 className="font-bold text-gray-900 line-clamp-2 hover:text-orange-500 transition-colors cursor-pointer">{item.title}</h3>
+                        </Link>
                         <p className="text-sm text-gray-500 mb-2">{item.brand}</p>
                         <div className="flex items-center gap-4 text-sm">
                           <button 

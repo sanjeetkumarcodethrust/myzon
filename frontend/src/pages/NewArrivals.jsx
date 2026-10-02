@@ -1,7 +1,8 @@
 import React from 'react';
 import { Sparkles, ShoppingCart, Star, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const newArrivals = [
+export const newArrivals = [
   {
     id: 101, brand: 'Nothing', title: 'Phone (2a) 5G',
     price: 23999, originalPrice: 25999, label: 'NEW', rating: 4.6, reviews: '120',
@@ -63,15 +64,17 @@ export const NewArrivals = () => {
               {product.label}
             </div>
             
-            <div className="h-56 flex items-center justify-center mb-5 overflow-hidden rounded-xl bg-gray-50 p-4">
+            <Link to={`/product/${product.id}`} className="block h-56 flex items-center justify-center mb-5 overflow-hidden rounded-xl bg-gray-50 p-4">
               <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-110 transition-transform duration-500 drop-shadow-md" />
-            </div>
+            </Link>
             
             <div className="flex justify-between items-start mb-2">
               <div className="text-xs text-gray-500 font-bold uppercase tracking-wider">{product.brand}</div>
             </div>
             
-            <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2">{product.title}</h4>
+            <Link to={`/product/${product.id}`}>
+              <h4 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 hover:text-orange-500 transition-colors">{product.title}</h4>
+            </Link>
             
             <div className="flex items-center gap-1 mb-4">
               <div className="flex text-orange-400 text-xs">

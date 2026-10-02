@@ -12,6 +12,8 @@ import { NewArrivals } from './pages/NewArrivals';
 import { TrackOrder } from './pages/TrackOrder';
 import { Cart } from './pages/Cart';
 import { Wishlist } from './pages/Wishlist';
+import { ProductDetail } from './pages/ProductDetail';
+
 function App() {
   return (
     <Router>
@@ -24,6 +26,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/categories" element={<Categories />} />
             <Route path="/deals" element={<Deals />} />
             <Route path="/brands" element={<Brands />} />
