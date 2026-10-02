@@ -4,25 +4,25 @@ import { Link } from 'react-router-dom';
 
 export const newArrivals = [
   {
-    id: 101, brand: 'Nothing', title: 'Phone (2a) 5G',
+    id: 90101, brand: 'Nothing', title: 'Phone (2a) 5G',
     price: 23999, originalPrice: 25999, label: 'NEW', rating: 4.6, reviews: '120',
     date: 'Added 2 days ago',
     image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 102, brand: 'Nike', title: 'Air Force 1 \'07 Pro-Tech',
+    id: 90102, brand: 'Nike', title: 'Air Force 1 \'07 Pro-Tech',
     price: 13995, originalPrice: 13995, label: 'JUST DROPPED', rating: 5.0, reviews: '12',
     date: 'Added 5 hours ago',
     image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 103, brand: 'Sony', title: 'Alpha 7C II Full-Frame Camera',
+    id: 90103, brand: 'Sony', title: 'Alpha 7C II Full-Frame Camera',
     price: 189990, originalPrice: 199990, label: 'NEW', rating: 4.9, reviews: '45',
     date: 'Added 1 week ago',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 104, brand: 'DJI', title: 'Mini 4 Pro Drone',
+    id: 90104, brand: 'DJI', title: 'Mini 4 Pro Drone',
     price: 84990, originalPrice: 89990, label: 'TRENDING', rating: 4.8, reviews: '89',
     date: 'Added 3 days ago',
     image: 'https://images.unsplash.com/photo-1507582020474-9a35b7d455d9?auto=format&fit=crop&q=80&w=400&h=400'

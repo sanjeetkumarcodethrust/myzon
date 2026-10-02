@@ -4,25 +4,25 @@ import { Link } from 'react-router-dom';
 
 export const dealProducts = [
   {
-    id: 201, brand: 'Sony', title: 'WH-1000XM5 Wireless Headphones',
+    id: 90001, brand: 'Sony', title: 'WH-1000XM5 Wireless Headphones',
     price: 24990, originalPrice: 34990, discount: '29% OFF', rating: 4.8, reviews: '4.2k',
     endsIn: 12400, // seconds
     image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 202, brand: 'Apple', title: 'MacBook Air M2 (256GB)',
+    id: 90002, brand: 'Apple', title: 'MacBook Air M2 (256GB)',
     price: 99900, originalPrice: 114900, discount: '13% OFF', rating: 4.9, reviews: '8.1k',
     endsIn: 86400, // seconds
     image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 203, brand: 'Dyson', title: 'V15 Detect Absolute Vacuum',
+    id: 90003, brand: 'Dyson', title: 'V15 Detect Absolute Vacuum',
     price: 54900, originalPrice: 65900, discount: '17% OFF', rating: 4.7, reviews: '950',
     endsIn: 4500, // seconds
     image: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 204, brand: 'Samsung', title: '55" The Frame 4K QLED TV',
+    id: 90004, brand: 'Samsung', title: '55" The Frame 4K QLED TV',
     price: 84990, originalPrice: 144900, discount: '41% OFF', rating: 4.6, reviews: '2.3k',
     endsIn: 36000, // seconds
     image: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&q=80&w=400&h=400'
