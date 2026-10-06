@@ -13,6 +13,7 @@ import { TrackOrder } from './pages/TrackOrder';
 import { Cart } from './pages/Cart';
 import { Wishlist } from './pages/Wishlist';
 import { ProductDetail } from './pages/ProductDetail';
+import { Chatbot } from './components/Chatbot';
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
             <Route path="*" element={<div className="p-8 text-center">Page Not Found</div>} />
           </Routes>
         </main>
+        
+        <Chatbot />
       </div>
     </Router>
   );
