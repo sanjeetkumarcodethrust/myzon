@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const newArrivals = [
   {
-    id: 90101, brand: 'Nothing', title: 'Phone (2a) 5G',
+    id: 90101, brand: 'Samsung', title: 'Galaxy S23 Ultra 5G',
     price: 23999, originalPrice: 25999, label: 'NEW', rating: 4.6, reviews: '120',
     date: 'Added 2 days ago',
     image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&q=80&w=400&h=400'
@@ -13,10 +13,10 @@ export const newArrivals = [
     id: 90102, brand: 'Nike', title: 'Air Force 1 \'07 Pro-Tech',
     price: 13995, originalPrice: 13995, label: 'JUST DROPPED', rating: 5.0, reviews: '12',
     date: 'Added 5 hours ago',
-    image: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&q=80&w=400&h=400'
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=400&h=400'
   },
   {
-    id: 90103, brand: 'Sony', title: 'Alpha 7C II Full-Frame Camera',
+    id: 90103, brand: 'Canon', title: 'EOS 200D II DSLR Camera',
     price: 189990, originalPrice: 199990, label: 'NEW', rating: 4.9, reviews: '45',
     date: 'Added 1 week ago',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=400&h=400'

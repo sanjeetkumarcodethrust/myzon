@@ -24,7 +24,7 @@ const categoryConfig = {
   'fashion': {
     brands: ['Zara', 'H&M', 'Nike', 'Adidas', 'Puma', 'Levis', 'Gucci', 'Calvin Klein', 'Tommy Hilfiger', 'Vans'],
     adjs: ['Classic', 'Modern', 'Vintage', 'Stylish', 'Comfortable', 'Trendy', 'Casual', 'Elegant', 'Premium', 'Urban'],
-    nouns: ['T-Shirt', 'Jeans', 'Jacket', 'Sneakers', 'Sweater', 'Dress', 'Hoodie', 'Shorts', 'Shirt', 'Coat'],
+    nouns: ['Apparel', 'Wear', 'Clothing', 'Garment', 'Outfit', 'Fashion Item'],
     images: [
       'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=300&h=300',
@@ -61,7 +61,7 @@ const categoryConfig = {
   'electronics': {
     brands: ['Sony', 'Samsung', 'Apple', 'LG', 'Bose', 'Dell', 'HP', 'Lenovo', 'Asus', 'Acer'],
     adjs: ['Smart', 'Wireless', 'Bluetooth', 'Portable', 'High-Speed', 'Ultra HD', 'Noise Cancelling', 'Compact', 'Pro', 'Gaming'],
-    nouns: ['Headphones', 'Speaker', 'Monitor', 'Keyboard', 'Mouse', 'Tablet', 'Laptop', 'Earbuds', 'Webcam', 'Router', 'Mobile'],
+    nouns: ['Device', 'Gadget', 'Tech Product', 'Accessory', 'System', 'Electronics'],
     images: [
       'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=300&h=300',
@@ -98,7 +98,7 @@ const categoryConfig = {
   'toys-games': {
     brands: ['LEGO', 'Hasbro', 'Mattel', 'Fisher-Price', 'Nerf', 'Hot Wheels', 'Barbie', 'Play-Doh', 'Bandai', 'Funko'],
     adjs: ['Interactive', 'Educational', 'Action', 'Creative', 'Musical', 'Plush', 'Collectible', 'Remote Control', 'Puzzle', 'Building'],
-    nouns: ['Figure', 'Board Game', 'Doll', 'Car', 'Block Set', 'Robot', 'Drone', 'Blaster', 'Train Set', 'Playhouse'],
+    nouns: ['Toy', 'Game', 'Play Set', 'Collectible', 'Activity Set', 'Fun Item'],
     images: [
       'https://images.unsplash.com/photo-1558060370-d644479cb6f7?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&q=80&w=300&h=300',
@@ -135,7 +135,7 @@ const categoryConfig = {
   'beauty-health': {
     brands: ['L\'Oreal', 'MAC', 'Estee Lauder', 'Clinique', 'Dove', 'Nivea', 'Neutrogena', 'Olay', 'Maybelline', 'Sephora'],
     adjs: ['Hydrating', 'Anti-Aging', 'Natural', 'Organic', 'Soothing', 'Radiant', 'Matte', 'Revitalizing', 'Nourishing', 'Glow'],
-    nouns: ['Serum', 'Moisturizer', 'Cleanser', 'Lipstick', 'Foundation', 'Perfume', 'Lotion', 'Mask', 'Scrub', 'Toner'],
+    nouns: ['Care Item', 'Beauty Essential', 'Cosmetic', 'Treatment', 'Formula'],
     images: [
       'https://images.unsplash.com/photo-1596462502278-27bf85033e5a?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&q=80&w=300&h=300',
@@ -172,7 +172,7 @@ const categoryConfig = {
   'home-kitchen': {
     brands: ['Philips', 'Bosch', 'KitchenAid', 'Samsung', 'LG', 'Dyson', 'Cuisinart', 'Whirlpool', 'Panasonic', 'Ninja'],
     adjs: ['Smart', 'Stainless Steel', 'Automatic', 'Compact', 'Energy Efficient', 'Non-Stick', 'Ceramic', 'Heavy Duty', 'Modern', 'Premium'],
-    nouns: ['Blender', 'Coffee Maker', 'Air Fryer', 'Toaster', 'Microwave', 'Vacuum Cleaner', 'Mixer', 'Kettle', 'Pan', 'Cookware Set'],
+    nouns: ['Appliance', 'Equipment', 'Home Tool', 'Kitchenware', 'Essential'],
     images: [
       'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?auto=format&fit=crop&q=80&w=300&h=300',
@@ -209,7 +209,7 @@ const categoryConfig = {
   'sports-outdoors': {
     brands: ['Nike', 'Adidas', 'Under Armour', 'Puma', 'Reebok', 'Columbia', 'North Face', 'Salomon', 'Wilson', 'Spalding'],
     adjs: ['Pro', 'Elite', 'Durable', 'Lightweight', 'Breathable', 'Waterproof', 'Thermal', 'Trekking', 'Training', 'Athletic'],
-    nouns: ['Tent', 'Sleeping Bag', 'Dumbbells', 'Yoga Mat', 'Basketball', 'Tennis Racket', 'Running Belt', 'Water Bottle', 'Backpack', 'Gloves'],
+    nouns: ['Gear', 'Equipment', 'Accessory', 'Sporting Good', 'Outdoor Item'],
     images: [
       'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=80&w=300&h=300',
@@ -246,7 +246,7 @@ const categoryConfig = {
   'books-stationery': {
     brands: ['Penguin', 'HarperCollins', 'Moleskine', 'Parker', 'Faber-Castell', 'Scholastic', 'Oxford', 'Crayola', 'Pilot', 'Staedtler'],
     adjs: ['Hardcover', 'Paperback', 'Classic', 'Illustrated', 'Premium', 'Leather-Bound', 'Spiral', 'Vintage', 'Modern', 'Educational'],
-    nouns: ['Novel', 'Journal', 'Fountain Pen', 'Notebook', 'Planner', 'Sketchbook', 'Marker Set', 'Biography', 'Dictionary', 'Backpack'],
+    nouns: ['Book', 'Stationery', 'Supply', 'Material', 'Edition'],
     images: [
       'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300',

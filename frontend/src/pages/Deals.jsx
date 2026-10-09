@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const dealProducts = [
   {
-    id: 90001, brand: 'Sony', title: 'WH-1000XM5 Wireless Headphones',
+    id: 90001, brand: 'boAt', title: 'Rockerz 450 Bluetooth Headphones',
     price: 24990, originalPrice: 34990, discount: '29% OFF', rating: 4.8, reviews: '4.2k',
     endsIn: 12400, // seconds
     image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400&h=400'

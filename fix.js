@@ -1,0 +1,10 @@
+const fs = require('fs');
+let code = fs.readFileSync('frontend/generate_products.cjs', 'utf-8');
+code = code.replace(/nouns: \['T-Shirt'.*?\],/g, "nouns: ['Apparel', 'Wear', 'Clothing', 'Garment', 'Outfit', 'Fashion Item'],");
+code = code.replace(/nouns: \['Headphones'.*?\],/g, "nouns: ['Device', 'Gadget', 'Tech Product', 'Accessory', 'System', 'Electronics'],");
+code = code.replace(/nouns: \['Figure'.*?\],/g, "nouns: ['Toy', 'Game', 'Play Set', 'Collectible', 'Activity Set', 'Fun Item'],");
+code = code.replace(/nouns: \['Serum'.*?\],/g, "nouns: ['Care Item', 'Beauty Essential', 'Cosmetic', 'Treatment', 'Formula'],");
+code = code.replace(/nouns: \['Blender'.*?\],/g, "nouns: ['Appliance', 'Equipment', 'Home Tool', 'Kitchenware', 'Essential'],");
+code = code.replace(/nouns: \['Tent'.*?\],/g, "nouns: ['Gear', 'Equipment', 'Accessory', 'Sporting Good', 'Outdoor Item'],");
+code = code.replace(/nouns: \['Novel'.*?\],/g, "nouns: ['Book', 'Stationery', 'Supply', 'Material', 'Edition'],");
+fs.writeFileSync('frontend/generate_products.cjs', code);
