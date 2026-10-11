@@ -7,7 +7,7 @@ const categoriesData = [
     name: 'Pooja Samagri',
     slug: 'pooja-samagri',
     icon: <Flame size={24} />,
-    image: 'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=400&h=300',
+    image: 'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=400&h=300',
     subcategories: ['Agarbatti & Dhoop', 'Diya & Kapur', 'Brass Pooja Thali', 'Chandan & Roli'],
     itemCount: '5,000+'
   },

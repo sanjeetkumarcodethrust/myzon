@@ -18,14 +18,14 @@ const existingProducts = [
   { id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery', price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 15, brand: 'Apple', title: 'iPhone 15 Mobile Phone', category: 'electronics', price: 79900, originalPrice: 79900, discount: '0%', rating: 4.8, reviews: '12k+', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 16, brand: 'Samsung', title: 'Galaxy S23 Mobile', category: 'electronics', price: 74999, originalPrice: 89999, discount: '-17%', rating: 4.6, reviews: '8.5k+', image: 'https://images.unsplash.com/photo-1610945265064-3234dac1fbd0?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 17, brand: 'Cycle Pure', title: 'Parampara Agarbatti & Dhoop Combo', category: 'pooja-samagri', price: 149, originalPrice: 199, discount: '-25%', rating: 4.8, reviews: '3.4k', image: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 18, brand: 'Mangaldeep', title: 'Pure Brass Akhand Diya for Pooja', category: 'pooja-samagri', price: 299, originalPrice: 499, discount: '-40%', rating: 4.7, reviews: '1.8k', image: 'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 19, brand: 'Bhimseni', title: 'Pure Camphor Tablets (Kapur) 250g', category: 'pooja-samagri', price: 249, originalPrice: 350, discount: '-28%', rating: 4.9, reviews: '5.2k', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 20, brand: 'Patanjali', title: 'Organic Cow Ghee Diya Wicks (Batti) 100pcs', category: 'pooja-samagri', price: 180, originalPrice: 220, discount: '-18%', rating: 4.6, reviews: '2.9k', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 21, brand: 'Isha Life', title: 'Traditional Engraved Brass Pooja Thali Set', category: 'pooja-samagri', price: 799, originalPrice: 1299, discount: '-38%', rating: 4.8, reviews: '940', image: 'https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 22, brand: 'Phool', title: 'Organic Rose & Sandalwood Havan Dhoop Cups', category: 'pooja-samagri', price: 320, originalPrice: 400, discount: '-20%', rating: 4.7, reviews: '1.1k', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 23, brand: 'Mangaldeep', title: 'Pure Sandalwood Chandan Tika with Kumkum', category: 'pooja-samagri', price: 120, originalPrice: 160, discount: '-25%', rating: 4.5, reviews: '820', image: 'https://images.unsplash.com/photo-1609137144822-26d9c6c2e399?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 24, brand: 'Cycle Pure', title: 'Natural Gangajal Holy Water 500ml', category: 'pooja-samagri', price: 99, originalPrice: 120, discount: '-17%', rating: 4.9, reviews: '4.6k', image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=300&h=300' }
+  { id: 17, brand: 'Cycle Pure', title: 'Parampara Agarbatti & Dhoop Combo', category: 'pooja-samagri', price: 149, originalPrice: 199, discount: '-25%', rating: 4.8, reviews: '3.4k', image: 'https://images.unsplash.com/photo-1512917860049-18d416baa831?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 18, brand: 'Mangaldeep', title: 'Pure Brass Akhand Diya for Pooja', category: 'pooja-samagri', price: 299, originalPrice: 499, discount: '-40%', rating: 4.7, reviews: '1.8k', image: 'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 19, brand: 'Bhimseni', title: 'Pure Camphor Tablets (Kapur) 250g', category: 'pooja-samagri', price: 249, originalPrice: 350, discount: '-28%', rating: 4.9, reviews: '5.2k', image: 'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 20, brand: 'Patanjali', title: 'Organic Cow Ghee Diya Wicks (Batti) 100pcs', category: 'pooja-samagri', price: 180, originalPrice: 220, discount: '-18%', rating: 4.6, reviews: '2.9k', image: 'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 21, brand: 'Isha Life', title: 'Traditional Engraved Brass Pooja Thali Set', category: 'pooja-samagri', price: 799, originalPrice: 1299, discount: '-38%', rating: 4.8, reviews: '940', image: 'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 22, brand: 'Phool', title: 'Organic Rose & Sandalwood Havan Dhoop Cups', category: 'pooja-samagri', price: 320, originalPrice: 400, discount: '-20%', rating: 4.7, reviews: '1.1k', image: 'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 23, brand: 'Mangaldeep', title: 'Pure Sandalwood Chandan Tika with Kumkum', category: 'pooja-samagri', price: 120, originalPrice: 160, discount: '-25%', rating: 4.5, reviews: '820', image: 'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 24, brand: 'Cycle Pure', title: 'Auspicious Coconut & Pooja Samagri Kit', category: 'pooja-samagri', price: 199, originalPrice: 250, discount: '-20%', rating: 4.9, reviews: '4.6k', image: 'https://images.unsplash.com/photo-1764304589223-30bfbfdaa9ef?auto=format&fit=crop&q=80&w=300&h=300' }
 ];
 
 const categoryConfig = {
@@ -293,16 +293,19 @@ const categoryConfig = {
     adjs: ['Pure', 'Aromatic', 'Sacred', 'Traditional', 'Organic', 'Handcrafted', 'Divine', 'Premium', 'Natural'],
     nouns: ['Pooja Samagri', 'Agarbatti Pack', 'Dhoop Batti', 'Brass Diya', 'Camphor Kapur', 'Chandan Tika', 'Havan Cups', 'Ghee Wicks', 'Pooja Thali Item'],
     images: [
-      'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1609137144822-26d9c6c2e399?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&q=80&w=300&h=300'
+      'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1512917860049-18d416baa831?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1635192592106-77a5aacbe1a3?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1551690935-a9e6f0a7e788?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1764304589223-30bfbfdaa9ef?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1776581496885-7dda8471060e?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1630764883473-e8c2056f0589?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=300&h=300'
     ]
   }
 };
