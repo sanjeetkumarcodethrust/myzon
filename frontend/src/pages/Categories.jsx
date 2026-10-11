@@ -1,10 +1,19 @@
 import React from 'react';
-import { Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, BookOpen, Puzzle, Car, Grid, ChevronRight } from 'lucide-react';
+import { Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, BookOpen, Puzzle, Car, Grid, ChevronRight, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const categoriesData = [
   { 
+    name: 'Pooja Samagri',
+    slug: 'pooja-samagri',
+    icon: <Flame size={24} />,
+    image: 'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=400&h=300',
+    subcategories: ['Agarbatti & Dhoop', 'Diya & Kapur', 'Brass Pooja Thali', 'Chandan & Roli'],
+    itemCount: '5,000+'
+  },
+  { 
     name: 'Electronics', 
+    slug: 'electronics',
     icon: <Laptop size={24} />,
     image: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&q=80&w=400&h=300',
     subcategories: ['Laptops', 'Smartphones', 'Audio', 'Cameras'],
@@ -12,6 +21,7 @@ const categoriesData = [
   },
   { 
     name: 'Fashion', 
+    slug: 'fashion',
     icon: <Shirt size={24} />,
     image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&q=80&w=400&h=300',
     subcategories: ['Men\'s Clothing', 'Women\'s Clothing', 'Shoes', 'Accessories'],
@@ -98,7 +108,7 @@ export const Categories = () => {
                 ))}
               </ul>
               
-              <Link to={`/shop?category=${category.name.toLowerCase()}`} className="block w-full text-center bg-gray-50 text-gray-900 hover:bg-orange-500 hover:text-white font-bold py-2.5 rounded-lg transition-colors">
+              <Link to={`/shop?category=${category.slug || category.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} className="block w-full text-center bg-gray-50 text-gray-900 hover:bg-orange-500 hover:text-white font-bold py-2.5 rounded-lg transition-colors">
                 View All in {category.name}
               </Link>
             </div>

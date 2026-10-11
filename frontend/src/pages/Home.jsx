@@ -2,11 +2,12 @@ import React from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { 
   Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, 
-  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star, Heart
+  BookOpen, Puzzle, Car, Grid, ChevronRight, Truck, RefreshCcw, ShieldCheck, ShoppingCart, Trash2, Star, Heart, Flame
 } from 'lucide-react';
 import { useCartStore, useWishlistStore } from '../store/useStore';
 
 const categories = [
+  { name: 'Pooja Samagri', icon: <Flame size={18} />, slug: 'pooja-samagri' },
   { name: 'Electronics', icon: <Laptop size={18} />, slug: 'electronics' },
   { name: 'Fashion', icon: <Shirt size={18} />, slug: 'fashion' },
   { name: 'Home & Kitchen', icon: <HomeIcon size={18} />, slug: 'home-kitchen' },
@@ -115,16 +116,16 @@ export const Home = () => {
           <div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-gray-900">Shop by Categories</h3>
-              <button className="text-orange-500 text-sm font-bold border border-orange-200 bg-orange-50 px-4 py-1.5 rounded hover:bg-orange-100 transition-colors">View All</button>
+              <Link to="/categories" className="text-orange-500 text-sm font-bold border border-orange-200 bg-orange-50 px-4 py-1.5 rounded hover:bg-orange-100 transition-colors">View All</Link>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-              {categories.slice(0, 8).map((cat, i) => (
-                <div key={i} className="flex flex-col items-center gap-3 min-w-[100px] cursor-pointer group">
+              {categories.filter(c => c.slug !== 'all').map((cat, i) => (
+                <Link to={`/shop?category=${cat.slug}`} key={i} className="flex flex-col items-center gap-3 min-w-[100px] cursor-pointer group">
                   <div className="w-20 h-20 bg-gray-50 border border-gray-100 rounded-2xl flex items-center justify-center text-gray-500 group-hover:border-orange-500 group-hover:bg-orange-50 transition-colors shadow-sm">
                     {React.cloneElement(cat.icon, { size: 32, className: "group-hover:text-orange-500" })}
                   </div>
                   <span className="text-xs font-medium text-gray-700 text-center">{cat.name}</span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

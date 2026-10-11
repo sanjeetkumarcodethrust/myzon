@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, BookOpen, Puzzle } from 'lucide-react';
+import { ChevronDown, Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, BookOpen, Puzzle, Flame } from 'lucide-react';
 
 export const Navigation = () => {
   const links = [
@@ -14,6 +14,7 @@ export const Navigation = () => {
   ];
 
   const categories = [
+    { name: 'Pooja Samagri', path: '/shop?category=pooja-samagri', icon: <Flame size={16} /> },
     { name: 'Electronics', path: '/shop?category=electronics', icon: <Laptop size={16} /> },
     { name: 'Fashion', path: '/shop?category=fashion', icon: <Shirt size={16} /> },
     { name: 'Home & Kitchen', path: '/shop?category=home-kitchen', icon: <HomeIcon size={16} /> },

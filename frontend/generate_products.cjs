@@ -17,7 +17,15 @@ const existingProducts = [
   { id: 13, brand: 'Nivia', title: 'Storm Football - Size 5', category: 'sports-outdoors', price: 450, originalPrice: 850, discount: '-47%', rating: 4.3, reviews: '2.1k', image: 'https://images.unsplash.com/photo-1614632537190-23e4146777db?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery', price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 15, brand: 'Apple', title: 'iPhone 15 Mobile Phone', category: 'electronics', price: 79900, originalPrice: 79900, discount: '0%', rating: 4.8, reviews: '12k+', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 16, brand: 'Samsung', title: 'Galaxy S23 Mobile', category: 'electronics', price: 74999, originalPrice: 89999, discount: '-17%', rating: 4.6, reviews: '8.5k+', image: 'https://images.unsplash.com/photo-1610945265064-3234dac1fbd0?auto=format&fit=crop&q=80&w=300&h=300' }
+  { id: 16, brand: 'Samsung', title: 'Galaxy S23 Mobile', category: 'electronics', price: 74999, originalPrice: 89999, discount: '-17%', rating: 4.6, reviews: '8.5k+', image: 'https://images.unsplash.com/photo-1610945265064-3234dac1fbd0?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 17, brand: 'Cycle Pure', title: 'Parampara Agarbatti & Dhoop Combo', category: 'pooja-samagri', price: 149, originalPrice: 199, discount: '-25%', rating: 4.8, reviews: '3.4k', image: 'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 18, brand: 'Mangaldeep', title: 'Pure Brass Akhand Diya for Pooja', category: 'pooja-samagri', price: 299, originalPrice: 499, discount: '-40%', rating: 4.7, reviews: '1.8k', image: 'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 19, brand: 'Bhimseni', title: 'Pure Camphor Tablets (Kapur) 250g', category: 'pooja-samagri', price: 249, originalPrice: 350, discount: '-28%', rating: 4.9, reviews: '5.2k', image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 20, brand: 'Patanjali', title: 'Organic Cow Ghee Diya Wicks (Batti) 100pcs', category: 'pooja-samagri', price: 180, originalPrice: 220, discount: '-18%', rating: 4.6, reviews: '2.9k', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 21, brand: 'Isha Life', title: 'Traditional Engraved Brass Pooja Thali Set', category: 'pooja-samagri', price: 799, originalPrice: 1299, discount: '-38%', rating: 4.8, reviews: '940', image: 'https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 22, brand: 'Phool', title: 'Organic Rose & Sandalwood Havan Dhoop Cups', category: 'pooja-samagri', price: 320, originalPrice: 400, discount: '-20%', rating: 4.7, reviews: '1.1k', image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 23, brand: 'Mangaldeep', title: 'Pure Sandalwood Chandan Tika with Kumkum', category: 'pooja-samagri', price: 120, originalPrice: 160, discount: '-25%', rating: 4.5, reviews: '820', image: 'https://images.unsplash.com/photo-1609137144822-26d9c6c2e399?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 24, brand: 'Cycle Pure', title: 'Natural Gangajal Holy Water 500ml', category: 'pooja-samagri', price: 99, originalPrice: 120, discount: '-17%', rating: 4.9, reviews: '4.6k', image: 'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=300&h=300' }
 ];
 
 const categoryConfig = {
@@ -279,6 +287,23 @@ const categoryConfig = {
       'https://images.unsplash.com/photo-1563396983906-b3795482a59a?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1517971053567-8bde93bc6a58?auto=format&fit=crop&q=80&w=300&h=300',
     ]
+  },
+  'pooja-samagri': {
+    brands: ['Mangaldeep', 'Cycle Pure', 'Phool', 'Patanjali', 'Zed Black', 'Bhimseni', 'Isha Life', 'Moksh'],
+    adjs: ['Pure', 'Aromatic', 'Sacred', 'Traditional', 'Organic', 'Handcrafted', 'Divine', 'Premium', 'Natural'],
+    nouns: ['Pooja Samagri', 'Agarbatti Pack', 'Dhoop Batti', 'Brass Diya', 'Camphor Kapur', 'Chandan Tika', 'Havan Cups', 'Ghee Wicks', 'Pooja Thali Item'],
+    images: [
+      'https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1616423640778-28d1b53229bd?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1609137144822-26d9c6c2e399?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&q=80&w=300&h=300'
+    ]
   }
 };
 
@@ -292,7 +317,8 @@ const categoriesToGenerate = [
   'beauty-health',
   'home-kitchen',
   'sports-outdoors',
-  'books-stationery'
+  'books-stationery',
+  'pooja-samagri'
 ];
 
 // Track per-category image index so images cycle sequentially (no repeats until all used)
@@ -309,7 +335,9 @@ for (const cat of categoriesToGenerate) {
     
     let originalPrice;
     const priceCategory = Math.random();
-    if (priceCategory < 0.3) {
+    if (cat === 'pooja-samagri') {
+      originalPrice = Math.floor(Math.random() * 800) + 99;
+    } else if (priceCategory < 0.3) {
       originalPrice = Math.floor(Math.random() * 4000) + 500;
     } else if (priceCategory < 0.7) {
       originalPrice = Math.floor(Math.random() * 15000) + 6000;

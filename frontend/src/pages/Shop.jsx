@@ -110,7 +110,7 @@ export const Shop = () => {
                       className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
                     />
                     <span className="text-sm text-gray-600 group-hover:text-orange-500">
-                      {catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' & ')}
+                      {catSlug === 'pooja-samagri' ? 'Pooja Samagri' : catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' & ')}
                     </span>
                   </label>
                 ))}
