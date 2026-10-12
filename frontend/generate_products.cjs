@@ -301,20 +301,116 @@ const categoryConfig = {
       'Electric Camphor Burner Dani', 'Supari Betel Nuts Pack'
     ],
     images: [
-      'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1512917860049-18d416baa831?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1635192592106-77a5aacbe1a3?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1551690935-a9e6f0a7e788?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1764304589223-30bfbfdaa9ef?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1776581496885-7dda8471060e?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1630764883473-e8c2056f0589?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=300&h=300'
-    ]
+      'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1776581496885-7dda8471060e?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=400&h=400',
+      'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=400&h=400'
+    ],
+    nounImages: {
+      'Agarbatti Incense Pack': [
+        'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Brass Agarbatti Stand Holder': [
+        'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Dhoop Batti Sticks': [
+        'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1630764883473-e8c2056f0589?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Tulsi Dhoop Cones': [
+        'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Havan Dhoop Cups': [
+        'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1630764883473-e8c2056f0589?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Sambrani Loban Dhoop': [
+        'https://images.unsplash.com/photo-1771929712047-3e7022669175?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Brass Akhand Diya': [
+        'https://images.unsplash.com/photo-1776581496885-7dda8471060e?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Pancha Aarti Diya': [
+        'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Organic Ghee Wicks': [
+        'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Cotton Phool Batti Wicks': [
+        'https://images.unsplash.com/photo-1781325118137-7bab3fc4dc4c?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1776581496885-7dda8471060e?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Camphor Kapur Tablets': [
+        'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1542385151-efd9000785a0?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Electric Camphor Burner Dani': [
+        'https://images.unsplash.com/photo-1541795083-1b160cf4f3d7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Chandan Tika Paste': [
+        'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Kesar Ashtagandha Paste': [
+        'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1615655406736-b37c4fabf923?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Haldi Kumkum Sindoor Set': [
+        'https://images.unsplash.com/photo-1754277198657-c288797a30a7?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1615655406736-b37c4fabf923?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Brass Pooja Thali Set': [
+        'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Brass Pooja Bell': [
+        'https://images.unsplash.com/photo-1635192592106-77a5aacbe1a3?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Brass Kalash Lota': [
+        'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Red Aasan Cloth': [
+        'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1604176354204-9268737828e4?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Sacred Mouli Kalava Thread': [
+        'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Rudraksha Japa Mala': [
+        'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Kamal Gatta Mala': [
+        'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1551690935-a9e6f0a7e788?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Havan Samagri Herbs Mix': [
+        'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Gangajal Holy Water': [
+        'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&q=80&w=400&h=400'
+      ],
+      'Supari Betel Nuts Pack': [
+        'https://images.unsplash.com/photo-1764304589223-30bfbfdaa9ef?auto=format&fit=crop&q=80&w=400&h=400',
+        'https://images.unsplash.com/photo-1512917860049-18d416baa831?auto=format&fit=crop&q=80&w=400&h=400'
+      ]
+    }
   }
 };
 
@@ -334,6 +430,7 @@ const categoriesToGenerate = [
 
 // Track per-category image index so images cycle sequentially (no repeats until all used)
 const imageCounters = {};
+const nounImageCounters = {};
 
 // Track seen product titles across the entire dataset to eliminate all duplicate / double items
 const seenTitles = new Set();
@@ -378,9 +475,17 @@ for (const cat of categoriesToGenerate) {
     const rating = (Math.random() * 2 + 3).toFixed(1); 
     const reviews = Math.floor(Math.random() * 5000) + 10;
     
-    // Cycle through images sequentially so each consecutive product gets a different image
-    const image = config.images[imageCounters[cat] % config.images.length];
-    imageCounters[cat]++;
+    // Pick image based on specific noun if available (guarantees accurate item-to-image matching), otherwise cycle category images
+    let image;
+    if (config.nounImages && config.nounImages[noun]) {
+      const nounList = config.nounImages[noun];
+      nounImageCounters[noun] = (nounImageCounters[noun] || 0);
+      image = nounList[nounImageCounters[noun] % nounList.length];
+      nounImageCounters[noun]++;
+    } else {
+      image = config.images[imageCounters[cat] % config.images.length];
+      imageCounters[cat]++;
+    }
 
     products.push({
       id: currentId++,
