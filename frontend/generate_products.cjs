@@ -17,7 +17,7 @@ const existingProducts = [
   { id: 13, brand: 'Nivia', title: 'Storm Football - Size 5', category: 'sports-outdoors', price: 450, originalPrice: 850, discount: '-47%', rating: 4.3, reviews: '2.1k', image: 'https://images.unsplash.com/photo-1614632537190-23e4146777db?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 14, brand: 'Penguin', title: 'Atomic Habits by James Clear', category: 'books-stationery', price: 499, originalPrice: 799, discount: '-37%', rating: 4.8, reviews: '15k+', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 15, brand: 'Apple', title: 'iPhone 15 Mobile Phone', category: 'electronics', price: 79900, originalPrice: 79900, discount: '0%', rating: 4.8, reviews: '12k+', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=300&h=300' },
-  { id: 16, brand: 'Samsung', title: 'Galaxy S23 Mobile', category: 'electronics', price: 74999, originalPrice: 89999, discount: '-17%', rating: 4.6, reviews: '8.5k+', image: 'https://images.unsplash.com/photo-1610945265064-3234dac1fbd0?auto=format&fit=crop&q=80&w=300&h=300' },
+  { id: 16, brand: 'OnePlus', title: 'OnePlus 12 5G Smartphone', category: 'electronics', price: 64999, originalPrice: 69999, discount: '-7%', rating: 4.7, reviews: '6.2k+', image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 17, brand: 'Cycle Pure', title: 'Parampara Agarbatti & Dhoop Combo', category: 'pooja-samagri', price: 149, originalPrice: 199, discount: '-25%', rating: 4.8, reviews: '3.4k', image: 'https://images.unsplash.com/photo-1512917860049-18d416baa831?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 18, brand: 'Mangaldeep', title: 'Pure Brass Akhand Diya for Pooja', category: 'pooja-samagri', price: 299, originalPrice: 499, discount: '-40%', rating: 4.7, reviews: '1.8k', image: 'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=300&h=300' },
   { id: 19, brand: 'Bhimseni', title: 'Pure Camphor Tablets (Kapur) 250g', category: 'pooja-samagri', price: 249, originalPrice: 350, discount: '-28%', rating: 4.9, reviews: '5.2k', image: 'https://images.unsplash.com/photo-1636619773834-c7e0762ddfe1?auto=format&fit=crop&q=80&w=300&h=300' },
@@ -136,7 +136,7 @@ const categoryConfig = {
       'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1598517834862-ad0e47a0aebc?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1610395219791-21b8234f92ac?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1533294455009-a77b7557d2d1?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1504707748692-419802426aae?auto=format&fit=crop&q=80&w=300&h=300',
     ]
   },
@@ -246,7 +246,7 @@ const categoryConfig = {
       'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1526401485004-46910ecc8e51?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1540539234-c14a20fb7c7b?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&q=80&w=300&h=300',
     ]
@@ -289,9 +289,17 @@ const categoryConfig = {
     ]
   },
   'pooja-samagri': {
-    brands: ['Mangaldeep', 'Cycle Pure', 'Phool', 'Patanjali', 'Zed Black', 'Bhimseni', 'Isha Life', 'Moksh'],
-    adjs: ['Pure', 'Aromatic', 'Sacred', 'Traditional', 'Organic', 'Handcrafted', 'Divine', 'Premium', 'Natural'],
-    nouns: ['Pooja Samagri', 'Agarbatti Pack', 'Dhoop Batti', 'Brass Diya', 'Camphor Kapur', 'Chandan Tika', 'Havan Cups', 'Ghee Wicks', 'Pooja Thali Item'],
+    brands: ['Mangaldeep', 'Cycle Pure', 'Phool', 'Patanjali', 'Zed Black', 'Bhimseni', 'Isha Life', 'Moksh', 'Hari Darshan', 'Tirupati', 'Kaveri', 'Soulflower'],
+    adjs: ['Pure', 'Aromatic', 'Sacred', 'Traditional', 'Organic', 'Handcrafted', 'Divine', 'Premium', 'Natural', 'Vedic', 'Auspicious', 'Authentic', 'Original', 'Fragrant', 'Holy'],
+    nouns: [
+      'Agarbatti Incense Pack', 'Dhoop Batti Sticks', 'Brass Akhand Diya', 'Camphor Kapur Tablets',
+      'Chandan Tika Paste', 'Havan Dhoop Cups', 'Organic Ghee Wicks', 'Brass Pooja Thali Set',
+      'Sambrani Loban Dhoop', 'Gangajal Holy Water', 'Brass Pooja Bell', 'Red Aasan Cloth',
+      'Rudraksha Japa Mala', 'Kamal Gatta Mala', 'Haldi Kumkum Sindoor Set', 'Pancha Aarti Diya',
+      'Brass Kalash Lota', 'Havan Samagri Herbs Mix', 'Kesar Ashtagandha Paste', 'Tulsi Dhoop Cones',
+      'Cotton Phool Batti Wicks', 'Sacred Mouli Kalava Thread', 'Brass Agarbatti Stand Holder',
+      'Electric Camphor Burner Dani', 'Supari Betel Nuts Pack'
+    ],
     images: [
       'https://images.unsplash.com/photo-1742984039016-4b34a90a0fe6?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1775427528127-a66ce3bb2bcb?auto=format&fit=crop&q=80&w=300&h=300',
@@ -327,15 +335,32 @@ const categoriesToGenerate = [
 // Track per-category image index so images cycle sequentially (no repeats until all used)
 const imageCounters = {};
 
+// Track seen product titles across the entire dataset to eliminate all duplicate / double items
+const seenTitles = new Set();
+existingProducts.forEach(p => seenTitles.add(p.title.trim().toLowerCase()));
+
 for (const cat of categoriesToGenerate) {
   const config = categoryConfig[cat];
   imageCounters[cat] = 0;
 
   for (let i = 0; i < 500; i++) {
-    const brand = config.brands[Math.floor(Math.random() * config.brands.length)];
-    const adj = config.adjs[Math.floor(Math.random() * config.adjs.length)];
-    const noun = config.nouns[Math.floor(Math.random() * config.nouns.length)];
-    
+    let brand, adj, noun, title;
+    let attempts = 0;
+
+    do {
+      brand = config.brands[Math.floor(Math.random() * config.brands.length)];
+      adj = config.adjs[Math.floor(Math.random() * config.adjs.length)];
+      noun = config.nouns[Math.floor(Math.random() * config.nouns.length)];
+      title = `${adj} ${brand} ${noun}`;
+      attempts++;
+      if (attempts > 1000) {
+        title = `${adj} ${brand} ${noun} ${i + 1}`;
+        break;
+      }
+    } while (seenTitles.has(title.toLowerCase()));
+
+    seenTitles.add(title.toLowerCase());
+
     let originalPrice;
     const priceCategory = Math.random();
     if (cat === 'pooja-samagri') {
@@ -360,7 +385,7 @@ for (const cat of categoriesToGenerate) {
     products.push({
       id: currentId++,
       brand,
-      title: `${adj} ${brand} ${noun}`,
+      title,
       category: cat,
       price,
       originalPrice,
