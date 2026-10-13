@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, Star, ShoppingCart, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCartStore } from '../store/useStore';
 
 export const dealProducts = [
   {
@@ -54,6 +55,8 @@ const CountdownTimer = ({ initialSeconds }) => {
 };
 
 export const Deals = () => {
+  const { addToCart } = useCartStore();
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-8">
       {/* Hero Banner */}
@@ -64,9 +67,9 @@ export const Deals = () => {
           </div>
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4">Biggest Sale of the Season</h1>
           <p className="text-white/80 text-lg mb-8">Save up to 70% on top electronics, fashion, and home appliances. Hurry, offers end soon!</p>
-          <button className="bg-white text-red-600 hover:bg-gray-50 font-bold px-8 py-3 rounded-lg transition-colors shadow-lg">
+          <Link to="/shop" className="bg-white text-red-600 hover:bg-gray-50 font-bold px-8 py-3 rounded-lg transition-colors shadow-lg inline-block">
             Shop All Deals
-          </button>
+          </Link>
         </div>
         
         {/* Graphic */}
@@ -89,10 +92,6 @@ export const Deals = () => {
             </div>
           </div>
         </div>
-        
-        {/* Background Decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-400 opacity-20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
       </div>
 
       <div className="mb-6 flex justify-between items-center">
@@ -135,7 +134,11 @@ export const Deals = () => {
                   <div className="text-sm text-gray-400 line-through mb-0.5">₹{product.originalPrice.toLocaleString()}</div>
                   <div className="text-2xl font-black text-gray-900">₹{product.price.toLocaleString()}</div>
                 </div>
-                <button className="bg-gray-900 text-white p-3 rounded-xl hover:bg-orange-500 transition-colors shadow-sm group-hover:shadow-md">
+                <button 
+                  onClick={() => addToCart(product)}
+                  className="bg-gray-900 text-white p-3 rounded-xl hover:bg-orange-500 transition-colors shadow-sm group-hover:shadow-md cursor-pointer"
+                  title="Add to Cart"
+                >
                   <ShoppingCart size={20} />
                 </button>
               </div>

@@ -1,67 +1,66 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Laptop, Shirt, Home as HomeIcon, HeartPulse, Dumbbell, BookOpen, Puzzle, Flame } from 'lucide-react';
+import { Menu, Zap, Sparkles, Flame, Shield, Gift } from 'lucide-react';
+import { useUIStore } from '../store/useStore';
 
 export const Navigation = () => {
-  const links = [
-    { name: 'Home', path: '/', active: true },
-    { name: 'Shop', path: '/shop' },
-    { name: 'Categories', path: '/categories', hasDropdown: true },
-    { name: 'Deals', path: '/deals' },
-    { name: 'New Arrivals', path: '/new-arrivals' },
-    { name: 'Brands', path: '/brands' },
-    { name: 'Track Order', path: '/track-order' },
-  ];
+  const { openDrawer } = useUIStore();
 
-  const categories = [
-    { name: 'Pooja Samagri', path: '/shop?category=pooja-samagri', icon: <Flame size={16} /> },
-    { name: 'Electronics', path: '/shop?category=electronics', icon: <Laptop size={16} /> },
-    { name: 'Fashion', path: '/shop?category=fashion', icon: <Shirt size={16} /> },
-    { name: 'Home & Kitchen', path: '/shop?category=home-kitchen', icon: <HomeIcon size={16} /> },
-    { name: 'Beauty & Health', path: '/shop?category=beauty-health', icon: <HeartPulse size={16} /> },
-    { name: 'Sports & Outdoors', path: '/shop?category=sports-outdoors', icon: <Dumbbell size={16} /> },
-    { name: 'Books & Stationery', path: '/shop?category=books-stationery', icon: <BookOpen size={16} /> },
-    { name: 'Toys & Games', path: '/shop?category=toys-games', icon: <Puzzle size={16} /> },
+  const navItems = [
+    { name: "⚡ Today's Deals", path: '/deals', highlight: true },
+    { name: '🪔 Pooja Samagri', path: '/shop?category=pooja-samagri', festive: true },
+    { name: '📱 Mobiles', path: '/shop?category=electronics' },
+    { name: '💻 Electronics', path: '/shop?category=electronics' },
+    { name: '👗 Fashion', path: '/shop?category=fashion' },
+    { name: '🏠 Home & Kitchen', path: '/shop?category=home-kitchen' },
+    { name: '⭐ Best Sellers', path: '/shop?sort=Avg.+Customer+Review' },
+    { name: 'New Arrivals', path: '/new-arrivals' },
+    { name: 'Customer Service', path: '/track-order' },
+    { name: 'Myzon Pay', path: '/cart' },
   ];
 
   return (
-    <div className="bg-white border-b border-gray-100 hidden md:block">
-      <div className="max-w-[1600px] mx-auto px-4">
-        <ul className="flex items-center gap-8 text-sm font-medium text-gray-700">
-          {links.map((link, index) => (
-            <li key={index} className="relative group">
-              <Link 
-                to={link.path} 
-                className={`flex items-center gap-1 py-4 border-b-2 transition-colors ${
-                  link.active ? 'border-orange-500 text-orange-500' : 'border-transparent hover:text-orange-500'
-                }`}
-              >
-                {link.name}
-                {link.hasDropdown && <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />}
-              </Link>
+    <div className="bg-[#232f3e] text-white text-xs border-b border-gray-700/60 overflow-x-auto hide-scrollbar">
+      <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between min-w-max gap-4">
+        
+        {/* Left Side Links */}
+        <div className="flex items-center gap-1 py-1.5">
+          {/* Amazon Iconic "All" Hamburger Button */}
+          <button
+            onClick={openDrawer}
+            className="flex items-center gap-1.5 py-1 px-2.5 rounded-xs font-bold hover:ring-1 hover:ring-white transition-all text-white cursor-pointer mr-1"
+          >
+            <Menu size={16} />
+            <span>All</span>
+          </button>
 
-              {link.hasDropdown && (
-                <div className="absolute top-full left-0 w-64 bg-white border border-gray-100 shadow-xl shadow-gray-200/50 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden transform translate-y-2 group-hover:translate-y-0">
-                  <ul className="py-2">
-                    {categories.map((cat, idx) => (
-                      <li key={idx}>
-                        <Link to={cat.path} className="flex items-center gap-3 px-4 py-2.5 hover:bg-orange-50 hover:text-orange-500 text-gray-600 transition-colors">
-                          <span className="text-gray-400">{cat.icon}</span>
-                          <span className="text-sm font-medium">{cat.name}</span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="border-t border-gray-100 bg-gray-50 p-3">
-                    <Link to="/categories" className="text-xs font-bold text-orange-500 hover:underline block text-center">
-                      View All Categories
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </li>
+          {/* Nav Links */}
+          {navItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+              className={`py-1 px-2.5 rounded-xs transition-all hover:ring-1 hover:ring-white whitespace-nowrap font-medium ${
+                item.festive
+                  ? 'text-[#ffe500] font-bold bg-amber-900/30'
+                  : item.highlight
+                  ? 'text-[#febd69] font-bold'
+                  : 'text-gray-200 hover:text-white'
+              }`}
+            >
+              {item.name}
+            </Link>
           ))}
-        </ul>
+        </div>
+
+        {/* Right Side: Prime / Plus Banner (Amazon / Flipkart Hybrid) */}
+        <Link
+          to="/deals"
+          className="hidden xl:flex items-center gap-2 py-1 px-3 text-[#febd69] hover:text-white font-bold transition-colors shrink-0"
+        >
+          <Sparkles size={14} className="text-[#ffe500]" />
+          <span>Join Myzon Prime | Free Delivery & Watch</span>
+        </Link>
+
       </div>
     </div>
   );

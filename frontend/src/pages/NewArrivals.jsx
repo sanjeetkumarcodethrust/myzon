@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles, ShoppingCart, Star, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCartStore } from '../store/useStore';
 
 export const newArrivals = [
   {
@@ -30,6 +31,8 @@ export const newArrivals = [
 ];
 
 export const NewArrivals = () => {
+  const { addToCart } = useCartStore();
+
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-8">
       <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl p-8 md:p-16 text-white mb-10 relative overflow-hidden">
@@ -97,7 +100,11 @@ export const NewArrivals = () => {
                     <div className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</div>
                   )}
                 </div>
-                <button className="bg-purple-600 text-white h-10 w-10 rounded-full flex items-center justify-center hover:bg-purple-700 transition-colors shadow-sm group-hover:shadow-md group-hover:scale-105">
+                <button 
+                  onClick={() => addToCart(product)}
+                  className="bg-purple-600 text-white h-10 w-10 rounded-full flex items-center justify-center hover:bg-purple-700 transition-colors shadow-sm group-hover:shadow-md group-hover:scale-105 cursor-pointer"
+                  title="Add to Cart"
+                >
                   <ShoppingCart size={18} />
                 </button>
               </div>

@@ -1,14 +1,36 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sparkles, Smartphone, HelpCircle, Shield, ShoppingBag } from 'lucide-react';
 
 export const TopBar = () => {
   return (
-    <div className="bg-gray-900 text-white text-xs py-2 px-4 flex justify-center items-center gap-2">
-      <Star className="text-orange-500 h-4 w-4 fill-current" />
-      <span className="font-medium">Big Summer Sale is Live! Get up to 50% OFF on selected items.</span>
-      <button className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-1 rounded text-xs font-bold transition-colors">
-        Shop Now
-      </button>
+    <div className="bg-[#131921] text-gray-300 text-[11px] py-1.5 px-4 border-b border-gray-800">
+      <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+        {/* Sale Tag */}
+        <div className="flex items-center gap-2 overflow-hidden">
+          <span className="bg-[#cc0c39] text-white font-extrabold text-[9px] px-2 py-0.5 rounded tracking-wide uppercase flex items-center gap-1 shrink-0">
+            <Sparkles size={10} /> Live Now
+          </span>
+          <span className="font-medium text-white truncate">
+            <strong>The Great Indian Festival:</strong> Up to 80% Off on Top Brands + Extra 10% Instant Discount on HDFC & SBI Cards!
+          </span>
+        </div>
+
+        {/* Quick Links */}
+        <div className="hidden lg:flex items-center gap-5 text-gray-300 shrink-0">
+          <Link to="/track-order" className="hover:text-[#febd69] transition-colors flex items-center gap-1">
+            <ShoppingBag size={12} /> Track Order
+          </Link>
+          <span className="text-gray-600">|</span>
+          <Link to="/shop" className="hover:text-[#febd69] transition-colors">
+            Sell on Myzon
+          </Link>
+          <span className="text-gray-600">|</span>
+          <Link to="/track-order" className="hover:text-[#febd69] transition-colors flex items-center gap-1">
+            <HelpCircle size={12} /> 24x7 Customer Service
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

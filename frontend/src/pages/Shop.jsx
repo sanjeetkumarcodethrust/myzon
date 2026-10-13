@@ -1,42 +1,40 @@
 import React, { useState } from 'react';
-import { Star, ShoppingCart, Filter, ChevronDown, Heart } from 'lucide-react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { useCartStore, useWishlistStore } from '../store/useStore';
-
+import { Filter, ChevronDown, Sparkles, X } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { ProductCard } from '../components/ProductCard';
 import productsData from '../data/products.json';
-const products = productsData;
 
 const priceRanges = [
-  { label: 'Under ₹1,000',       min: 0,     max: 999 },
-  { label: '₹1,000 - ₹5,000',   min: 1000,  max: 5000 },
-  { label: '₹5,000 - ₹20,000',  min: 5000,  max: 20000 },
-  { label: 'Over ₹20,000',       min: 20001, max: Infinity },
+  { label: 'Under ₹1,000',      min: 0,     max: 999 },
+  { label: '₹1,000 - ₹5,000',  min: 1000,  max: 5000 },
+  { label: '₹5,000 - ₹20,000', min: 5000,  max: 20000 },
+  { label: 'Over ₹20,000',      min: 20001, max: Infinity },
 ];
 
 export const Shop = () => {
-  const { addToCart, cartItems } = useCartStore();
-  const { addToWishlist, wishlistItems } = useWishlistStore();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const categoryParam = searchParams.get('category') || '';
   const brandParam = searchParams.get('brand') || '';
   const priceParam = searchParams.get('price') || '';
-  const sortOption = searchParams.get('sort') || 'Featured';
+  const sortOption = searchParams.get('sort') || 'Relevance';
   const selectedPrice = priceRanges.find(r => r.label === priceParam) || null;
 
-  const productsMatchingQuery = products.filter(product => {
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 24;
+
+  const productsMatchingQuery = productsData.filter(product => {
     if (!query) return true;
     const q = query.toLowerCase();
-    
-    if (product.title.toLowerCase().includes(q)) return true;
-    if (product.brand.toLowerCase().includes(q)) return true;
-    if (product.category.toLowerCase().includes(q.replace('-', ' '))) return true;
-    if (product.description && product.description.toLowerCase().includes(q)) return true;
-    
-    return false;
+    return (
+      product.title.toLowerCase().includes(q) ||
+      product.brand.toLowerCase().includes(q) ||
+      product.category.toLowerCase().includes(q.replace('-', ' '))
+    );
   });
 
-  const dynamicCategories = Array.from(new Set(productsMatchingQuery.map(p => p.category)));
+  const dynamicCategories = Array.from(new Set(productsData.map(p => p.category)));
+  const dynamicBrands = Array.from(new Set(productsMatchingQuery.map(p => p.brand))).slice(0, 15);
 
   let filteredProducts = productsMatchingQuery.filter(product => {
     const categoryMatch = categoryParam === '' || product.category === categoryParam;
@@ -50,267 +48,265 @@ export const Shop = () => {
     filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sortOption === 'Price: High to Low') {
     filteredProducts.sort((a, b) => b.price - a.price);
-  } else if (sortOption === 'Avg. Customer Review') {
-    filteredProducts.sort((a, b) => b.rating - a.rating);
+  } else if (sortOption === 'Customer Rating') {
+    filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   }
 
+  const paginatedProducts = filteredProducts.slice(0, page * itemsPerPage);
+  const hasMore = paginatedProducts.length < filteredProducts.length;
+
+  const handleSortChange = (sortName) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (sortName === 'Relevance') {
+      newParams.delete('sort');
+    } else {
+      newParams.set('sort', sortName);
+    }
+    setSearchParams(newParams);
+  };
+
   return (
-    <div className="max-w-[1600px] mx-auto px-4 py-8">
-      {/* Breadcrumb & Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-black text-gray-900">Shop All Products</h1>
-        <p className="text-gray-500 mt-2">Find the best deals across all categories.</p>
-      </div>
+    <div className="bg-[#f1f3f6] min-h-screen py-6">
+      <div className="max-w-[1600px] mx-auto px-4">
+        
+        {/* Breadcrumb / Top Info */}
+        <div className="mb-4">
+          <h1 className="text-2xl font-black text-gray-900">
+            {categoryParam ? (
+              <span className="capitalize">{categoryParam.replace('-', ' ')} Store</span>
+            ) : query ? (
+              <span>Results for "{query}"</span>
+            ) : (
+              <span>Shop All Products</span>
+            )}
+          </h1>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Showing {filteredProducts.length} items with fast delivery & genuine warranty
+          </p>
+        </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar Filters */}
-        <div className="w-full lg:w-64 flex-shrink-0">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sticky top-4">
-            <div className="flex items-center gap-2 font-bold text-gray-900 mb-4 pb-4 border-b border-gray-100">
-              <Filter size={20} className="text-orange-500" />
-              Filters
-            </div>
+        <div className="flex flex-col lg:flex-row gap-6">
+          
+          {/* Left Sidebar Filters (Flipkart & Amazon style) */}
+          <div className="w-full lg:w-64 shrink-0">
+            <div className="bg-white rounded-xl border border-gray-200/80 p-5 shadow-xs sticky top-20">
+              <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4 font-bold text-gray-900 text-sm">
+                <div className="flex items-center gap-2">
+                  <Filter size={16} className="text-[#2874f0]" />
+                  <span>Filters</span>
+                </div>
+                {(categoryParam || brandParam || priceParam || query) && (
+                  <button
+                    onClick={() => setSearchParams({})}
+                    className="text-[11px] text-[#2874f0] font-bold hover:underline"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
 
-            {/* Category Filter */}
-            <div className="mb-6">
-              <h3 className="font-bold text-gray-900 mb-3 flex justify-between items-center">
-                Categories <ChevronDown size={16} className="text-gray-400" />
-              </h3>
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input 
-                    type="radio"
-                    name="categoryGroup"
-                    checked={categoryParam === ''}
-                    onChange={() => {
-                      const newParams = new URLSearchParams(searchParams);
-                      newParams.delete('category');
-                      setSearchParams(newParams);
-                    }}
-                    className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500" 
-                  />
-                  <span className={`text-sm transition-colors ${categoryParam === '' ? 'text-orange-500 font-bold' : 'text-gray-600 group-hover:text-orange-500'}`}>
-                    All Categories
-                  </span>
-                </label>
-                {dynamicCategories.map((catSlug, idx) => (
-                  <label key={idx} className="flex items-center gap-2 cursor-pointer group">
-                    <input 
-                      type="checkbox" 
-                      checked={categoryParam === catSlug}
+              {/* Active Filter Chips */}
+              {(categoryParam || brandParam || priceParam) && (
+                <div className="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-gray-100">
+                  {categoryParam && (
+                    <span className="inline-flex items-center gap-1 bg-blue-50 text-[#2874f0] text-[10px] font-bold px-2 py-0.5 rounded-full capitalize">
+                      {categoryParam.replace('-', ' ')}
+                      <X size={12} className="cursor-pointer" onClick={() => {
+                        const p = new URLSearchParams(searchParams);
+                        p.delete('category');
+                        setSearchParams(p);
+                      }} />
+                    </span>
+                  )}
+                  {brandParam && (
+                    <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      {brandParam}
+                      <X size={12} className="cursor-pointer" onClick={() => {
+                        const p = new URLSearchParams(searchParams);
+                        p.delete('brand');
+                        setSearchParams(p);
+                      }} />
+                    </span>
+                  )}
+                  {priceParam && (
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                      {priceParam}
+                      <X size={12} className="cursor-pointer" onClick={() => {
+                        const p = new URLSearchParams(searchParams);
+                        p.delete('price');
+                        setSearchParams(p);
+                      }} />
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Category Filter */}
+              <div className="mb-5">
+                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
+                  Categories
+                </h4>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="cat"
+                      checked={categoryParam === ''}
                       onChange={() => {
-                        const newParams = new URLSearchParams(searchParams);
-                        if (categoryParam === catSlug) {
-                          newParams.delete('category');
-                        } else {
-                          newParams.set('category', catSlug);
-                        }
-                        setSearchParams(newParams);
+                        const p = new URLSearchParams(searchParams);
+                        p.delete('category');
+                        setSearchParams(p);
                       }}
-                      className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+                      className="text-[#2874f0] focus:ring-[#2874f0]"
                     />
-                    <span className="text-sm text-gray-600 group-hover:text-orange-500">
-                      {catSlug === 'pooja-samagri' ? 'Pooja Samagri' : catSlug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' & ')}
+                    <span className={categoryParam === '' ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                      All Categories
                     </span>
                   </label>
-                ))}
+                  {dynamicCategories.map((c, i) => (
+                    <label key={i} className="flex items-center gap-2 cursor-pointer capitalize">
+                      <input
+                        type="radio"
+                        name="cat"
+                        checked={categoryParam === c}
+                        onChange={() => {
+                          const p = new URLSearchParams(searchParams);
+                          p.set('category', c);
+                          setSearchParams(p);
+                        }}
+                        className="text-[#2874f0] focus:ring-[#2874f0]"
+                      />
+                      <span className={categoryParam === c ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                        {c.replace('-', ' ')}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Price Filter */}
-            <div>
-              <h3 className="font-bold text-gray-900 mb-3 flex justify-between items-center">
-                Price <ChevronDown size={16} className="text-gray-400" />
-              </h3>
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="price"
-                    checked={priceParam === ''}
-                    onChange={() => {
-                      const newParams = new URLSearchParams(searchParams);
-                      newParams.delete('price');
-                      setSearchParams(newParams);
-                    }}
-                    className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500"
-                  />
-                  <span className={`text-sm transition-colors ${
-                    priceParam === ''
-                      ? 'text-orange-500 font-bold'
-                      : 'text-gray-600 group-hover:text-orange-500'
-                  }`}>All Prices</span>
-                </label>
-                {priceRanges.map((range, idx) => (
-                  <label key={idx} className="flex items-center gap-2 cursor-pointer group">
+              {/* Price Filter */}
+              <div className="mb-5 border-t border-gray-100 pt-4">
+                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
+                  Price Range
+                </h4>
+                <div className="space-y-1.5 text-xs">
+                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
                       name="price"
-                      checked={priceParam === range.label}
+                      checked={priceParam === ''}
                       onChange={() => {
-                        const newParams = new URLSearchParams(searchParams);
-                        newParams.set('price', range.label);
-                        setSearchParams(newParams);
+                        const p = new URLSearchParams(searchParams);
+                        p.delete('price');
+                        setSearchParams(p);
                       }}
-                      className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-orange-500"
+                      className="text-[#2874f0]"
                     />
-                    <span className={`text-sm transition-colors ${
-                      selectedPrice?.label === range.label
-                        ? 'text-orange-500 font-bold'
-                        : 'text-gray-600 group-hover:text-orange-500'
-                    }`}>{range.label}</span>
+                    <span className={priceParam === '' ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                      All Prices
+                    </span>
                   </label>
-                ))}
+                  {priceRanges.map((r, i) => (
+                    <label key={i} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="price"
+                        checked={priceParam === r.label}
+                        onChange={() => {
+                          const p = new URLSearchParams(searchParams);
+                          p.set('price', r.label);
+                          setSearchParams(p);
+                        }}
+                        className="text-[#2874f0]"
+                      />
+                      <span className={priceParam === r.label ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                        {r.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Customer Rating Filter */}
+              <div className="border-t border-gray-100 pt-4 text-xs">
+                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
+                  Customer Rating
+                </h4>
+                <div className="space-y-1 text-gray-600">
+                  <div className="flex items-center gap-1.5 hover:text-[#2874f0] cursor-pointer" onClick={() => handleSortChange('Customer Rating')}>
+                    <span className="font-bold text-amber-500">4★ & above</span>
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* Right Product Grid Column */}
+          <div className="flex-1">
             
-            <button 
-              onClick={() => setSearchParams({})}
-              className="w-full mt-6 bg-orange-50 text-orange-500 font-bold py-2 rounded-md hover:bg-orange-100 transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        </div>
-
-        {/* Product Grid */}
-        <div className="flex-1">
-          {query && (
-            <div className="mb-4 bg-orange-50 text-orange-800 p-3 rounded-lg border border-orange-100 flex items-center justify-between">
-              <span>Showing results for search: <strong>"{query}"</strong></span>
-              <button onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                params.delete('q');
-                setSearchParams(params);
-              }} className="text-orange-500 hover:underline text-sm font-bold">Clear</button>
-            </div>
-          )}
-          {categoryParam && (
-            <div className="mb-4 bg-purple-50 text-purple-800 p-3 rounded-lg border border-purple-100 flex items-center justify-between">
-              <span>Showing category: <strong className="capitalize">{categoryParam.replace('-', ' ')}</strong></span>
-              <button onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                params.delete('category');
-                setSearchParams(params);
-              }} className="text-purple-600 hover:underline text-sm font-bold">Clear</button>
-            </div>
-          )}
-          {brandParam && (
-            <div className="mb-4 bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100 flex items-center justify-between">
-              <span>Showing brand: <strong className="capitalize">{brandParam}</strong></span>
-              <button onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                params.delete('brand');
-                setSearchParams(params);
-              }} className="text-blue-600 hover:underline text-sm font-bold">Clear</button>
-            </div>
-          )}
-          {priceParam && (
-            <div className="mb-4 bg-green-50 text-green-800 p-3 rounded-lg border border-green-100 flex items-center justify-between">
-              <span>Showing price: <strong className="capitalize">{priceParam}</strong></span>
-              <button onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                params.delete('price');
-                setSearchParams(params);
-              }} className="text-green-600 hover:underline text-sm font-bold">Clear</button>
-            </div>
-          )}
-
-          <div className="flex justify-between items-center mb-6 bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
-            <span className="text-sm text-gray-500">Showing {filteredProducts.length} results</span>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
-              <select 
-                value={sortOption}
-                onChange={(e) => {
-                  const newParams = new URLSearchParams(searchParams);
-                  if (e.target.value === 'Featured') {
-                    newParams.delete('sort');
-                  } else {
-                    newParams.set('sort', e.target.value);
-                  }
-                  setSearchParams(newParams);
-                }}
-                className="text-sm border-gray-200 rounded-md focus:border-orange-500 focus:ring-orange-500"
-              >
-                <option>Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Avg. Customer Review</option>
-              </select>
-            </div>
-          </div>
-
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map(product => {
-                const inCart = cartItems.find(i => i.id === product.id);
-                const inWishlist = wishlistItems.find(i => i.id === product.id);
-                return (
-                  <div key={product.id} className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow group relative flex flex-col h-full">
-                    {/* Discount badge */}
-                    <div className="absolute top-3 left-3 bg-pink-100 text-pink-600 text-[10px] font-bold px-2 py-0.5 rounded z-10">
-                      {product.discount}
-                    </div>
-                    {/* Wishlist button */}
+            {/* Sort Bar (Flipkart Style Tabs) */}
+            <div className="bg-white rounded-xl border border-gray-200/80 p-3 mb-4 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-gray-800">Sort By:</span>
+                <div className="flex items-center gap-1 overflow-x-auto">
+                  {['Relevance', 'Price: Low to High', 'Price: High to Low', 'Customer Rating'].map((opt) => (
                     <button
-                      onClick={() => addToWishlist(product)}
-                      className={`absolute top-3 right-3 z-10 h-8 w-8 bg-white rounded-full flex items-center justify-center shadow-sm transition-colors ${
-                        inWishlist ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                      key={opt}
+                      onClick={() => handleSortChange(opt)}
+                      className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                        sortOption === opt
+                          ? 'bg-[#2874f0] text-white shadow-xs'
+                          : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
-                      <Heart size={15} className={inWishlist ? 'fill-current' : ''} />
+                      {opt}
                     </button>
-                    {/* Product image */}
-                    <Link to={`/product/${product.id}`} className="block h-48 flex items-center justify-center mb-4 overflow-hidden rounded-lg bg-gray-50">
-                      <img src={product.image} alt={product.title} className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                    </Link>
-                    <div className="text-xs text-gray-500 mb-1">{product.brand}</div>
-                    <Link to={`/product/${product.id}`}>
-                      <h4 className="font-bold text-gray-900 text-sm mb-2 line-clamp-2 min-h-[40px] hover:text-orange-500 transition-colors">{product.title}</h4>
-                    </Link>
-                    <div className="flex items-center gap-1 mb-3 mt-auto">
-                      <div className="flex text-orange-400 text-xs">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={12} className={i < Math.floor(product.rating) ? 'fill-current' : 'text-gray-300'} />
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-400">({product.reviews})</span>
-                    </div>
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className="text-lg font-black text-gray-900">₹{product.price.toLocaleString()}</span>
-                        <span className="text-xs text-gray-400 line-through">₹{product.originalPrice.toLocaleString()}</span>
-                      </div>
-                      <button
-                        onClick={() => addToCart(product)}
-                        className={`relative h-9 w-9 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${
-                          inCart
-                            ? 'bg-orange-500 text-white'
-                            : 'bg-orange-50 text-orange-500 hover:bg-orange-500 hover:text-white'
-                        }`}
-                      >
-                        <ShoppingCart size={16} />
-                        {inCart && (
-                          <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
-                            {inCart.qty}
-                          </span>
-                        )}
-                      </button>
-                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <span className="text-gray-500 font-medium">
+                Showing {Math.min(paginatedProducts.length, filteredProducts.length)} of {filteredProducts.length}
+              </span>
+            </div>
+
+            {/* Products Grid */}
+            {paginatedProducts.length > 0 ? (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {paginatedProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+
+                {/* Load More Button */}
+                {hasMore && (
+                  <div className="text-center mt-8">
+                    <button
+                      onClick={() => setPage((p) => p + 1)}
+                      className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 font-bold px-8 py-3 rounded-xl shadow-xs transition-colors cursor-pointer text-xs"
+                    >
+                      Load More Products ({filteredProducts.length - paginatedProducts.length} remaining)
+                    </button>
                   </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="py-20 text-center bg-white border border-gray-100 rounded-xl">
-              <p className="text-gray-500 text-xl mb-4">No match product on your criteria. Please add the item in it.</p>
-              <button onClick={() => setSearchParams({})} className="bg-orange-500 text-white font-bold px-6 py-2 rounded-md hover:bg-orange-600">
-                View All Products
-              </button>
-            </div>
-          )}
+                )}
+              </>
+            ) : (
+              <div className="bg-white rounded-2xl border border-gray-200/80 p-16 text-center shadow-xs">
+                <p className="text-xl font-bold text-gray-800 mb-2">No products matched your criteria</p>
+                <p className="text-xs text-gray-500 mb-6">Try clearing some filters or searching for different keywords.</p>
+                <button
+                  onClick={() => setSearchParams({})}
+                  className="bg-[#2874f0] text-white font-bold px-6 py-2.5 rounded-lg text-xs"
+                >
+                  Reset All Filters
+                </button>
+              </div>
+            )}
+          </div>
+
         </div>
+
       </div>
     </div>
   );

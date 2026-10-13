@@ -3,6 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { TopBar } from './components/TopBar';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
+import { Footer } from './components/Footer';
+import { PincodeModal } from './components/PincodeModal';
+import { LoginModal } from './components/LoginModal';
+import { AmazonDrawer } from './components/AmazonDrawer';
+import { Toast } from './components/Toast';
 import { Home } from './pages/Home';
 import { Shop } from './pages/Shop';
 import { Categories } from './pages/Categories';
@@ -18,7 +23,7 @@ import { Chatbot } from './components/Chatbot';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-[#f1f3f6] flex flex-col font-sans selection:bg-[#febd69] selection:text-gray-900">
         <TopBar />
         <Header />
         <Navigation />
@@ -35,10 +40,15 @@ function App() {
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
-            <Route path="*" element={<div className="p-8 text-center">Page Not Found</div>} />
+            <Route path="*" element={<div className="p-16 text-center text-lg font-bold">Page Not Found</div>} />
           </Routes>
         </main>
         
+        <Footer />
+        <PincodeModal />
+        <LoginModal />
+        <AmazonDrawer />
+        <Toast />
         <Chatbot />
       </div>
     </Router>
