@@ -45,7 +45,7 @@ export const ProductDetail = () => {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
-    navigate('/cart');
+    navigate('/cart', { state: { openCheckout: true } });
   };
 
   const handleAddToCart = () => {

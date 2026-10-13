@@ -104,3 +104,16 @@ export const useWishlistStore = create((set) => ({
     set({ wishlistItems: [] });
   },
 }));
+
+export const useOrderStore = create((set, get) => ({
+  orders: JSON.parse(localStorage.getItem('myzon_orders')) || [],
+  addOrder: (order) => set((state) => {
+    const updated = [order, ...state.orders];
+    localStorage.setItem('myzon_orders', JSON.stringify(updated));
+    return { orders: updated };
+  }),
+  getOrder: (orderId) => {
+    return get().orders.find((o) => o.id === orderId);
+  },
+}));
+
