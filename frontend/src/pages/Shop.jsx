@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Filter, ChevronDown, Sparkles, X } from 'lucide-react';
+import { Filter, ChevronDown, Sparkles, X, ArrowUpRight } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { ProductCard } from '../components/ProductCard';
 import productsData from '../data/products.json';
@@ -66,50 +66,54 @@ export const Shop = () => {
   };
 
   return (
-    <div className="bg-[#f1f3f6] min-h-screen py-6">
-      <div className="max-w-[1600px] mx-auto px-4">
+    <div className="bg-[#0a0b0e] text-neutral-100 min-h-screen py-8 select-none">
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-8">
         
         {/* Breadcrumb / Top Info */}
-        <div className="mb-4">
-          <h1 className="text-2xl font-black text-gray-900">
+        <div className="mb-6">
+          <div className="inline-flex items-center gap-1.5 text-amber-400 text-xs font-bold uppercase tracking-wider mb-1">
+            <Sparkles size={13} />
+            <span>Studio Catalog</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white">
             {categoryParam ? (
-              <span className="capitalize">{categoryParam.replace('-', ' ')} Store</span>
+              <span className="capitalize">{categoryParam.replace('-', ' ')} Collection</span>
             ) : query ? (
               <span>Results for "{query}"</span>
             ) : (
-              <span>Shop All Products</span>
+              <span>All Studio Drops</span>
             )}
           </h1>
-          <p className="text-xs text-gray-500 mt-0.5">
-            Showing {filteredProducts.length} items with fast delivery & genuine warranty
+          <p className="text-xs text-neutral-400 mt-1">
+            Displaying {filteredProducts.length} certified items with complimentary express courier & authenticity assurance.
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
           
-          {/* Left Sidebar Filters (Flipkart & Amazon style) */}
+          {/* Left Sidebar Filters */}
           <div className="w-full lg:w-64 shrink-0">
-            <div className="bg-white rounded-xl border border-gray-200/80 p-5 shadow-xs sticky top-20">
-              <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4 font-bold text-gray-900 text-sm">
+            <div className="bg-[#121316] rounded-2xl border border-neutral-800 p-5 shadow-xl sticky top-24">
+              <div className="flex items-center justify-between pb-3.5 border-b border-neutral-800 mb-4 font-bold text-white text-xs uppercase tracking-wider">
                 <div className="flex items-center gap-2">
-                  <Filter size={16} className="text-[#2874f0]" />
-                  <span>Filters</span>
+                  <Filter size={15} className="text-amber-400" />
+                  <span>Curated Filters</span>
                 </div>
                 {(categoryParam || brandParam || priceParam || query) && (
                   <button
                     onClick={() => setSearchParams({})}
-                    className="text-[11px] text-[#2874f0] font-bold hover:underline"
+                    className="text-[10px] text-amber-400 font-bold hover:underline cursor-pointer"
                   >
-                    Clear All
+                    Reset
                   </button>
                 )}
               </div>
 
               {/* Active Filter Chips */}
               {(categoryParam || brandParam || priceParam) && (
-                <div className="flex flex-wrap gap-1.5 mb-4 pb-3 border-b border-gray-100">
+                <div className="flex flex-wrap gap-1.5 mb-4 pb-3.5 border-b border-neutral-800">
                   {categoryParam && (
-                    <span className="inline-flex items-center gap-1 bg-blue-50 text-[#2874f0] text-[10px] font-bold px-2 py-0.5 rounded-full capitalize">
+                    <span className="inline-flex items-center gap-1 bg-neutral-900 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full capitalize">
                       {categoryParam.replace('-', ' ')}
                       <X size={12} className="cursor-pointer" onClick={() => {
                         const p = new URLSearchParams(searchParams);
@@ -119,7 +123,7 @@ export const Shop = () => {
                     </span>
                   )}
                   {brandParam && (
-                    <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <span className="inline-flex items-center gap-1 bg-neutral-900 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
                       {brandParam}
                       <X size={12} className="cursor-pointer" onClick={() => {
                         const p = new URLSearchParams(searchParams);
@@ -129,7 +133,7 @@ export const Shop = () => {
                     </span>
                   )}
                   {priceParam && (
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    <span className="inline-flex items-center gap-1 bg-neutral-900 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
                       {priceParam}
                       <X size={12} className="cursor-pointer" onClick={() => {
                         const p = new URLSearchParams(searchParams);
@@ -143,10 +147,10 @@ export const Shop = () => {
 
               {/* Category Filter */}
               <div className="mb-5">
-                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
-                  Categories
+                <h4 className="text-[10px] font-bold uppercase text-neutral-400 tracking-widest mb-3">
+                  Collections
                 </h4>
-                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs">
+                <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1 text-xs text-neutral-300">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -157,10 +161,10 @@ export const Shop = () => {
                         p.delete('category');
                         setSearchParams(p);
                       }}
-                      className="text-[#2874f0] focus:ring-[#2874f0]"
+                      className="accent-amber-400"
                     />
-                    <span className={categoryParam === '' ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
-                      All Categories
+                    <span className={categoryParam === '' ? 'font-bold text-amber-400' : 'text-neutral-400 hover:text-white'}>
+                      All Collections
                     </span>
                   </label>
                   {dynamicCategories.map((c, i) => (
@@ -174,9 +178,9 @@ export const Shop = () => {
                           p.set('category', c);
                           setSearchParams(p);
                         }}
-                        className="text-[#2874f0] focus:ring-[#2874f0]"
+                        className="accent-amber-400"
                       />
-                      <span className={categoryParam === c ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                      <span className={categoryParam === c ? 'font-bold text-amber-400' : 'text-neutral-400 hover:text-white'}>
                         {c.replace('-', ' ')}
                       </span>
                     </label>
@@ -185,11 +189,11 @@ export const Shop = () => {
               </div>
 
               {/* Price Filter */}
-              <div className="mb-5 border-t border-gray-100 pt-4">
-                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
-                  Price Range
+              <div className="mb-5 border-t border-neutral-800 pt-4">
+                <h4 className="text-[10px] font-bold uppercase text-neutral-400 tracking-widest mb-3">
+                  Price Tier
                 </h4>
-                <div className="space-y-1.5 text-xs">
+                <div className="space-y-1.5 text-xs text-neutral-300">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -200,10 +204,10 @@ export const Shop = () => {
                         p.delete('price');
                         setSearchParams(p);
                       }}
-                      className="text-[#2874f0]"
+                      className="accent-amber-400"
                     />
-                    <span className={priceParam === '' ? 'font-bold text-amber-600' : 'text-gray-600'}>
-                      All Prices
+                    <span className={priceParam === '' ? 'font-bold text-amber-400' : 'text-neutral-400 hover:text-white'}>
+                      All Price Tiers
                     </span>
                   </label>
                   {priceRanges.map((r, i) => (
@@ -217,9 +221,9 @@ export const Shop = () => {
                           p.set('price', r.label);
                           setSearchParams(p);
                         }}
-                        className="accent-amber-500"
+                        className="accent-amber-400"
                       />
-                      <span className={priceParam === r.label ? 'font-bold text-amber-600' : 'text-gray-600'}>
+                      <span className={priceParam === r.label ? 'font-bold text-amber-400' : 'text-neutral-400 hover:text-white'}>
                         {r.label}
                       </span>
                     </label>
@@ -227,17 +231,6 @@ export const Shop = () => {
                 </div>
               </div>
 
-              {/* Customer Rating Filter */}
-              <div className="border-t border-gray-100 pt-4 text-xs">
-                <h4 className="text-xs font-black uppercase text-gray-700 tracking-wider mb-2.5">
-                  Customer Rating
-                </h4>
-                <div className="space-y-1 text-gray-600">
-                  <div className="flex items-center gap-1.5 hover:text-amber-600 cursor-pointer" onClick={() => handleSortChange('Customer Rating')}>
-                    <span className="font-bold text-amber-500">4★ & above</span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -245,18 +238,18 @@ export const Shop = () => {
           <div className="flex-1">
             
             {/* Sort Bar */}
-            <div className="bg-white rounded-xl border border-gray-200/80 p-3 mb-4 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="bg-[#121316] rounded-2xl border border-neutral-800 p-3.5 mb-6 shadow-md flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-gray-800">Sort By:</span>
-                <div className="flex items-center gap-1 overflow-x-auto">
+                <span className="font-bold text-neutral-400">Sort By:</span>
+                <div className="flex items-center gap-1.5 overflow-x-auto">
                   {['Relevance', 'Price: Low to High', 'Price: High to Low', 'Customer Rating'].map((opt) => (
                     <button
                       key={opt}
                       onClick={() => handleSortChange(opt)}
-                      className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
                         sortOption === opt
-                          ? 'bg-[#121316] text-amber-400 border border-amber-500/40 shadow-xs'
-                          : 'text-gray-600 hover:bg-gray-100'
+                          ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 shadow-xs'
+                          : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
                       }`}
                     >
                       {opt}
@@ -265,15 +258,15 @@ export const Shop = () => {
                 </div>
               </div>
 
-              <span className="text-gray-500 font-medium">
-                Showing {Math.min(paginatedProducts.length, filteredProducts.length)} of {filteredProducts.length}
+              <span className="text-neutral-500 font-medium">
+                Showing {Math.min(paginatedProducts.length, filteredProducts.length)} of {filteredProducts.length} drops
               </span>
             </div>
 
             {/* Products Grid */}
             {paginatedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                   {paginatedProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -281,23 +274,23 @@ export const Shop = () => {
 
                 {/* Load More Button */}
                 {hasMore && (
-                  <div className="text-center mt-8">
+                  <div className="text-center mt-10">
                     <button
                       onClick={() => setPage((p) => p + 1)}
-                      className="bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 font-bold px-8 py-3 rounded-xl shadow-xs transition-colors cursor-pointer text-xs"
+                      className="bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-700 hover:border-amber-500/40 font-bold px-8 py-3.5 rounded-2xl shadow-md transition-all cursor-pointer text-xs"
                     >
-                      Load More Products ({filteredProducts.length - paginatedProducts.length} remaining)
+                      Load More Drops ({filteredProducts.length - paginatedProducts.length} remaining)
                     </button>
                   </div>
                 )}
               </>
             ) : (
-              <div className="bg-white rounded-2xl border border-gray-200/80 p-16 text-center shadow-xs">
-                <p className="text-xl font-bold text-gray-800 mb-2">No products matched your criteria</p>
-                <p className="text-xs text-gray-500 mb-6">Try clearing some filters or searching for different keywords.</p>
+              <div className="bg-[#121316] rounded-3xl border border-neutral-800 p-16 text-center shadow-xl">
+                <p className="text-xl font-bold text-white mb-2">No drops matched your criteria</p>
+                <p className="text-xs text-neutral-400 mb-6">Try clearing active filters or searching for different keywords.</p>
                 <button
                   onClick={() => setSearchParams({})}
-                  className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-6 py-2.5 rounded-lg text-xs cursor-pointer shadow-xs"
+                  className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-7 py-3 rounded-xl text-xs cursor-pointer shadow-md"
                 >
                   Reset All Filters
                 </button>

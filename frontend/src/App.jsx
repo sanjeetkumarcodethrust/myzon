@@ -23,7 +23,7 @@ import { Chatbot } from './components/Chatbot';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-[#f1f3f6] flex flex-col font-sans selection:bg-amber-400 selection:text-neutral-950">
+      <div className="min-h-screen bg-[#0a0b0e] text-neutral-100 flex flex-col font-sans selection:bg-amber-400 selection:text-neutral-950">
         <TopBar />
         <Header />
         <Navigation />

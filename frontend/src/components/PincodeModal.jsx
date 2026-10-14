@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, X, Check } from 'lucide-react';
+import { MapPin, X, Check, Sparkles } from 'lucide-react';
 import { useUIStore } from '../store/useStore';
 
 const POPULAR_CITIES = [
@@ -34,30 +34,32 @@ export const PincodeModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-gray-100 overflow-hidden transform transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in select-none">
+      <div className="bg-[#121316] text-neutral-100 rounded-3xl w-full max-w-md shadow-2xl border border-neutral-800 overflow-hidden transform transition-all">
+        
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#121316] to-[#0a0b0d] text-white p-4 flex items-center justify-between border-b border-neutral-800">
-          <div className="flex items-center gap-2">
-            <MapPin size={20} className="text-amber-400" />
-            <h3 className="font-bold text-base">Choose your delivery location</h3>
+        <div className="bg-[#0e0f12] text-white p-5 flex items-center justify-between border-b border-neutral-800">
+          <div className="flex items-center gap-2.5">
+            <MapPin size={18} className="text-amber-400" />
+            <h3 className="font-bold text-sm">Select Dispatch Destination</h3>
           </div>
           <button 
             onClick={closePincodeModal}
-            className="text-gray-400 hover:text-white p-1 rounded-full transition-colors cursor-pointer"
+            className="text-neutral-400 hover:text-white p-1 rounded-full transition-colors cursor-pointer"
+            aria-label="Close"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Body */}
         <div className="p-6">
-          <p className="text-xs text-gray-500 mb-4">
-            Select a delivery location to see product availability and delivery options tailored to your area.
+          <p className="text-xs text-neutral-400 mb-5 leading-relaxed">
+            Enter your destination pincode to verify same-day express air courier availability for your area.
           </p>
 
           <form onSubmit={handleApply} className="mb-6">
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+            <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-2">
               Enter Indian Pincode
             </label>
             <div className="flex gap-2">
@@ -70,58 +72,49 @@ export const PincodeModal = () => {
                   setError('');
                 }}
                 placeholder="e.g. 110001"
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+                className="w-full bg-neutral-900 text-white rounded-xl border border-neutral-700 px-4 py-2.5 text-xs focus:outline-none focus:border-amber-400 font-semibold"
               />
               <button
                 type="submit"
-                className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-5 py-2 rounded-lg text-sm shadow-sm transition-colors cursor-pointer"
+                className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all shadow-md active:scale-98 cursor-pointer shrink-0"
               >
                 Apply
               </button>
             </div>
-            {error && <p className="text-red-500 text-xs mt-1.5">{error}</p>}
+            {error && <p className="text-rose-400 text-xs mt-1.5 font-medium">{error}</p>}
           </form>
 
-          <div className="relative flex py-2 items-center mb-4">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink mx-4 text-xs font-semibold text-gray-400 uppercase">Or Select Major City</span>
-            <div className="flex-grow border-t border-gray-200"></div>
+          {/* Popular Cities */}
+          <div>
+            <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest block mb-2.5">
+              Major Metro Hubs
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {POPULAR_CITIES.map((c) => {
+                const isCurrent = location.pincode === c.pincode;
+                return (
+                  <button
+                    key={c.pincode}
+                    type="button"
+                    onClick={() => setLocation(c.city, c.pincode)}
+                    className={`flex items-center justify-between p-2.5 rounded-xl border text-left text-xs transition-all cursor-pointer ${
+                      isCurrent
+                        ? 'border-amber-400 bg-amber-400/10 text-white font-bold'
+                        : 'border-neutral-800 bg-neutral-900/60 hover:bg-neutral-800 text-neutral-300'
+                    }`}
+                  >
+                    <span>{c.city}</span>
+                    <span className="text-[10px] text-neutral-500 font-mono">
+                      {isCurrent ? <Check size={13} className="text-amber-400" /> : c.pincode}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1">
-            {POPULAR_CITIES.map((c) => {
-              const isSelected = location.pincode === c.pincode;
-              return (
-                <button
-                  key={c.pincode}
-                  type="button"
-                  onClick={() => setLocation(c.city, c.pincode)}
-                  className={`flex items-center justify-between p-2.5 rounded-lg border text-left text-xs font-medium transition-all cursor-pointer ${
-                    isSelected 
-                      ? 'border-amber-500 bg-amber-50/70 text-amber-900 font-bold ring-1 ring-amber-500' 
-                      : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/30 text-gray-700'
-                  }`}
-                >
-                  <div>
-                    <p className="truncate">{c.city}</p>
-                    <p className="text-[10px] text-gray-400 font-normal">{c.pincode}</p>
-                  </div>
-                  {isSelected && <Check size={14} className="text-amber-600" />}
-                </button>
-              );
-            })}
-          </div>
         </div>
 
-        {/* Footer */}
-        <div className="bg-gray-50 px-6 py-3 border-t border-gray-100 flex justify-end">
-          <button
-            onClick={closePincodeModal}
-            className="text-xs font-bold text-gray-600 hover:text-gray-900 px-4 py-1.5"
-          >
-            Done
-          </button>
-        </div>
       </div>
     </div>
   );

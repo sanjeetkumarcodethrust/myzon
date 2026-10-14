@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   X, User, ChevronRight, Flame, Laptop, Shirt, Home as HomeIcon, 
-  HeartPulse, Dumbbell, BookOpen, Puzzle, Car, Zap, Tag, Gift, HelpCircle, 
-  ShoppingBag, Shield
+  Sparkles, Zap, Tag, Gift, HelpCircle, ShoppingBag, ShieldCheck,
+  Compass, Headphones, Watch, Gem
 } from 'lucide-react';
 import { useUIStore, useAuthStore } from '../store/useStore';
 
@@ -14,244 +14,201 @@ export const AmazonDrawer = () => {
   if (!isDrawerOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex">
+    <div className="fixed inset-0 z-50 flex select-none">
       {/* Backdrop */}
       <div 
         onClick={closeDrawer}
-        className="fixed inset-0 bg-black/70 backdrop-blur-xs transition-opacity duration-300 animate-fadeIn"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300"
       />
 
-      {/* Drawer Box */}
-      <div className="relative w-full max-w-[365px] bg-white h-full shadow-2xl flex flex-col z-10 animate-slideRight overflow-hidden">
-        {/* Drawer Header */}
-        <div className="bg-[#121316] text-white p-4.5 flex items-center justify-between border-b border-neutral-800">
+      {/* Drawer Panel */}
+      <div className="relative w-full max-w-[360px] bg-[#0e0f14] text-neutral-200 h-full shadow-2xl flex flex-col z-10 border-r border-neutral-800 overflow-hidden animate-in slide-in-from-left duration-300">
+        
+        {/* Header */}
+        <div className="bg-[#121318] p-5 flex items-center justify-between border-b border-neutral-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-amber-400/30 text-white font-bold">
+            <div className="w-11 h-11 rounded-2xl bg-neutral-900 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold shadow-xs">
               {user ? (
                 user.name.charAt(0).toUpperCase()
               ) : (
-                <User size={22} className="text-amber-400" />
+                <User size={20} className="text-amber-400" />
               )}
             </div>
             <div>
-              <p className="text-xs text-gray-400">Hello,</p>
+              <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">Myzon Client</span>
               {user ? (
-                <p className="text-base font-bold text-white">{user.name}</p>
+                <p className="text-sm font-bold text-white truncate max-w-[170px]">{user.name}</p>
               ) : (
                 <button 
                   onClick={() => { closeDrawer(); openLoginModal(); }}
-                  className="text-base font-bold text-amber-400 hover:text-amber-300 hover:underline cursor-pointer"
+                  className="text-sm font-bold text-white hover:text-amber-400 cursor-pointer transition-colors"
                 >
-                  Sign in
+                  Sign in / Join Club
                 </button>
               )}
             </div>
           </div>
           <button 
             onClick={closeDrawer}
-            className="text-gray-400 hover:text-white p-1 rounded-md cursor-pointer transition-colors"
+            className="text-neutral-400 hover:text-white p-1.5 rounded-full hover:bg-neutral-800 transition-colors cursor-pointer"
+            aria-label="Close Menu"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto divide-y divide-gray-100 text-sm text-gray-800">
-          {/* Trending */}
-          <div className="py-3">
-            <h4 className="px-5 py-2 text-xs font-black uppercase text-gray-900 tracking-wider">
-              Trending
+        <div className="flex-1 overflow-y-auto divide-y divide-neutral-800/80 text-xs">
+          
+          {/* Curated Highlights */}
+          <div className="py-3 px-3">
+            <h4 className="px-3 pb-2 text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Curated Highlights
             </h4>
-            <Link 
-              to="/deals" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Flame size={16} className="text-orange-500" />
-                <span>Best Sellers</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/new-arrivals" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Zap size={16} className="text-yellow-500" />
-                <span>New Arrivals</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/deals" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Tag size={16} className="text-red-500" />
-                <span>Today's Lightning Deals</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-          </div>
-
-          {/* Shop by Department */}
-          <div className="py-3">
-            <h4 className="px-5 py-2 text-xs font-black uppercase text-gray-900 tracking-wider">
-              Shop by Department
-            </h4>
-            <Link 
-              to="/shop?category=pooja-samagri" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-orange-50 hover:text-orange-600 transition-colors"
-            >
-              <div className="flex items-center gap-3 font-semibold text-orange-600">
-                <Flame size={16} className="text-orange-500" />
-                <span>Pooja & Spiritual Samagri</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=electronics" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Laptop size={16} className="text-blue-500" />
-                <span>Mobiles & Electronics</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=fashion" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Shirt size={16} className="text-pink-500" />
-                <span>Men & Women Fashion</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=home-kitchen" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <HomeIcon size={16} className="text-emerald-500" />
-                <span>Home & Kitchen Appliances</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=beauty-health" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <HeartPulse size={16} className="text-purple-500" />
-                <span>Beauty & Personal Care</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=sports-outdoors" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Dumbbell size={16} className="text-indigo-500" />
-                <span>Sports & Fitness</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/shop?category=automotive" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Car size={16} className="text-slate-600" />
-                <span>Car & Motorbike Accessories</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/categories" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 text-amber-600 font-bold hover:bg-amber-50 transition-colors"
-            >
-              <span>See All Categories</span>
-              <ChevronRight size={16} />
-            </Link>
-          </div>
-
-          {/* Programs & Features */}
-          <div className="py-3">
-            <h4 className="px-5 py-2 text-xs font-black uppercase text-gray-900 tracking-wider">
-              Programs & Features
-            </h4>
-            <div className="px-5 py-2 text-xs text-amber-700 bg-amber-50 font-semibold mx-4 rounded-md mb-2 flex items-center gap-2">
-              <Gift size={14} className="text-amber-600" />
-              <span>Myzon Prime: Free One-Day Delivery</span>
+            <div className="space-y-0.5">
+              <Link
+                to="/deals"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-amber-400 font-bold hover:bg-amber-400/10 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Zap size={15} className="text-amber-400 fill-amber-400" />
+                  <span>The Flash Vault</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+              <Link
+                to="/new-arrivals"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Sparkles size={15} className="text-amber-400" />
+                  <span>New Season Drops</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+              <Link
+                to="/brands"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Gem size={15} className="text-amber-400" />
+                  <span>Curated Ateliers & Brands</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
             </div>
-            <Link 
-              to="/track-order" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <ShoppingBag size={16} className="text-gray-600" />
-                <span>Your Orders & Shipments</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
-            <Link 
-              to="/wishlist" 
-              onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <Tag size={16} className="text-gray-600" />
-                <span>Your Wishlist</span>
-              </div>
-              <ChevronRight size={16} className="text-gray-400" />
-            </Link>
           </div>
 
-          {/* Help & Settings */}
-          <div className="py-3">
-            <h4 className="px-5 py-2 text-xs font-black uppercase text-gray-900 tracking-wider">
-              Help & Settings
+          {/* Collections by Department */}
+          <div className="py-3 px-3">
+            <h4 className="px-3 pb-2 text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Flagship Collections
             </h4>
-            <Link 
-              to="/track-order" 
-              onClick={closeDrawer}
-              className="flex items-center gap-3 px-5 py-2.5 hover:bg-gray-100 transition-colors"
-            >
-              <HelpCircle size={16} className="text-gray-500" />
-              <span>Customer Service & Help</span>
-            </Link>
-            {user ? (
-              <button 
-                onClick={() => { logout(); closeDrawer(); }}
-                className="w-full text-left px-5 py-2.5 text-red-600 hover:bg-red-50 font-bold transition-colors"
+            <div className="space-y-0.5">
+              <Link
+                to="/shop?category=electronics"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
               >
-                Sign Out ({user.name})
-              </button>
-            ) : (
-              <button 
-                onClick={() => { closeDrawer(); openLoginModal(); }}
-                className="w-full text-left px-5 py-2.5 text-amber-600 hover:bg-amber-50 font-bold transition-colors cursor-pointer"
+                <div className="flex items-center gap-2.5">
+                  <Headphones size={15} className="text-neutral-400" />
+                  <span>High-Fidelity Audio & Tech</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+
+              <Link
+                to="/shop?category=pooja-samagri"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-amber-300 hover:bg-neutral-800/60 transition-colors"
               >
-                Sign In / Register
-              </button>
-            )}
+                <div className="flex items-center gap-2.5">
+                  <Flame size={15} className="text-amber-400" />
+                  <span>Sacred Vedic & Artisanal Brass</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+
+              <Link
+                to="/shop?category=fashion"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Shirt size={15} className="text-neutral-400" />
+                  <span>Designer Apparel & Footwear</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+
+              <Link
+                to="/shop?category=home-kitchen"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <HomeIcon size={15} className="text-neutral-400" />
+                  <span>Home Sanctuary & Appliances</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+
+              <Link
+                to="/shop?maxPrice=999"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-200 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Tag size={15} className="text-amber-400" />
+                  <span>Curated Under ₹999</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+            </div>
           </div>
+
+          {/* Client Concierge */}
+          <div className="py-3 px-3">
+            <h4 className="px-3 pb-2 text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+              Client Concierge
+            </h4>
+            <div className="space-y-0.5">
+              <Link
+                to="/track-order"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <ShoppingBag size={15} className="text-neutral-400" />
+                  <span>Track Your Order</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+
+              <Link
+                to="/track-order"
+                onClick={closeDrawer}
+                className="flex items-center justify-between px-3 py-2.5 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-colors"
+              >
+                <div className="flex items-center gap-2.5">
+                  <ShieldCheck size={15} className="text-amber-400" />
+                  <span>Authenticity Guarantee</span>
+                </div>
+                <ChevronRight size={14} className="text-neutral-600" />
+              </Link>
+            </div>
+          </div>
+
         </div>
+
+        {/* Footer */}
+        <div className="p-4 bg-[#0a0b0e] border-t border-neutral-800/80 text-center text-[11px] text-neutral-500">
+          MYZON Studio Edition • Curated 2026
+        </div>
+
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart, ShoppingCart, Search, MapPin, ChevronDown, User, Sparkles, Globe, LogOut, ArrowRight, Package } from 'lucide-react';
+import { 
+  Heart, ShoppingBag, Search, MapPin, ChevronDown, User, Sparkles, 
+  Menu, X, ArrowUpRight, LogOut, Package, ShieldCheck
+} from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCartStore, useWishlistStore, useAuthStore, useUIStore } from '../store/useStore';
 
@@ -9,18 +12,18 @@ const SEARCH_SUGGESTIONS = [
   'Noise Smartwatch Pulse 3',
   'Nike Air Max Running Shoes',
   'Luxury Cotton Bath Towels',
-  'Organic Mint Whitening Toothpaste',
+  'Organic Mint Toothpaste',
   'Canon DSLR Camera',
   'Apple AirPods Pro',
-  'Home & Kitchen Appliances',
+  'Minimalist Living Essentials',
 ];
 
 export const Header = () => {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const suggestRef = useRef(null);
   const accountRef = useRef(null);
 
@@ -28,11 +31,10 @@ export const Header = () => {
   const { cartItems } = useCartStore();
   const { wishlistItems } = useWishlistStore();
   const { user, logout } = useAuthStore();
-  const { location, openPincodeModal, openLoginModal, language, setLanguage } = useUIStore();
+  const { location, openPincodeModal, openLoginModal, openDrawer } = useUIStore();
 
   useEffect(() => {
     setQuery(searchParams.get('q') || '');
-    setSelectedCategory(searchParams.get('category') || 'all');
   }, [searchParams]);
 
   useEffect(() => {
@@ -51,12 +53,11 @@ export const Header = () => {
   const handleSearch = (e) => {
     if (e) e.preventDefault();
     setIsSuggestOpen(false);
-    let target = '/shop?';
-    const params = new URLSearchParams();
-    if (query.trim()) params.set('q', query.trim());
-    if (selectedCategory && selectedCategory !== 'all') params.set('category', selectedCategory);
-    
-    navigate(`/shop?${params.toString()}`);
+    if (query.trim()) {
+      navigate(`/shop?q=${encodeURIComponent(query.trim())}`);
+    } else {
+      navigate('/shop');
+    }
   };
 
   const handleSelectSuggestion = (s) => {
@@ -68,235 +69,235 @@ export const Header = () => {
   const totalCartCount = cartItems.reduce((acc, item) => acc + (item.qty || 1), 0);
 
   return (
-    <div className="bg-[#121316] text-white sticky top-0 z-40 shadow-md border-b border-neutral-800">
-      <div className="max-w-[1600px] mx-auto px-4 py-2.5 flex items-center justify-between gap-3 md:gap-5">
+    <header className="sticky top-0 z-40 backdrop-blur-xl bg-[#0d0e12]/90 border-b border-neutral-800/80 transition-all select-none">
+      <div className="max-w-[1600px] mx-auto px-4 lg:px-8 h-18 flex items-center justify-between gap-4">
         
-        {/* 1. Logo */}
-        <Link to="/" className="flex flex-col items-start shrink-0 group py-1">
-          <div className="flex items-center gap-1.5">
-            <span className="text-2xl md:text-3xl font-black tracking-tight text-white">
-              My<span className="text-amber-400">zon</span>
-            </span>
-            <span className="text-[10px] bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-black px-1.5 py-0.5 rounded shadow-xs">
-              .in
-            </span>
-          </div>
-          <div className="flex items-center gap-1 -mt-1 text-[10px] text-gray-300">
-            <span>Explore</span>
-            <span className="text-amber-400 font-bold italic flex items-center">
-              Plus <Sparkles size={9} className="ml-0.5 fill-amber-400" />
-            </span>
-          </div>
-        </Link>
-
-        {/* 2. Deliver To / Pincode Selector */}
-        <button
-          onClick={openPincodeModal}
-          className="hidden sm:flex items-center gap-1.5 p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all text-left shrink-0 cursor-pointer"
-        >
-          <MapPin size={18} className="text-amber-400 shrink-0 -mt-2" />
-          <div className="flex flex-col text-xs leading-tight">
-            <span className="text-gray-300 text-[11px] truncate max-w-[100px]">
-              Delivering to {user ? user.name.split(' ')[0] : 'India'}
-            </span>
-            <span className="font-bold text-white text-xs flex items-center gap-0.5">
-              {location.city} {location.pincode}
-              <ChevronDown size={11} className="text-gray-400" />
-            </span>
-          </div>
-        </button>
-
-        {/* 3. Amazon Smart Search Bar */}
-        <div ref={suggestRef} className="flex-1 max-w-3xl relative">
-          <form onSubmit={handleSearch} className="flex items-center rounded-md overflow-hidden bg-white focus-within:ring-2 focus-within:ring-amber-400 transition-all shadow-xs">
-            {/* Category Dropdown on Left */}
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-2.5 py-2.5 border-r border-gray-300 focus:outline-none cursor-pointer hidden md:block max-w-[130px] truncate"
-            >
-              <option value="all">All</option>
-              <option value="pooja-samagri">Pooja Samagri</option>
-              <option value="electronics">Electronics</option>
-              <option value="fashion">Fashion</option>
-              <option value="home-kitchen">Home & Kitchen</option>
-              <option value="beauty-health">Beauty & Health</option>
-              <option value="sports-outdoors">Sports</option>
-              <option value="books-stationery">Books</option>
-              <option value="toys-games">Toys & Games</option>
-              <option value="automotive">Automotive</option>
-            </select>
-
-            {/* Input */}
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setIsSuggestOpen(true);
-              }}
-              onFocus={() => setIsSuggestOpen(true)}
-              placeholder="Search products, brands, deals & essentials..."
-              className="w-full bg-white text-gray-900 py-2.5 px-3.5 text-sm focus:outline-none"
-            />
-
-            {/* Search Button */}
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 p-2.5 px-5.5 transition-colors cursor-pointer shrink-0 flex items-center justify-center font-bold"
-            >
-              <Search size={20} strokeWidth={2.5} />
-            </button>
-          </form>
-
-          {/* Autocomplete / Suggestions Dropdown */}
-          {isSuggestOpen && (
-            <div className="absolute top-full left-0 right-0 bg-white text-gray-800 shadow-2xl rounded-b-lg border border-gray-200 mt-1 z-50 overflow-hidden divide-y divide-gray-100">
-              <div className="p-2 bg-gray-50 text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center justify-between">
-                <span>Trending Searches</span>
-                <span className="text-[10px] text-amber-600 font-bold">Fast Delivery</span>
-              </div>
-              {SEARCH_SUGGESTIONS.map((s, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleSelectSuggestion(s)}
-                  className="w-full text-left px-4 py-2.5 text-xs hover:bg-amber-50 hover:text-amber-800 flex items-center justify-between transition-colors cursor-pointer"
-                >
-                  <span className="flex items-center gap-2">
-                    <Search size={14} className="text-gray-400" />
-                    <span>{s}</span>
-                  </span>
-                  <span className="text-[10px] text-gray-400">in Myzon</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* 4. Language Selector */}
-        <div className="hidden xl:flex items-center gap-1 p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all cursor-pointer">
-          <span className="text-sm">🇮🇳</span>
-          <span className="text-xs font-bold">{language}</span>
-          <ChevronDown size={12} className="text-gray-400" />
-        </div>
-
-        {/* 5. Account & Lists Dropdown (Iconic Amazon Feature) */}
-        <div ref={accountRef} className="relative">
+        {/* Left: Mobile Menu Trigger + Brand Logo */}
+        <div className="flex items-center gap-4">
           <button
-            onClick={() => setIsAccountOpen(!isAccountOpen)}
-            onMouseEnter={() => setIsAccountOpen(true)}
-            className="flex flex-col text-left p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all cursor-pointer"
+            onClick={openDrawer}
+            className="lg:hidden text-neutral-300 hover:text-white p-2 rounded-xl hover:bg-neutral-800/50 transition-colors cursor-pointer"
+            aria-label="Open Navigation Menu"
           >
-            <span className="text-[11px] text-gray-300 leading-none truncate max-w-[120px]">
-              Hello, {user ? user.name.split(' ')[0] : 'Sign in'}
+            <Menu size={22} />
+          </button>
+
+          <Link to="/" className="flex items-center gap-2 group py-1">
+            <div className="flex items-center tracking-tight">
+              <span className="text-2xl lg:text-3xl font-black text-white tracking-tighter">
+                MYZON
+              </span>
+              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 ml-1 shadow-sm shadow-amber-400/50" />
+            </div>
+            <span className="hidden sm:inline-flex text-[9px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 group-hover:border-amber-500/40 group-hover:text-amber-400 transition-colors">
+              Studio
             </span>
-            <span className="font-bold text-xs text-white flex items-center gap-0.5 leading-tight mt-0.5">
-              Account & Lists
-              <ChevronDown size={11} className="text-gray-400" />
+          </Link>
+        </div>
+
+        {/* Center: Desktop Curated Navigation Links */}
+        <nav className="hidden xl:flex items-center gap-1 bg-neutral-900/60 p-1.5 rounded-full border border-neutral-800/60 text-xs font-semibold">
+          <Link
+            to="/"
+            className="px-4 py-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-all"
+          >
+            Discover
+          </Link>
+          <Link
+            to="/new-arrivals"
+            className="px-4 py-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-all"
+          >
+            New Drops
+          </Link>
+          <Link
+            to="/deals"
+            className="px-4 py-1.5 rounded-full text-amber-400 font-bold hover:bg-amber-400/10 transition-all flex items-center gap-1.5"
+          >
+            <Sparkles size={13} className="text-amber-400" />
+            The Vault
+          </Link>
+          <Link
+            to="/categories"
+            className="px-4 py-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-all"
+          >
+            Collections
+          </Link>
+          <Link
+            to="/brands"
+            className="px-4 py-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-all"
+          >
+            Ateliers
+          </Link>
+        </nav>
+
+        {/* Right: Modern Search Bar + Location + Icons */}
+        <div className="flex items-center gap-3">
+          
+          {/* Modern Search Input */}
+          <div ref={suggestRef} className="relative hidden md:block w-64 lg:w-80">
+            <form onSubmit={handleSearch} className="relative">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setIsSuggestOpen(true);
+                }}
+                onFocus={() => setIsSuggestOpen(true)}
+                placeholder="Search catalog, audio, tech..."
+                className="w-full bg-neutral-900/80 hover:bg-neutral-900 text-neutral-100 placeholder-neutral-500 py-2 pl-9 pr-12 rounded-full text-xs border border-neutral-800 focus:border-amber-500/70 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+              />
+              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+              <button 
+                type="submit" 
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-amber-400 text-neutral-950 p-1 rounded-full hover:bg-amber-300 transition-colors cursor-pointer"
+              >
+                <ArrowUpRight size={13} strokeWidth={2.5} />
+              </button>
+            </form>
+
+            {/* Suggestions Modal */}
+            {isSuggestOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-[#121316] text-neutral-200 shadow-2xl rounded-2xl border border-neutral-800 z-50 overflow-hidden divide-y divide-neutral-800/60 animate-in fade-in slide-in-from-top-2">
+                <div className="px-4 py-2 bg-neutral-900/80 text-[10px] font-bold text-neutral-400 uppercase tracking-widest flex items-center justify-between">
+                  <span>Trending Searches</span>
+                  <span className="text-amber-400 text-[10px]">Instant Dispatch</span>
+                </div>
+                <div className="p-1">
+                  {SEARCH_SUGGESTIONS.map((s, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSelectSuggestion(s)}
+                      className="w-full text-left px-3.5 py-2 text-xs text-neutral-300 hover:text-amber-300 hover:bg-neutral-800/50 rounded-lg flex items-center justify-between transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <Search size={13} className="text-neutral-500" />
+                        <span>{s}</span>
+                      </span>
+                      <ArrowUpRight size={12} className="text-neutral-500" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Quick Location Badge */}
+          <button
+            onClick={openPincodeModal}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/60 border border-neutral-800/80 text-xs text-neutral-300 hover:border-amber-500/40 hover:text-white transition-all cursor-pointer"
+            title="Update Delivery Location"
+          >
+            <MapPin size={13} className="text-amber-400 shrink-0" />
+            <span className="truncate max-w-[110px] text-[11px] font-medium">
+              {location.city || 'India'}
             </span>
           </button>
 
-          {/* Account Dropdown Menu */}
-          {isAccountOpen && (
-            <div 
-              onMouseLeave={() => setIsAccountOpen(false)}
-              className="absolute right-0 top-full mt-1 w-64 bg-white text-gray-800 rounded-lg shadow-2xl border border-gray-200 z-50 p-4 animate-fadeIn"
+          {/* Wishlist Link */}
+          <Link
+            to="/wishlist"
+            className="relative p-2 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-colors"
+            title="Wishlist"
+          >
+            <Heart size={19} />
+            {wishlistItems.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-black text-[9px] rounded-full flex items-center justify-center shadow-xs">
+                {wishlistItems.length}
+              </span>
+            )}
+          </Link>
+
+          {/* Cart / Bag Button */}
+          <Link
+            to="/cart"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold text-xs transition-all shadow-sm active:scale-95 cursor-pointer"
+          >
+            <ShoppingBag size={15} strokeWidth={2.2} />
+            <span className="hidden sm:inline">Bag</span>
+            <span className="bg-neutral-950 text-amber-400 px-1.5 py-0.2 rounded-full text-[10px] font-black">
+              {totalCartCount}
+            </span>
+          </Link>
+
+          {/* User Account Popover */}
+          <div ref={accountRef} className="relative">
+            <button
+              onClick={() => setIsAccountOpen(!isAccountOpen)}
+              className="p-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-colors cursor-pointer border border-neutral-800"
+              title="Account"
             >
-              {!user ? (
-                <div className="text-center pb-3 border-b border-gray-100">
-                  <button
-                    onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
-                    className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-2 rounded-md text-xs shadow-xs transition-colors cursor-pointer mb-2"
-                  >
-                    Sign In
-                  </button>
-                  <p className="text-[11px] text-gray-500">
-                    New customer?{' '}
-                    <span 
-                    onClick={() => { setIsAccountOpen(false); openLoginModal(); }}
-                    className="text-amber-600 font-semibold cursor-pointer hover:underline"
-                  >
-                    Start here.
-                  </span>
-                </p>
-              </div>
-            ) : (
-              <div className="pb-3 border-b border-gray-100 mb-2">
-                <p className="text-xs text-gray-500">Signed in as</p>
-                <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
-                <p className="text-[11px] text-gray-400 truncate">{user.email || user.phone}</p>
+              <User size={18} />
+            </button>
+
+            {isAccountOpen && (
+              <div className="absolute right-0 top-full mt-2 w-64 bg-[#121316] text-neutral-200 rounded-2xl shadow-2xl border border-neutral-800 z-50 p-4 animate-in fade-in">
+                {user ? (
+                  <div>
+                    <div className="pb-3 border-b border-neutral-800 mb-3">
+                      <p className="text-[10px] text-amber-400 font-bold uppercase tracking-widest">VIP Member</p>
+                      <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                      <p className="text-xs text-neutral-400 truncate">{user.email}</p>
+                    </div>
+                    <div className="space-y-1 text-xs">
+                      <Link
+                        to="/track-order"
+                        onClick={() => setIsAccountOpen(false)}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-neutral-300 hover:text-white hover:bg-neutral-800/50 transition-colors"
+                      >
+                        <Package size={14} className="text-amber-400" /> My Orders & Shipments
+                      </Link>
+                      <Link
+                        to="/wishlist"
+                        onClick={() => setIsAccountOpen(false)}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-neutral-300 hover:text-white hover:bg-neutral-800/50 transition-colors"
+                      >
+                        <Heart size={14} className="text-amber-400" /> Saved Wishlist
+                      </Link>
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsAccountOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
+                      >
+                        <LogOut size={14} /> Sign Out
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-center pb-3 border-b border-neutral-800 mb-3">
+                      <p className="text-xs text-neutral-400 mb-2">Sign in to access VIP Drops & The Vault</p>
+                      <button
+                        onClick={() => {
+                          setIsAccountOpen(false);
+                          openLoginModal();
+                        }}
+                        className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-2 rounded-xl text-xs shadow-xs transition-all cursor-pointer"
+                      >
+                        Sign In / Register
+                      </button>
+                    </div>
+                    <div className="space-y-1 text-xs text-neutral-400">
+                      <Link
+                        to="/track-order"
+                        onClick={() => setIsAccountOpen(false)}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:text-white hover:bg-neutral-800/50 transition-colors"
+                      >
+                        <Package size={14} /> Track Existing Order
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
-
-            <div className="space-y-1.5 pt-2 text-xs">
-              <p className="text-[10px] font-black uppercase text-gray-400 tracking-wider">Your Account</p>
-              <Link to="/track-order" onClick={() => setIsAccountOpen(false)} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 text-gray-700">
-                <Package size={14} className="text-gray-500" />
-                <span>Your Orders</span>
-              </Link>
-              <Link to="/wishlist" onClick={() => setIsAccountOpen(false)} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 text-gray-700">
-                <Heart size={14} className="text-gray-500" />
-                <span>Your Wishlist ({wishlistItems.length})</span>
-              </Link>
-              <Link to="/deals" onClick={() => setIsAccountOpen(false)} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-gray-100 text-gray-700">
-                <Sparkles size={14} className="text-amber-500" />
-                <span>Myzon Prime & Rewards</span>
-              </Link>
-              {user && (
-                <button
-                  onClick={() => { logout(); setIsAccountOpen(false); }}
-                  className="w-full text-left flex items-center gap-2 px-2 py-1.5 rounded hover:bg-red-50 text-red-600 font-semibold mt-2 pt-2 border-t border-gray-100 cursor-pointer"
-                >
-                  <LogOut size={14} />
-                  <span>Sign Out</span>
-                </button>
-              )}
-            </div>
           </div>
-        )}
-      </div>
 
-      {/* 6. Returns & Orders */}
-      <Link
-        to="/track-order"
-        className="hidden md:flex flex-col text-left p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all text-white shrink-0"
-      >
-        <span className="text-[11px] text-gray-300 leading-none">Returns</span>
-        <span className="font-bold text-xs text-white leading-tight mt-0.5">& Orders</span>
-      </Link>
-
-      {/* 7. Wishlist Heart (Quick Access) */}
-      <Link
-        to="/wishlist"
-        className="relative p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all flex items-center text-white shrink-0"
-        title="Wishlist"
-      >
-        <Heart size={22} className="text-gray-200 hover:text-rose-400 transition-colors" />
-        {wishlistItems.length > 0 && (
-          <span className="absolute -top-1 -right-1 bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 text-[10px] font-black h-4 w-4 rounded-full flex items-center justify-center shadow-xs">
-            {wishlistItems.length}
-          </span>
-        )}
-      </Link>
-
-      {/* 8. Myzon Cart with Counter */}
-      <Link
-        to="/cart"
-        className="flex items-center gap-1.5 p-1.5 rounded-sm hover:ring-1 hover:ring-white transition-all text-white shrink-0 group"
-      >
-        <div className="relative">
-          <ShoppingCart size={26} className="text-white group-hover:text-amber-400 transition-colors" />
-          <span className="absolute -top-1.5 right-1 bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 text-[11px] font-black h-4.5 min-w-[18px] px-1 rounded-full flex items-center justify-center shadow-xs">
-            {totalCartCount}
-          </span>
         </div>
-        <span className="font-bold text-xs text-white hidden sm:block mt-2">
-          Cart
-        </span>
-      </Link>
 
       </div>
-    </div>
+    </header>
   );
 };

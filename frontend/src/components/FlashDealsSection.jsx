@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Zap, ArrowRight } from 'lucide-react';
+import { Clock, Zap, ArrowRight, Sparkles } from 'lucide-react';
 import { ProductCard } from './ProductCard';
 
 export const FlashDealsSection = ({ products }) => {
@@ -18,63 +18,72 @@ export const FlashDealsSection = ({ products }) => {
   const seconds = timeLeft % 60;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 md:p-6 mb-8 overflow-hidden">
+    <div className="bg-[#121316] rounded-3xl border border-neutral-800 shadow-2xl p-6 sm:p-8 mb-12 relative overflow-hidden select-none">
+      
+      {/* Ambient background glow */}
+      <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+
       {/* Top Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-gray-100 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#121316] text-amber-400 border border-amber-500/30 flex items-center justify-center shadow-sm">
-            <Zap size={22} className="fill-current text-amber-400" />
+      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-neutral-800/80 mb-6">
+        
+        {/* Title */}
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 text-neutral-950 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
+            <Zap size={24} className="fill-current" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight">
-                Deal of the Day
+              <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                The Flash Vault
               </h3>
-              <span className="bg-[#121316] text-amber-400 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded uppercase shadow-xs">
-                Limited Time
+              <span className="bg-neutral-900 text-amber-400 border border-amber-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                Limited Drops
               </span>
             </div>
-            <p className="text-xs text-gray-500">Handpicked top discounts refreshed daily</p>
+            <p className="text-xs text-neutral-400 mt-0.5">High-demand catalog items at special studio prices</p>
           </div>
         </div>
 
-        {/* Live Timer */}
-        <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200/80 text-amber-900 px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm">
-          <Clock size={16} className="text-amber-600 animate-pulse" />
-          <span>Ends in:</span>
-          <span className="font-mono bg-white px-2 py-0.5 rounded border border-amber-200 text-amber-900 shadow-xs">
-            {hours.toString().padStart(2, '0')}h : {minutes.toString().padStart(2, '0')}m : {seconds.toString().padStart(2, '0')}s
-          </span>
+        {/* Live Timer + Action */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 text-neutral-300 px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold">
+            <Clock size={16} className="text-amber-400 animate-pulse" />
+            <span className="text-neutral-400 text-xs">Closes In:</span>
+            <span className="font-mono text-amber-400 font-bold tracking-wider">
+              {hours.toString().padStart(2, '0')}h : {minutes.toString().padStart(2, '0')}m : {seconds.toString().padStart(2, '0')}s
+            </span>
+          </div>
+
+          <Link
+            to="/deals"
+            className="inline-flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-neutral-200 hover:text-white font-semibold text-xs px-4 py-2.5 rounded-2xl border border-neutral-700 hover:border-amber-500/40 transition-all cursor-pointer"
+          >
+            <span>Explore All Drops</span>
+            <ArrowRight size={14} />
+          </Link>
         </div>
 
-        {/* View All Button */}
-        <Link
-          to="/deals"
-          className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
-        >
-          <span>View All Deals</span>
-          <ArrowRight size={14} />
-        </Link>
       </div>
 
       {/* Grid of Deal Products */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        {products.slice(0, 6).map((product) => (
+      <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+        {products.slice(0, 4).map((product) => (
           <div key={product.id} className="flex flex-col">
             <ProductCard product={product} />
-            {/* Progress bar */}
-            <div className="mt-2 bg-gray-100 rounded-full h-1.5 overflow-hidden">
-              <div 
-                className="bg-gradient-to-r from-amber-400 to-amber-500 h-full rounded-full" 
-                style={{ width: `${Math.min(95, 45 + (product.id * 7) % 45)}%` }} 
-              />
+            {/* Urgency Progress Bar */}
+            <div className="mt-2 px-1">
+              <div className="flex items-center justify-between text-[10px] text-neutral-400 mb-1">
+                <span>⚡ 82% Claimed</span>
+                <span className="text-amber-400 font-semibold">Fast Selling</span>
+              </div>
+              <div className="w-full bg-neutral-900 rounded-full h-1.5 overflow-hidden border border-neutral-800">
+                <div className="bg-gradient-to-r from-amber-400 to-amber-500 h-full rounded-full w-[82%]" />
+              </div>
             </div>
-            <span className="text-[10px] text-gray-400 mt-1">
-              🔥 {Math.min(95, 45 + (product.id * 7) % 45)}% Claimed
-            </span>
           </div>
         ))}
       </div>
+
     </div>
   );
 };

@@ -1,33 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Smartphone, HelpCircle, Shield, ShoppingBag } from 'lucide-react';
+import { Sparkles, ShieldCheck, Truck, Headphones } from 'lucide-react';
 
 export const TopBar = () => {
   return (
-    <div className="bg-[#0a0b0d] text-gray-300 text-[11px] py-1.5 px-4 border-b border-neutral-800">
+    <div className="bg-[#08090b] text-neutral-300 text-[11px] py-2 px-4 border-b border-neutral-800/80 select-none">
       <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-        {/* Sale Tag */}
-        <div className="flex items-center gap-2 overflow-hidden">
-          <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-black text-[9px] px-2 py-0.5 rounded tracking-wide uppercase flex items-center gap-1 shrink-0 shadow-xs">
-            <Sparkles size={10} /> Live Now
+        {/* Flagship Announcement */}
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-black text-[9px] px-2.5 py-0.5 rounded-full tracking-wider uppercase flex items-center gap-1 shrink-0 shadow-xs">
+            <Sparkles size={10} /> Flagship Edition
           </span>
-          <span className="font-medium text-white truncate">
-            <strong>The Great Indian Festival:</strong> Up to 80% Off on Top Brands + Extra 10% Instant Discount on HDFC & SBI Cards!
+          <span className="font-medium text-neutral-200 truncate text-xs">
+            Complimentary Express Courier on orders over ₹999 • Use code <strong className="text-amber-400 tracking-wide font-bold">LUXE10</strong> for 10% off
           </span>
         </div>
 
-        {/* Quick Links */}
-        <div className="hidden lg:flex items-center gap-5 text-gray-300 shrink-0">
-          <Link to="/track-order" className="hover:text-amber-400 transition-colors flex items-center gap-1">
-            <ShoppingBag size={12} /> Track Order
+        {/* Studio Quick Links */}
+        <div className="hidden lg:flex items-center gap-6 text-neutral-400 text-xs shrink-0">
+          <Link to="/track-order" className="hover:text-amber-400 transition-colors flex items-center gap-1.5">
+            <Truck size={13} className="text-amber-400" /> Track Shipment
           </Link>
-          <span className="text-neutral-700">|</span>
-          <Link to="/shop" className="hover:text-amber-400 transition-colors">
-            Sell on Myzon
+          <span className="text-neutral-800">•</span>
+          <Link to="/deals" className="hover:text-amber-400 transition-colors flex items-center gap-1.5">
+            <Sparkles size={13} className="text-amber-400" /> The Vault
           </Link>
-          <span className="text-neutral-700">|</span>
-          <Link to="/track-order" className="hover:text-amber-400 transition-colors flex items-center gap-1">
-            <HelpCircle size={12} /> 24x7 Customer Service
+          <span className="text-neutral-800">•</span>
+          <Link to="/track-order" className="hover:text-amber-400 transition-colors flex items-center gap-1.5">
+            <Headphones size={13} className="text-amber-400" /> VIP Concierge
           </Link>
         </div>
       </div>
