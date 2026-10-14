@@ -12,7 +12,7 @@ const BANNERS = [
     link: '/shop?category=electronics',
     buttonText: 'Shop Tech Deals',
     bgGradient: 'from-[#0f172a] via-[#1e293b] to-[#334155]',
-    accentColor: '#febd69',
+    accentColor: '#fbbf24',
     badge: 'Live Mega Sale',
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=1000'
   },
@@ -96,7 +96,7 @@ export const HeroCarousel = () => {
         {/* Content Box */}
         <div className="relative z-10 max-w-2xl px-6 sm:px-12 py-10 flex flex-col items-start">
           <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-3 border border-white/20">
-            <Sparkles size={13} className="text-[#febd69]" />
+            <Sparkles size={13} className="text-amber-400" />
             <span>{banner.badge}</span>
           </div>
 
@@ -108,7 +108,7 @@ export const HeroCarousel = () => {
             {banner.subtitle}
           </p>
 
-          <div className="text-2xl sm:text-4xl font-black mb-3 text-[#febd69] drop-shadow-sm">
+          <div className="text-2xl sm:text-4xl font-black mb-3 text-amber-400 drop-shadow-sm">
             {banner.discount}
           </div>
 
@@ -118,7 +118,7 @@ export const HeroCarousel = () => {
 
           <Link
             to={banner.link}
-            className="bg-[#febd69] hover:bg-[#f3a847] text-gray-950 font-black px-7 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-black px-7 py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-2 text-sm transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
             <span>{banner.buttonText}</span>
             <ArrowRight size={16} />
@@ -161,7 +161,7 @@ export const HeroCarousel = () => {
             key={idx}
             onClick={() => setCurrent(idx)}
             className={`h-2.5 rounded-full transition-all cursor-pointer ${
-              current === idx ? 'w-8 bg-[#febd69]' : 'w-2.5 bg-white/50 hover:bg-white/80'
+              current === idx ? 'w-8 bg-amber-400' : 'w-2.5 bg-white/50 hover:bg-white/80'
             }`}
             aria-label={`Slide ${idx + 1}`}
           />

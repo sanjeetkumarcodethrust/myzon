@@ -18,19 +18,19 @@ export const FlashDealsSection = ({ products }) => {
   const seconds = timeLeft % 60;
 
   return (
-    <div className="bg-white rounded-2xl border border-rose-100 shadow-sm p-5 md:p-6 mb-8 overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 md:p-6 mb-8 overflow-hidden">
       {/* Top Header Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-gray-100 mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-200">
-            <Zap size={22} className="fill-current" />
+          <div className="w-10 h-10 rounded-xl bg-[#121316] text-amber-400 border border-amber-500/30 flex items-center justify-center shadow-sm">
+            <Zap size={22} className="fill-current text-amber-400" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight">
                 Deal of the Day
               </h3>
-              <span className="bg-[#cc0c39] text-white text-[10px] font-black px-2 py-0.5 rounded uppercase">
+              <span className="bg-[#121316] text-amber-400 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded uppercase shadow-xs">
                 Limited Time
               </span>
             </div>
@@ -39,10 +39,10 @@ export const FlashDealsSection = ({ products }) => {
         </div>
 
         {/* Live Timer */}
-        <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-700 px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm">
-          <Clock size={16} className="text-rose-600 animate-pulse" />
+        <div className="flex items-center gap-2 bg-amber-50/80 border border-amber-200/80 text-amber-900 px-3.5 py-1.5 rounded-xl font-bold text-xs sm:text-sm">
+          <Clock size={16} className="text-amber-600 animate-pulse" />
           <span>Ends in:</span>
-          <span className="font-mono bg-white px-2 py-0.5 rounded border border-rose-200 text-rose-800 shadow-xs">
+          <span className="font-mono bg-white px-2 py-0.5 rounded border border-amber-200 text-amber-900 shadow-xs">
             {hours.toString().padStart(2, '0')}h : {minutes.toString().padStart(2, '0')}m : {seconds.toString().padStart(2, '0')}s
           </span>
         </div>
@@ -50,7 +50,7 @@ export const FlashDealsSection = ({ products }) => {
         {/* View All Button */}
         <Link
           to="/deals"
-          className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+          className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
         >
           <span>View All Deals</span>
           <ArrowRight size={14} />
@@ -65,7 +65,7 @@ export const FlashDealsSection = ({ products }) => {
             {/* Progress bar */}
             <div className="mt-2 bg-gray-100 rounded-full h-1.5 overflow-hidden">
               <div 
-                className="bg-rose-500 h-full rounded-full" 
+                className="bg-gradient-to-r from-amber-400 to-amber-500 h-full rounded-full" 
                 style={{ width: `${Math.min(95, 45 + (product.id * 7) % 45)}%` }} 
               />
             </div>

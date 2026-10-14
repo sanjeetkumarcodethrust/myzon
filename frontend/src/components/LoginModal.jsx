@@ -53,32 +53,32 @@ export const LoginModal = () => {
           <X size={20} />
         </button>
 
-        {/* Left Side: Flipkart Signature Blue Banner */}
-        <div className="md:w-5/12 bg-gradient-to-br from-[#2874f0] to-[#1c5dc7] text-white p-8 flex flex-col justify-between">
+        {/* Left Side: Obsidian & Champagne Gold Banner */}
+        <div className="md:w-5/12 bg-gradient-to-br from-[#121316] via-[#1a1c22] to-[#0f1013] border-r border-neutral-800 text-white p-8 flex flex-col justify-between">
           <div>
             <h2 className="text-2xl font-black mb-3">Login to Myzon</h2>
-            <p className="text-blue-100 text-sm leading-relaxed mb-6">
+            <p className="text-gray-300 text-sm leading-relaxed mb-6">
               Get access to your Orders, Wishlist and Personalized Recommendations.
             </p>
             
             <div className="space-y-4 hidden md:block">
-              <div className="flex items-center gap-3 text-xs text-blue-50">
-                <Truck size={16} className="text-[#ffe500]" />
+              <div className="flex items-center gap-3 text-xs text-gray-200">
+                <Truck size={16} className="text-amber-400" />
                 <span>Track orders & easy returns</span>
               </div>
-              <div className="flex items-center gap-3 text-xs text-blue-50">
-                <Heart size={16} className="text-[#ffe500]" />
+              <div className="flex items-center gap-3 text-xs text-gray-200">
+                <Heart size={16} className="text-amber-400" />
                 <span>Save favorites in your wishlist</span>
               </div>
-              <div className="flex items-center gap-3 text-xs text-blue-50">
-                <ShieldCheck size={16} className="text-[#ffe500]" />
+              <div className="flex items-center gap-3 text-xs text-gray-200">
+                <ShieldCheck size={16} className="text-amber-400" />
                 <span>100% Secure & safe payments</span>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 pt-4 border-t border-blue-400/40 text-[11px] text-blue-100 flex items-center gap-1.5">
-            <ShoppingBag size={14} className="text-[#ffe500]" />
+          <div className="mt-8 pt-4 border-t border-neutral-700/60 text-[11px] text-gray-300 flex items-center gap-1.5">
+            <ShoppingBag size={14} className="text-amber-400" />
             <span>Over 10 Million+ Satisfied Customers</span>
           </div>
         </div>
@@ -98,7 +98,7 @@ export const LoginModal = () => {
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     placeholder="Enter Email or 10-digit Mobile Number"
-                    className="w-full border-b-2 border-gray-300 py-2.5 text-sm focus:outline-none focus:border-[#2874f0] transition-colors"
+                    className="w-full border-b-2 border-gray-300 py-2.5 text-sm focus:outline-none focus:border-amber-500 transition-colors"
                   />
                 </div>
 
@@ -111,26 +111,26 @@ export const LoginModal = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Sanjeev"
-                    className="w-full border-b-2 border-gray-300 py-2.5 text-sm focus:outline-none focus:border-[#2874f0] transition-colors"
+                    className="w-full border-b-2 border-gray-300 py-2.5 text-sm focus:outline-none focus:border-amber-500 transition-colors"
                   />
                 </div>
 
                 <p className="text-[11px] text-gray-500 leading-normal pt-2">
                   By continuing, you agree to Myzon's{' '}
-                  <span className="text-[#2874f0] font-semibold cursor-pointer">Terms of Use</span> and{' '}
-                  <span className="text-[#2874f0] font-semibold cursor-pointer">Privacy Policy</span>.
+                  <span className="text-amber-600 font-semibold cursor-pointer hover:underline">Terms of Use</span> and{' '}
+                  <span className="text-amber-600 font-semibold cursor-pointer hover:underline">Privacy Policy</span>.
                 </p>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#fb641b] hover:bg-[#e85814] text-white font-bold py-3 rounded-md shadow-md text-sm transition-all transform active:scale-98 cursor-pointer mt-2"
+                  className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3 rounded-md shadow-md text-sm transition-all transform active:scale-98 cursor-pointer mt-2"
                 >
                   Request OTP / Continue
                 </button>
               </form>
             ) : (
               <form onSubmit={handleVerify} className="space-y-4">
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-xs text-[#2874f0]">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 font-medium">
                   OTP has been sent to <strong>{identifier}</strong>. (Enter any 6 digits to verify)
                 </div>
 
@@ -144,13 +144,13 @@ export const LoginModal = () => {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                     placeholder="e.g. 123456"
-                    className="w-full border-b-2 border-gray-300 py-2.5 text-center text-lg tracking-widest font-bold focus:outline-none focus:border-[#2874f0]"
+                    className="w-full border-b-2 border-gray-300 py-2.5 text-center text-lg tracking-widest font-bold focus:outline-none focus:border-amber-500"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-[#fb641b] hover:bg-[#e85814] text-white font-bold py-3 rounded-md shadow-md text-sm transition-all cursor-pointer"
+                  className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3 rounded-md shadow-md text-sm transition-all cursor-pointer"
                 >
                   Verify & Login
                 </button>

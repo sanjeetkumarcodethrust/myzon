@@ -21,11 +21,11 @@ export const ProductCard = ({ product }) => {
       {/* Top Tag & Wishlist Button */}
       <div className="flex items-center justify-between z-10 mb-2">
         {discountText ? (
-          <span className="bg-[#cc0c39] text-white text-[10px] font-extrabold px-2 py-0.5 rounded tracking-wide uppercase">
+          <span className="bg-[#121316] text-amber-400 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded tracking-wide uppercase shadow-xs">
             {discountText}
           </span>
         ) : (
-          <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">
+          <span className="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-100">
             Top Rated
           </span>
         )}
@@ -64,22 +64,21 @@ export const ProductCard = ({ product }) => {
         <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider truncate">
           {product.brand}
         </span>
-        {/* Flipkart Assured / Prime style badge */}
-        <span className="inline-flex items-center gap-0.5 text-[9px] font-black text-[#2874f0] bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+        <span className="inline-flex items-center gap-0.5 text-[9px] font-black text-amber-800 bg-amber-50/80 px-1.5 py-0.5 rounded border border-amber-200/60">
           ✦ Assured
         </span>
       </div>
 
       {/* Product Title */}
       <Link to={`/product/${product.id}`} className="mb-2">
-        <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 hover:text-[#2874f0] transition-colors leading-snug h-8">
+        <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 hover:text-amber-600 transition-colors leading-snug h-8">
           {product.title}
         </h4>
       </Link>
 
-      {/* Rating badge (Flipkart-style green pill rating) */}
+      {/* Rating badge */}
       <div className="flex items-center gap-1.5 mb-2.5">
-        <span className="inline-flex items-center gap-0.5 bg-[#388e3c] text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+        <span className="inline-flex items-center gap-0.5 bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
           {product.rating || '4.2'} <Star size={10} className="fill-current" />
         </span>
         <span className="text-[11px] text-gray-400">
@@ -87,7 +86,7 @@ export const ProductCard = ({ product }) => {
         </span>
       </div>
 
-      {/* Price Section (Rupee styling) */}
+      {/* Price Section */}
       <div className="mt-auto pt-2 border-t border-gray-50">
         <div className="flex items-baseline gap-2 mb-1">
           <span className="text-base font-black text-gray-900">
@@ -102,13 +101,13 @@ export const ProductCard = ({ product }) => {
 
         {/* Free Delivery Tag */}
         <p className="text-[10px] text-gray-600 mb-3 flex items-center gap-1">
-          <span className="text-[#388e3c] font-bold">FREE Delivery</span> Tomorrow
+          <span className="text-emerald-600 font-bold">FREE Delivery</span> Tomorrow
         </p>
 
         {/* Add to Cart button */}
         <button
           onClick={() => addToCart(product)}
-          className="w-full bg-[#ffd814] hover:bg-[#f7ca00] text-gray-900 font-bold py-2 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs active:scale-98 cursor-pointer"
+          className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-2.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs active:scale-98 cursor-pointer"
         >
           <ShoppingCart size={14} />
           Add to Cart

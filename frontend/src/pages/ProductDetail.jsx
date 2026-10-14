@@ -31,7 +31,7 @@ export const ProductDetail = () => {
         <p className="text-gray-500 mb-6">The product you are looking for does not exist or has been removed.</p>
         <button 
           onClick={() => navigate('/')} 
-          className="bg-[#2874f0] text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-600 transition-colors"
+          className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-6 py-2.5 rounded-lg transition-colors shadow-xs"
         >
           Return to Home
         </button>
@@ -69,11 +69,11 @@ export const ProductDetail = () => {
     <div className="bg-[#f1f3f6] min-h-screen py-6">
       <div className="max-w-[1600px] mx-auto px-4">
         
-        {/* Amazon-style Breadcrumbs */}
+        {/* Breadcrumbs */}
         <nav className="flex items-center gap-1.5 text-xs text-gray-500 mb-4 overflow-x-auto whitespace-nowrap">
-          <Link to="/" className="hover:text-[#2874f0]">Home</Link>
+          <Link to="/" className="hover:text-amber-600">Home</Link>
           <ChevronRight size={12} />
-          <Link to={`/shop?category=${product.category}`} className="hover:text-[#2874f0] capitalize">
+          <Link to={`/shop?category=${product.category}`} className="hover:text-amber-600 capitalize">
             {product.category?.replace('-', ' ')}
           </Link>
           <ChevronRight size={12} />
@@ -89,7 +89,7 @@ export const ProductDetail = () => {
           <div className="w-full lg:w-5/12 flex flex-col items-center">
             <div className="w-full h-80 sm:h-96 md:h-[420px] bg-gray-50 rounded-2xl p-6 flex items-center justify-center relative border border-gray-100 group overflow-hidden">
               {/* Discount Tag */}
-              <div className="absolute top-4 left-4 bg-[#cc0c39] text-white text-xs font-black px-2.5 py-1 rounded shadow-xs">
+              <div className="absolute top-4 left-4 bg-[#121316] text-amber-400 border border-amber-500/30 text-xs font-black px-2.5 py-1 rounded shadow-xs">
                 {discountPct}% OFF
               </div>
 
@@ -97,7 +97,7 @@ export const ProductDetail = () => {
               <div className="absolute top-4 right-4 flex flex-col gap-2 z-10">
                 <button
                   onClick={() => addToWishlist(product)}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
+                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all cursor-pointer ${
                     inWishlist ? 'bg-rose-50 text-rose-500' : 'bg-white text-gray-500 hover:text-rose-500'
                   }`}
                   title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -106,7 +106,7 @@ export const ProductDetail = () => {
                 </button>
                 <button
                   onClick={handleShare}
-                  className="w-9 h-9 rounded-full bg-white text-gray-500 hover:text-[#2874f0] flex items-center justify-center shadow-md transition-all"
+                  className="w-9 h-9 rounded-full bg-white text-gray-500 hover:text-amber-600 flex items-center justify-center shadow-md transition-all cursor-pointer"
                   title="Share product"
                 >
                   <Share2 size={16} />
@@ -127,7 +127,7 @@ export const ProductDetail = () => {
                 <p className="text-[10px] font-bold text-gray-700">7 Days Return</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-2.5 border border-gray-100">
-                <Truck size={18} className="mx-auto text-[#2874f0] mb-1" />
+                <Truck size={18} className="mx-auto text-amber-600 mb-1" />
                 <p className="text-[10px] font-bold text-gray-700">Free Delivery</p>
               </div>
               <div className="bg-gray-50 rounded-lg p-2.5 border border-gray-100">
@@ -141,7 +141,7 @@ export const ProductDetail = () => {
           <div className="w-full lg:w-4/12 flex flex-col">
             <Link 
               to={`/shop?q=${encodeURIComponent(product.brand)}`}
-              className="text-xs font-bold text-[#2874f0] hover:underline uppercase tracking-wider mb-1"
+              className="text-xs font-bold text-amber-600 hover:underline uppercase tracking-wider mb-1"
             >
               Visit the {product.brand} Store
             </Link>
@@ -159,7 +159,7 @@ export const ProductDetail = () => {
               <span className="text-xs text-gray-500 font-medium">
                 {product.reviews || '1.2k'} ratings & customer reviews
               </span>
-              <span className="text-xs text-[#2874f0] font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+              <span className="text-xs text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
                 ✦ Assured
               </span>
             </div>
@@ -185,7 +185,7 @@ export const ProductDetail = () => {
             {/* Bank Offers Accordion */}
             <div className="mb-6 space-y-2">
               <h4 className="text-xs font-black uppercase text-gray-800 tracking-wider flex items-center gap-1.5">
-                <Tag size={14} className="text-[#2874f0]" /> Available Bank & Partner Offers
+                <Tag size={14} className="text-amber-600" /> Available Bank & Partner Offers
               </h4>
               <div className="border border-gray-200 rounded-lg p-3 text-xs space-y-2">
                 <p className="text-gray-700">
@@ -203,7 +203,7 @@ export const ProductDetail = () => {
             {/* Pincode Delivery Checker */}
             <div className="mb-6">
               <h4 className="text-xs font-black uppercase text-gray-800 tracking-wider mb-2 flex items-center gap-1">
-                <MapPin size={14} className="text-[#febd69]" /> Delivery to Pincode
+                <MapPin size={14} className="text-amber-500" /> Delivery to Pincode
               </h4>
               <div className="flex gap-2">
                 <input
@@ -212,12 +212,12 @@ export const ProductDetail = () => {
                   value={pincodeCheck}
                   onChange={(e) => setPincodeCheck(e.target.value)}
                   placeholder="Enter Pincode"
-                  className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#2874f0] w-36"
+                  className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 w-36"
                 />
                 <button
                   type="button"
                   onClick={() => setPincodeChecked(true)}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold px-4 py-1.5 rounded-lg text-xs"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold px-4 py-1.5 rounded-lg text-xs cursor-pointer"
                 >
                   Check
                 </button>
@@ -231,7 +231,7 @@ export const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Right Column: Amazon Buy Box */}
+          {/* Right Column: Buy Box */}
           <div className="w-full lg:w-3/12 flex flex-col">
             <div className="border border-gray-300 rounded-2xl p-5 bg-white shadow-sm sticky top-20">
               <div className="text-2xl font-black text-gray-900 mb-2">
@@ -277,7 +277,7 @@ export const ProductDetail = () => {
               {/* Add to Cart button */}
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-[#ffd814] hover:bg-[#f7ca00] text-gray-950 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 mb-2.5 shadow-xs transition-colors cursor-pointer"
+                className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 mb-2.5 shadow-xs transition-colors cursor-pointer"
               >
                 <ShoppingCart size={18} />
                 Add to Cart
@@ -286,7 +286,7 @@ export const ProductDetail = () => {
               {/* Buy Now button */}
               <button
                 onClick={handleBuyNow}
-                className="w-full bg-[#ffa41c] hover:bg-[#fa8900] text-gray-950 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 mb-4 shadow-xs transition-colors cursor-pointer"
+                className="w-full bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 font-bold py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 mb-4 shadow-xs transition-colors cursor-pointer"
               >
                 <Zap size={18} />
                 Buy Now
@@ -326,7 +326,7 @@ export const ProductDetail = () => {
                     <img src={p.image} alt={p.title} className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
                   </div>
                   <p className="text-[10px] text-gray-400 font-bold uppercase truncate">{p.brand}</p>
-                  <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 h-8 leading-snug group-hover:text-[#2874f0]">
+                  <h4 className="text-xs font-semibold text-gray-800 line-clamp-2 h-8 leading-snug group-hover:text-amber-600">
                     {p.title}
                   </h4>
                   <div className="mt-auto pt-2 flex items-baseline gap-1.5">

@@ -27,7 +27,7 @@ export const Toast = () => {
             <Link 
               to="/cart" 
               onClick={hideToast}
-              className="text-xs text-[#febd69] font-bold hover:underline inline-flex items-center gap-1 mt-0.5"
+              className="text-xs text-amber-400 font-bold hover:underline inline-flex items-center gap-1 mt-0.5"
             >
               <ShoppingCart size={12} /> View Cart ({cartItems.length} items) →
             </Link>

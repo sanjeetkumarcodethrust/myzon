@@ -56,19 +56,19 @@ export const Chatbot = () => {
       {isOpen && (
         <div className="bg-white w-80 sm:w-96 rounded-2xl shadow-2xl border border-gray-100 flex flex-col mb-4 overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-200 h-[450px]">
           {/* Header */}
-          <div className="bg-orange-500 text-white p-4 flex items-center justify-between shadow-sm">
+          <div className="bg-[#121316] text-white p-4 flex items-center justify-between border-b border-neutral-800">
             <div className="flex items-center gap-2">
-              <Bot size={24} />
+              <Bot size={24} className="text-amber-400" />
               <div>
                 <h3 className="font-bold text-sm">Myzon Support</h3>
-                <p className="text-[10px] text-orange-100 flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-green-400 inline-block"></span> Online
+                <p className="text-[10px] text-gray-300 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span> Online
                 </p>
               </div>
             </div>
             <button 
               onClick={() => setIsOpen(false)}
-              className="text-white hover:bg-orange-600 p-1.5 rounded-full transition-colors"
+              className="text-gray-400 hover:text-white hover:bg-neutral-800 p-1.5 rounded-full transition-colors cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -81,13 +81,13 @@ export const Chatbot = () => {
                 key={msg.id} 
                 className={`flex gap-2 max-w-[85%] ${msg.sender === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`}
               >
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${msg.sender === 'user' ? 'bg-orange-100 text-orange-600' : 'bg-gray-200 text-gray-600'}`}>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${msg.sender === 'user' ? 'bg-amber-100 text-amber-800' : 'bg-gray-200 text-gray-600'}`}>
                   {msg.sender === 'user' ? <User size={14} /> : <Bot size={14} />}
                 </div>
                 <div 
                   className={`p-3 rounded-2xl text-sm shadow-sm ${
                     msg.sender === 'user' 
-                      ? 'bg-orange-500 text-white rounded-tr-none' 
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 font-medium rounded-tr-none shadow-xs' 
                       : 'bg-white text-gray-700 border border-gray-100 rounded-tl-none'
                   }`}
                 >
@@ -105,12 +105,12 @@ export const Chatbot = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors"
             />
             <button 
               type="submit"
               disabled={!inputValue.trim()}
-              className="bg-orange-500 text-white p-2.5 rounded-full hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 p-2.5 rounded-full hover:from-amber-500 hover:to-amber-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs cursor-pointer"
             >
               <Send size={18} className="ml-0.5" />
             </button>
@@ -122,7 +122,7 @@ export const Chatbot = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group"
+          className="bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 p-4 rounded-full shadow-2xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer"
         >
           <MessageCircle size={28} className="group-hover:scale-110 transition-transform duration-300" />
         </button>

@@ -69,7 +69,7 @@ export const Home = () => {
         <div className="bg-white rounded-xl border border-gray-100 shadow-xs p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-black text-gray-900">
-              Results for <span className="text-[#2874f0]">"{query}"</span>
+              Results for <span className="text-amber-600">"{query}"</span>
             </h1>
             <p className="text-xs text-gray-500 mt-1">
               Showing {searchResults.length} products matching your query
@@ -95,7 +95,7 @@ export const Home = () => {
             <p className="text-xs text-gray-400 mb-6">Try checking your spelling or searching for broad terms like "headphones", "pooja", or "shoes".</p>
             <Link
               to="/shop"
-              className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white text-xs font-bold px-6 py-3 rounded-lg shadow-sm"
+              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 text-xs font-bold px-6 py-3 rounded-lg shadow-xs"
             >
               Browse All Products
             </Link>
@@ -156,7 +156,7 @@ export const Home = () => {
                 <h3 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight">
                   Best of Electronics & Gadgets
                 </h3>
-                <span className="hidden sm:inline-block bg-blue-50 text-[#2874f0] text-[10px] font-black px-2 py-0.5 rounded">
+                <span className="hidden sm:inline-block bg-amber-50 text-amber-800 border border-amber-200/60 text-[10px] font-black px-2 py-0.5 rounded">
                   ✦ Assured
                 </span>
               </div>
@@ -164,7 +164,7 @@ export const Home = () => {
             </div>
             <Link
               to="/shop?category=electronics"
-              className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+              className="bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
             >
               <span>View All</span>
               <ArrowRight size={14} />
@@ -207,7 +207,7 @@ export const Home = () => {
           </div>
         </div>
 
-        {/* 8. Budget Store: Under ₹999 Store (Amazon Bazaar Style) */}
+        {/* 8. Budget Store: Under ₹999 Store */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-xs p-5 md:p-6 mb-8">
           <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
             <div>
@@ -223,7 +223,7 @@ export const Home = () => {
             </div>
             <Link
               to="/shop?price=Under+₹1,000"
-              className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+              className="bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
             >
               <span>View Under ₹999</span>
               <ArrowRight size={14} />
@@ -253,7 +253,7 @@ export const Home = () => {
             </div>
             <Link
               to="/shop?category=fashion"
-              className="bg-[#2874f0] hover:bg-[#1a5ec4] text-white font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+              className="bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 font-bold text-xs px-4 py-2 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-xs"
             >
               <span>View Fashion</span>
               <ArrowRight size={14} />

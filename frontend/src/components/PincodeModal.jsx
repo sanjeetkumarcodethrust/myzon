@@ -37,14 +37,14 @@ export const PincodeModal = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
       <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl border border-gray-100 overflow-hidden transform transition-all">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#232f3e] to-[#131921] text-white p-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#121316] to-[#0a0b0d] text-white p-4 flex items-center justify-between border-b border-neutral-800">
           <div className="flex items-center gap-2">
-            <MapPin size={20} className="text-[#febd69]" />
+            <MapPin size={20} className="text-amber-400" />
             <h3 className="font-bold text-base">Choose your delivery location</h3>
           </div>
           <button 
             onClick={closePincodeModal}
-            className="text-gray-400 hover:text-white p-1 rounded-full transition-colors"
+            className="text-gray-400 hover:text-white p-1 rounded-full transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
@@ -70,11 +70,11 @@ export const PincodeModal = () => {
                   setError('');
                 }}
                 placeholder="e.g. 110001"
-                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#f3a847] focus:border-transparent"
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               />
               <button
                 type="submit"
-                className="bg-[#febd69] hover:bg-[#f3a847] text-gray-900 font-bold px-5 py-2 rounded-lg text-sm shadow-sm transition-colors cursor-pointer"
+                className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-5 py-2 rounded-lg text-sm shadow-sm transition-colors cursor-pointer"
               >
                 Apply
               </button>
@@ -96,17 +96,17 @@ export const PincodeModal = () => {
                   key={c.pincode}
                   type="button"
                   onClick={() => setLocation(c.city, c.pincode)}
-                  className={`flex items-center justify-between p-2.5 rounded-lg border text-left text-xs font-medium transition-all ${
+                  className={`flex items-center justify-between p-2.5 rounded-lg border text-left text-xs font-medium transition-all cursor-pointer ${
                     isSelected 
-                      ? 'border-[#2874f0] bg-blue-50/60 text-[#2874f0] font-bold ring-1 ring-[#2874f0]' 
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700'
+                      ? 'border-amber-500 bg-amber-50/70 text-amber-900 font-bold ring-1 ring-amber-500' 
+                      : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/30 text-gray-700'
                   }`}
                 >
                   <div>
                     <p className="truncate">{c.city}</p>
                     <p className="text-[10px] text-gray-400 font-normal">{c.pincode}</p>
                   </div>
-                  {isSelected && <Check size={14} className="text-[#2874f0]" />}
+                  {isSelected && <Check size={14} className="text-amber-600" />}
                 </button>
               );
             })}

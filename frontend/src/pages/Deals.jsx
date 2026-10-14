@@ -45,8 +45,8 @@ const CountdownTimer = ({ initialSeconds }) => {
   const s = seconds % 60;
 
   return (
-    <div className="flex items-center gap-1.5 text-red-500 font-bold bg-red-50 px-3 py-1.5 rounded-md border border-red-100">
-      <Clock size={16} />
+    <div className="flex items-center gap-1.5 text-amber-900 font-bold bg-amber-50 px-3 py-1.5 rounded-md border border-amber-200">
+      <Clock size={16} className="text-amber-600" />
       <span>{h.toString().padStart(2, '0')}</span>:
       <span>{m.toString().padStart(2, '0')}</span>:
       <span>{s.toString().padStart(2, '0')}</span>
@@ -60,34 +60,34 @@ export const Deals = () => {
   return (
     <div className="max-w-[1600px] mx-auto px-4 py-8">
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-red-600 to-orange-500 rounded-2xl p-8 md:p-12 text-white mb-10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+      <div className="bg-gradient-to-r from-[#121316] via-[#1a1c22] to-[#0f1013] border border-amber-500/30 rounded-2xl p-8 md:p-12 text-white mb-10 relative overflow-hidden flex flex-col md:flex-row items-center justify-between shadow-xl">
         <div className="relative z-10 max-w-lg mb-8 md:mb-0">
-          <div className="flex items-center gap-2 text-yellow-300 font-bold mb-4 bg-white/20 inline-flex px-3 py-1 rounded-full backdrop-blur-sm">
-            <Zap size={18} className="fill-current" /> Lightning Deals
+          <div className="flex items-center gap-2 text-amber-400 font-bold mb-4 bg-white/10 inline-flex px-3 py-1 rounded-full backdrop-blur-sm border border-amber-400/20">
+            <Zap size={18} className="fill-current text-amber-400" /> Lightning Deals
           </div>
           <h1 className="text-4xl md:text-5xl font-black leading-tight mb-4">Biggest Sale of the Season</h1>
-          <p className="text-white/80 text-lg mb-8">Save up to 70% on top electronics, fashion, and home appliances. Hurry, offers end soon!</p>
-          <Link to="/shop" className="bg-white text-red-600 hover:bg-gray-50 font-bold px-8 py-3 rounded-lg transition-colors shadow-lg inline-block">
+          <p className="text-gray-300 text-lg mb-8">Save up to 70% on top electronics, fashion, and home appliances. Exclusive limited-time pricing!</p>
+          <Link to="/shop" className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-8 py-3 rounded-lg transition-colors shadow-lg inline-block">
             Shop All Deals
           </Link>
         </div>
         
         {/* Graphic */}
-        <div className="relative z-10 bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
+        <div className="relative z-10 bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-amber-500/20 shadow-xl">
           <div className="text-center">
-            <div className="text-sm font-bold uppercase tracking-widest text-white/80 mb-2">Sale ends in</div>
+            <div className="text-sm font-bold uppercase tracking-widest text-amber-300 mb-2">Sale ends in</div>
             <div className="flex gap-4">
-              <div className="bg-white text-red-600 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
+              <div className="bg-[#121316] text-amber-400 border border-amber-500/30 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
                 <span className="text-2xl">02</span>
-                <span className="text-[10px] uppercase">Days</span>
+                <span className="text-[10px] uppercase text-gray-400">Days</span>
               </div>
-              <div className="bg-white text-red-600 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
+              <div className="bg-[#121316] text-amber-400 border border-amber-500/30 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
                 <span className="text-2xl">14</span>
-                <span className="text-[10px] uppercase">Hours</span>
+                <span className="text-[10px] uppercase text-gray-400">Hours</span>
               </div>
-              <div className="bg-white text-red-600 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
+              <div className="bg-[#121316] text-amber-400 border border-amber-500/30 w-16 h-16 rounded-xl flex flex-col items-center justify-center font-black shadow-lg">
                 <span className="text-2xl">35</span>
-                <span className="text-[10px] uppercase">Mins</span>
+                <span className="text-[10px] uppercase text-gray-400">Mins</span>
               </div>
             </div>
           </div>
@@ -96,15 +96,15 @@ export const Deals = () => {
 
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-          Deals of the Day <span className="text-red-500">🔥</span>
+          Deals of the Day <span className="text-amber-500">🔥</span>
         </h2>
-        <Link to="/shop" className="text-orange-500 font-bold hover:underline">View All</Link>
+        <Link to="/shop" className="text-amber-600 font-bold hover:underline">View All</Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {dealProducts.map(product => (
-          <div key={product.id} className="bg-white border-2 border-red-100 rounded-2xl p-5 shadow-sm hover:shadow-xl hover:border-red-500 transition-all group relative flex flex-col h-full">
-            <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-black px-3 py-1 rounded-full z-10 shadow-sm">
+          <div key={product.id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-xs hover:shadow-xl hover:border-amber-400 transition-all group relative flex flex-col h-full">
+            <div className="absolute top-4 left-4 bg-[#121316] text-amber-400 border border-amber-500/30 text-xs font-black px-3 py-1 rounded-full z-10 shadow-xs">
               {product.discount}
             </div>
             
@@ -114,14 +114,14 @@ export const Deals = () => {
             
             <div className="flex justify-between items-start mb-2">
               <div className="text-xs text-gray-500 font-medium">{product.brand}</div>
-              <div className="flex text-orange-400 text-xs">
+              <div className="flex text-amber-500 text-xs">
                 <Star size={12} className="fill-current" />
                 <span className="text-gray-600 ml-1 font-medium">{product.rating}</span>
               </div>
             </div>
             
             <Link to={`/product/${product.id}`}>
-              <h4 className="font-bold text-gray-900 text-base mb-4 line-clamp-2 min-h-[48px] hover:text-orange-500 transition-colors">{product.title}</h4>
+              <h4 className="font-bold text-gray-900 text-base mb-4 line-clamp-2 min-h-[48px] hover:text-amber-600 transition-colors">{product.title}</h4>
             </Link>
             
             <div className="mt-auto">
@@ -136,7 +136,7 @@ export const Deals = () => {
                 </div>
                 <button 
                   onClick={() => addToCart(product)}
-                  className="bg-gray-900 text-white p-3 rounded-xl hover:bg-orange-500 transition-colors shadow-sm group-hover:shadow-md cursor-pointer"
+                  className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 p-3 rounded-xl transition-all shadow-xs cursor-pointer font-bold"
                   title="Add to Cart"
                 >
                   <ShoppingCart size={20} />

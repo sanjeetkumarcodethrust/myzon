@@ -20,15 +20,15 @@ export const Navigation = () => {
   ];
 
   return (
-    <div className="bg-[#232f3e] text-white text-xs border-b border-gray-700/60 overflow-x-auto hide-scrollbar">
+    <div className="bg-[#18191f] text-white text-xs border-b border-neutral-800 overflow-x-auto hide-scrollbar">
       <div className="max-w-[1600px] mx-auto px-4 flex items-center justify-between min-w-max gap-4">
         
         {/* Left Side Links */}
         <div className="flex items-center gap-1 py-1.5">
-          {/* Amazon Iconic "All" Hamburger Button */}
+          {/* All Hamburger Button */}
           <button
             onClick={openDrawer}
-            className="flex items-center gap-1.5 py-1 px-2.5 rounded-xs font-bold hover:ring-1 hover:ring-white transition-all text-white cursor-pointer mr-1"
+            className="flex items-center gap-1.5 py-1 px-2.5 rounded-sm font-bold hover:ring-1 hover:ring-white transition-all text-white cursor-pointer mr-1"
           >
             <Menu size={16} />
             <span>All</span>
@@ -39,12 +39,12 @@ export const Navigation = () => {
             <Link
               key={index}
               to={item.path}
-              className={`py-1 px-2.5 rounded-xs transition-all hover:ring-1 hover:ring-white whitespace-nowrap font-medium ${
+              className={`py-1 px-2.5 rounded-sm transition-all hover:ring-1 hover:ring-white whitespace-nowrap font-medium ${
                 item.festive
-                  ? 'text-[#ffe500] font-bold bg-amber-900/30'
+                  ? 'text-amber-300 font-bold bg-amber-500/10 border border-amber-500/20'
                   : item.highlight
-                  ? 'text-[#febd69] font-bold'
-                  : 'text-gray-200 hover:text-white'
+                  ? 'text-amber-400 font-bold'
+                  : 'text-gray-300 hover:text-white'
               }`}
             >
               {item.name}
@@ -52,12 +52,12 @@ export const Navigation = () => {
           ))}
         </div>
 
-        {/* Right Side: Prime / Plus Banner (Amazon / Flipkart Hybrid) */}
+        {/* Right Side: Prime / Plus Banner */}
         <Link
           to="/deals"
-          className="hidden xl:flex items-center gap-2 py-1 px-3 text-[#febd69] hover:text-white font-bold transition-colors shrink-0"
+          className="hidden xl:flex items-center gap-2 py-1 px-3 text-amber-400 hover:text-amber-300 font-bold transition-colors shrink-0"
         >
-          <Sparkles size={14} className="text-[#ffe500]" />
+          <Sparkles size={14} className="text-amber-400" />
           <span>Join Myzon Prime | Free Delivery & Watch</span>
         </Link>
 

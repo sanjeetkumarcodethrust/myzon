@@ -24,7 +24,7 @@ export const AmazonQuadCard = ({ title, items, seeMoreLink = '/shop', seeMoreTex
                   className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform"
                 />
               </div>
-              <span className="text-[11px] font-semibold text-gray-700 group-hover:text-[#2874f0] transition-colors mt-1.5 line-clamp-1">
+              <span className="text-[11px] font-semibold text-gray-700 group-hover:text-amber-600 transition-colors mt-1.5 line-clamp-1">
                 {item.title}
               </span>
               {item.subtitle && (
@@ -39,7 +39,7 @@ export const AmazonQuadCard = ({ title, items, seeMoreLink = '/shop', seeMoreTex
 
       <Link
         to={seeMoreLink}
-        className="text-xs font-bold text-[#2874f0] hover:text-[#0c52bb] hover:underline inline-flex items-center gap-1 mt-auto pt-2 border-t border-gray-50"
+        className="text-xs font-bold text-amber-600 hover:text-amber-700 hover:underline inline-flex items-center gap-1 mt-auto pt-2 border-t border-gray-50"
       >
         {seeMoreText} →
       </Link>

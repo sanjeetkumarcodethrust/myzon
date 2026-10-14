@@ -84,19 +84,19 @@ export const FlipkartCategoryStrip = () => {
               to={cat.slug === 'all' ? '/deals' : `/shop?category=${cat.slug}`}
               className="flex flex-col items-center gap-1.5 min-w-[76px] sm:min-w-[92px] group text-center cursor-pointer p-1"
             >
-              <div className="relative w-15 h-15 sm:w-16 sm:h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center p-1 group-hover:scale-108 group-hover:border-[#2874f0] group-hover:shadow-md transition-all duration-200 overflow-hidden">
+              <div className="relative w-15 h-15 sm:w-16 sm:h-16 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center p-1 group-hover:scale-108 group-hover:border-amber-400 group-hover:shadow-md transition-all duration-200 overflow-hidden">
                 <img
                   src={cat.image}
                   alt={cat.name}
                   className="w-full h-full object-cover rounded-full"
                 />
                 {cat.badge && (
-                  <span className="absolute -top-0.5 right-0 bg-[#e41e31] text-white text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter shadow-xs">
+                  <span className="absolute -top-0.5 right-0 bg-[#121316] text-amber-400 border border-amber-500/30 text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-tighter shadow-xs">
                     {cat.badge}
                   </span>
                 )}
               </div>
-              <span className="text-[11px] sm:text-xs font-bold text-gray-700 group-hover:text-[#2874f0] transition-colors line-clamp-1">
+              <span className="text-[11px] sm:text-xs font-bold text-gray-700 group-hover:text-amber-600 transition-colors line-clamp-1">
                 {cat.name}
               </span>
             </Link>

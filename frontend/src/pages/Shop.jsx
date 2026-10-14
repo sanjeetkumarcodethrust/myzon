@@ -202,7 +202,7 @@ export const Shop = () => {
                       }}
                       className="text-[#2874f0]"
                     />
-                    <span className={priceParam === '' ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                    <span className={priceParam === '' ? 'font-bold text-amber-600' : 'text-gray-600'}>
                       All Prices
                     </span>
                   </label>
@@ -217,9 +217,9 @@ export const Shop = () => {
                           p.set('price', r.label);
                           setSearchParams(p);
                         }}
-                        className="text-[#2874f0]"
+                        className="accent-amber-500"
                       />
-                      <span className={priceParam === r.label ? 'font-bold text-[#2874f0]' : 'text-gray-600'}>
+                      <span className={priceParam === r.label ? 'font-bold text-amber-600' : 'text-gray-600'}>
                         {r.label}
                       </span>
                     </label>
@@ -233,7 +233,7 @@ export const Shop = () => {
                   Customer Rating
                 </h4>
                 <div className="space-y-1 text-gray-600">
-                  <div className="flex items-center gap-1.5 hover:text-[#2874f0] cursor-pointer" onClick={() => handleSortChange('Customer Rating')}>
+                  <div className="flex items-center gap-1.5 hover:text-amber-600 cursor-pointer" onClick={() => handleSortChange('Customer Rating')}>
                     <span className="font-bold text-amber-500">4★ & above</span>
                   </div>
                 </div>
@@ -244,7 +244,7 @@ export const Shop = () => {
           {/* Right Product Grid Column */}
           <div className="flex-1">
             
-            {/* Sort Bar (Flipkart Style Tabs) */}
+            {/* Sort Bar */}
             <div className="bg-white rounded-xl border border-gray-200/80 p-3 mb-4 shadow-xs flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-gray-800">Sort By:</span>
@@ -255,7 +255,7 @@ export const Shop = () => {
                       onClick={() => handleSortChange(opt)}
                       className={`px-3 py-1.5 rounded-lg font-bold transition-all cursor-pointer ${
                         sortOption === opt
-                          ? 'bg-[#2874f0] text-white shadow-xs'
+                          ? 'bg-[#121316] text-amber-400 border border-amber-500/40 shadow-xs'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -297,7 +297,7 @@ export const Shop = () => {
                 <p className="text-xs text-gray-500 mb-6">Try clearing some filters or searching for different keywords.</p>
                 <button
                   onClick={() => setSearchParams({})}
-                  className="bg-[#2874f0] text-white font-bold px-6 py-2.5 rounded-lg text-xs"
+                  className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-6 py-2.5 rounded-lg text-xs cursor-pointer shadow-xs"
                 >
                   Reset All Filters
                 </button>

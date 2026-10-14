@@ -107,11 +107,11 @@ export const Cart = () => {
     <div className="bg-[#f1f3f6] min-h-screen py-8">
       <div className="max-w-[1500px] mx-auto px-4">
         
-        {/* Deliver to address bar (Flipkart style) */}
+        {/* Deliver to address bar */}
         {cartItems.length > 0 && !orderSuccess && (
           <div className="bg-white rounded-xl border border-gray-200/80 shadow-xs p-4 mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <MapPin size={20} className="text-[#2874f0]" />
+              <MapPin size={20} className="text-amber-600" />
               <div className="text-xs">
                 <span className="text-gray-500">Deliver to: </span>
                 <span className="font-bold text-gray-900">{addressForm.city} - {addressForm.pincode}</span>
@@ -119,7 +119,7 @@ export const Cart = () => {
             </div>
             <button
               onClick={openPincodeModal}
-              className="text-[#2874f0] font-bold text-xs border border-blue-200 rounded-lg px-4 py-1.5 hover:bg-blue-50 transition-colors cursor-pointer"
+              className="text-amber-600 font-bold text-xs border border-amber-200 rounded-lg px-4 py-1.5 hover:bg-amber-50 transition-colors cursor-pointer"
             >
               Change Pincode
             </button>
@@ -159,7 +159,7 @@ export const Cart = () => {
                         {/* Title and details */}
                         <div className="flex-1 min-w-0">
                           <Link to={`/product/${item.id}`}>
-                            <h3 className="font-bold text-sm text-gray-900 line-clamp-2 hover:text-[#2874f0] transition-colors leading-snug mb-1">
+                            <h3 className="font-bold text-sm text-gray-900 line-clamp-2 hover:text-amber-600 transition-colors leading-snug mb-1">
                               {item.title}
                             </h3>
                           </Link>
@@ -167,7 +167,7 @@ export const Cart = () => {
                           <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
                             <span className="capitalize">{item.brand}</span>
                             <span>•</span>
-                            <span className="text-[#2874f0] font-black text-[10px] bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                            <span className="text-amber-800 font-black text-[10px] bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200/60">
                               ✦ Assured
                             </span>
                           </div>
@@ -239,7 +239,7 @@ export const Cart = () => {
                 <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
                   <button
                     onClick={handleOpenCheckout}
-                    className="bg-[#fb641b] hover:bg-[#e85814] text-white font-bold px-8 py-3 rounded-lg shadow-md text-sm transition-all flex items-center gap-2 cursor-pointer"
+                    className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold px-8 py-3 rounded-lg shadow-md text-sm transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <span>PLACE ORDER</span>
                     <ArrowRight size={16} />
@@ -291,7 +291,7 @@ export const Cart = () => {
 
                 <button
                   onClick={handleOpenCheckout}
-                  className="w-full bg-[#fb641b] hover:bg-[#e85814] text-white font-bold py-3.5 rounded-lg shadow-md text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3.5 rounded-lg shadow-md text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>PROCEED TO BUY</span>
                   <ArrowRight size={16} />
@@ -316,7 +316,7 @@ export const Cart = () => {
             </p>
             <Link 
               to="/" 
-              className="bg-[#ffd814] hover:bg-[#f7ca00] text-gray-950 font-bold py-3 px-8 rounded-xl text-sm transition-colors shadow-xs inline-block"
+              className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3 px-8 rounded-xl text-sm transition-colors shadow-xs inline-block"
             >
               Shop Today's Deals
             </Link>
@@ -329,14 +329,14 @@ export const Cart = () => {
             <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden border border-gray-200">
               
               {/* Header */}
-              <div className="bg-[#131921] text-white px-6 py-4 flex items-center justify-between">
+              <div className="bg-[#121316] text-white px-6 py-4 flex items-center justify-between border-b border-neutral-800">
                 <div className="flex items-center gap-3">
-                  <div className="bg-[#febd69] text-[#111] p-1.5 rounded-lg">
+                  <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-neutral-950 p-1.5 rounded-lg">
                     <Lock size={18} />
                   </div>
                   <div>
                     <h2 className="text-base font-black tracking-wide">Myzon Secure Checkout</h2>
-                    <p className="text-[11px] text-gray-300">100% Safe & Encrypted Payment Guarantee</p>
+                    <p className="text-[11px] text-gray-400">100% Safe & Encrypted Payment Guarantee</p>
                   </div>
                 </div>
                 <button 
@@ -353,7 +353,7 @@ export const Cart = () => {
                 {/* Section 1: Delivery Address */}
                 <div className="border border-gray-200 rounded-xl p-5 bg-gray-50/50">
                   <div className="flex items-center gap-2 mb-3 text-sm font-black text-gray-900 border-b border-gray-200 pb-2">
-                    <MapPin size={18} className="text-[#2874f0]" />
+                    <MapPin size={18} className="text-amber-600" />
                     <span>1. Delivery Address</span>
                   </div>
 
@@ -365,7 +365,7 @@ export const Cart = () => {
                         required
                         value={addressForm.name} 
                         onChange={(e) => setAddressForm({ ...addressForm, name: e.target.value })}
-                        className="w-full text-xs font-semibold px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#2874f0] focus:ring-1 focus:ring-[#2874f0] outline-none bg-white"
+                        className="w-full text-xs font-semibold px-3 py-2.5 rounded-lg border border-gray-300 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none bg-white"
                         placeholder="e.g. Sanjeev Kumar"
                       />
                     </div>
@@ -377,7 +377,7 @@ export const Cart = () => {
                         required
                         value={addressForm.phone} 
                         onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
-                        className="w-full text-xs font-semibold px-3 py-2.5 rounded-lg border border-gray-300 focus:border-[#2874f0] focus:ring-1 focus:ring-[#2874f0] outline-none bg-white"
+                        className="w-full text-xs font-semibold px-3 py-2.5 rounded-lg border border-gray-300 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 outline-none bg-white"
                         placeholder="10-digit mobile number"
                       />
                     </div>
@@ -434,7 +434,7 @@ export const Cart = () => {
                       onClick={() => setPaymentMethod('cod')}
                       className={`flex items-start gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                         paymentMethod === 'cod' 
-                          ? 'border-[#fb641b] bg-orange-50/40 shadow-xs' 
+                          ? 'border-amber-500 bg-amber-50/40 shadow-xs' 
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -443,7 +443,7 @@ export const Cart = () => {
                         name="payment" 
                         checked={paymentMethod === 'cod'} 
                         onChange={() => setPaymentMethod('cod')}
-                        className="mt-1 accent-[#fb641b]" 
+                        className="mt-1 accent-amber-500" 
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
@@ -459,7 +459,7 @@ export const Cart = () => {
                       onClick={() => setPaymentMethod('upi')}
                       className={`flex items-start gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                         paymentMethod === 'upi' 
-                          ? 'border-[#fb641b] bg-orange-50/40 shadow-xs' 
+                          ? 'border-amber-500 bg-amber-50/40 shadow-xs' 
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -468,11 +468,11 @@ export const Cart = () => {
                         name="payment" 
                         checked={paymentMethod === 'upi'} 
                         onChange={() => setPaymentMethod('upi')}
-                        className="mt-1 accent-[#fb641b]" 
+                        className="mt-1 accent-amber-500" 
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <QrCode size={18} className="text-[#2874f0]" />
+                          <QrCode size={18} className="text-amber-600" />
                           <span className="text-xs font-black text-gray-900">UPI / QR Payment</span>
                         </div>
                         <p className="text-[11px] text-gray-500 mt-0.5">Google Pay, PhonePe, Paytm, BHIM</p>
@@ -484,7 +484,7 @@ export const Cart = () => {
                       onClick={() => setPaymentMethod('card')}
                       className={`flex items-start gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                         paymentMethod === 'card' 
-                          ? 'border-[#fb641b] bg-orange-50/40 shadow-xs' 
+                          ? 'border-amber-500 bg-amber-50/40 shadow-xs' 
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -493,7 +493,7 @@ export const Cart = () => {
                         name="payment" 
                         checked={paymentMethod === 'card'} 
                         onChange={() => setPaymentMethod('card')}
-                        className="mt-1 accent-[#fb641b]" 
+                        className="mt-1 accent-amber-500" 
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
@@ -509,7 +509,7 @@ export const Cart = () => {
                       onClick={() => setPaymentMethod('netbanking')}
                       className={`flex items-start gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                         paymentMethod === 'netbanking' 
-                          ? 'border-[#fb641b] bg-orange-50/40 shadow-xs' 
+                          ? 'border-amber-500 bg-amber-50/40 shadow-xs' 
                           : 'border-gray-200 hover:border-gray-300 bg-white'
                       }`}
                     >
@@ -518,7 +518,7 @@ export const Cart = () => {
                         name="payment" 
                         checked={paymentMethod === 'netbanking'} 
                         onChange={() => setPaymentMethod('netbanking')}
-                        className="mt-1 accent-[#fb641b]" 
+                        className="mt-1 accent-amber-500" 
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
@@ -556,7 +556,7 @@ export const Cart = () => {
 
                   <div className="mt-3 pt-3 border-t border-dashed border-gray-200 flex justify-between items-center">
                     <span className="text-sm font-black text-gray-900">Total Payable:</span>
-                    <span className="text-lg font-black text-[#2874f0]">₹{cartTotal.toLocaleString()}</span>
+                    <span className="text-lg font-black text-amber-600">₹{cartTotal.toLocaleString()}</span>
                   </div>
                 </div>
 
@@ -564,7 +564,7 @@ export const Cart = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#fb641b] hover:bg-[#e85814] text-white font-extrabold py-3.5 rounded-xl shadow-lg text-sm transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-99"
+                    className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-extrabold py-3.5 rounded-xl shadow-lg text-sm transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-99"
                   >
                     <CheckCircle2 size={18} />
                     <span>Confirm & Place Order • ₹{cartTotal.toLocaleString()}</span>
@@ -610,7 +610,7 @@ export const Cart = () => {
                     <span className="text-base font-black text-gray-900">{orderSuccess.id}</span>
                     <button
                       onClick={() => copyOrderId(orderSuccess.id)}
-                      className="text-gray-400 hover:text-[#2874f0] p-1 transition-colors cursor-pointer"
+                      className="text-gray-400 hover:text-amber-600 p-1 transition-colors cursor-pointer"
                       title="Copy Order ID"
                     >
                       {copiedId ? <Check size={16} className="text-emerald-600" /> : <Copy size={16} />}
@@ -658,7 +658,7 @@ export const Cart = () => {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => navigate(`/track-order?orderId=${orderSuccess.id}`)}
-                className="bg-[#2874f0] hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition-colors cursor-pointer"
+                className="bg-[#121316] hover:bg-[#1a1c22] text-amber-400 border border-amber-500/40 font-bold py-3 px-6 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition-colors cursor-pointer"
               >
                 <Truck size={16} />
                 <span>Track Your Order</span>
@@ -669,7 +669,7 @@ export const Cart = () => {
                   setOrderSuccess(null);
                   navigate('/');
                 }}
-                className="bg-[#ffd814] hover:bg-[#f7ca00] text-gray-950 font-bold py-3 px-6 rounded-xl text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
+                className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-neutral-950 font-bold py-3 px-6 rounded-xl text-xs flex items-center justify-center gap-2 shadow-xs transition-colors cursor-pointer"
               >
                 <ShoppingCart size={16} />
                 <span>Continue Shopping</span>

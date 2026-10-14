@@ -23,24 +23,24 @@ export const AmazonDrawer = () => {
 
       {/* Drawer Box */}
       <div className="relative w-full max-w-[365px] bg-white h-full shadow-2xl flex flex-col z-10 animate-slideRight overflow-hidden">
-        {/* Drawer Header (Amazon dark navy) */}
-        <div className="bg-[#232f3e] text-white p-4.5 flex items-center justify-between border-b border-gray-700">
+        {/* Drawer Header */}
+        <div className="bg-[#121316] text-white p-4.5 flex items-center justify-between border-b border-neutral-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center border border-white/30 text-white font-bold">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-amber-400/30 text-white font-bold">
               {user ? (
                 user.name.charAt(0).toUpperCase()
               ) : (
-                <User size={22} className="text-[#febd69]" />
+                <User size={22} className="text-amber-400" />
               )}
             </div>
             <div>
-              <p className="text-xs text-gray-300">Hello,</p>
+              <p className="text-xs text-gray-400">Hello,</p>
               {user ? (
                 <p className="text-base font-bold text-white">{user.name}</p>
               ) : (
                 <button 
                   onClick={() => { closeDrawer(); openLoginModal(); }}
-                  className="text-base font-bold text-[#febd69] hover:underline"
+                  className="text-base font-bold text-amber-400 hover:text-amber-300 hover:underline cursor-pointer"
                 >
                   Sign in
                 </button>
@@ -49,7 +49,7 @@ export const AmazonDrawer = () => {
           </div>
           <button 
             onClick={closeDrawer}
-            className="text-gray-300 hover:text-white p-1 rounded-md"
+            className="text-gray-400 hover:text-white p-1 rounded-md cursor-pointer transition-colors"
           >
             <X size={24} />
           </button>
@@ -182,7 +182,7 @@ export const AmazonDrawer = () => {
             <Link 
               to="/categories" 
               onClick={closeDrawer}
-              className="flex items-center justify-between px-5 py-2.5 text-[#2874f0] font-bold hover:bg-blue-50 transition-colors"
+              className="flex items-center justify-between px-5 py-2.5 text-amber-600 font-bold hover:bg-amber-50 transition-colors"
             >
               <span>See All Categories</span>
               <ChevronRight size={16} />
@@ -245,7 +245,7 @@ export const AmazonDrawer = () => {
             ) : (
               <button 
                 onClick={() => { closeDrawer(); openLoginModal(); }}
-                className="w-full text-left px-5 py-2.5 text-[#2874f0] hover:bg-blue-50 font-bold transition-colors"
+                className="w-full text-left px-5 py-2.5 text-amber-600 hover:bg-amber-50 font-bold transition-colors cursor-pointer"
               >
                 Sign In / Register
               </button>
