@@ -1,7 +1,22 @@
 import { create } from 'zustand';
 
+const getInitialUser = () => {
+  try {
+    const raw = localStorage.getItem('myzon_user');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && (parsed.email === 'sanjeev@example.com' || parsed.name === 'Sanjeev')) {
+      localStorage.removeItem('myzon_user');
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+};
+
 export const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem('myzon_user')) || { name: 'Sanjeev', email: 'sanjeev@example.com', phone: '9876543210' },
+  user: getInitialUser(),
   login: (userData) => {
     localStorage.setItem('myzon_user', JSON.stringify(userData));
     set({ user: userData });
@@ -12,8 +27,23 @@ export const useAuthStore = create((set) => ({
   },
 }));
 
+const getInitialLocation = () => {
+  try {
+    const raw = localStorage.getItem('myzon_location');
+    if (!raw) return { city: '', pincode: '' };
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.city === 'New Delhi' && parsed.pincode === '110001') {
+      localStorage.removeItem('myzon_location');
+      return { city: '', pincode: '' };
+    }
+    return parsed;
+  } catch {
+    return { city: '', pincode: '' };
+  }
+};
+
 export const useUIStore = create((set) => {
-  const savedLocation = JSON.parse(localStorage.getItem('myzon_location')) || { city: 'New Delhi', pincode: '110001' };
+  const savedLocation = getInitialLocation();
   return {
     location: savedLocation,
     isPincodeModalOpen: false,

@@ -22,9 +22,16 @@ export const ProductDetail = () => {
   const { location, openPincodeModal, showToast } = useUIStore();
 
   const [quantity, setQuantity] = useState(1);
-  const [pincodeCheck, setPincodeCheck] = useState(location.pincode || '110001');
-  const [pincodeChecked, setPincodeChecked] = useState(true);
+  const [pincodeCheck, setPincodeCheck] = useState(location.pincode || '');
+  const [pincodeChecked, setPincodeChecked] = useState(Boolean(location.pincode));
   const [activeAccordion, setActiveAccordion] = useState('specs');
+
+  useEffect(() => {
+    if (location.pincode) {
+      setPincodeCheck(location.pincode);
+      setPincodeChecked(true);
+    }
+  }, [location.pincode]);
 
   if (!product) {
     return (
@@ -224,18 +231,25 @@ export const ProductDetail = () => {
                 />
                 <button
                   type="button"
-                  onClick={() => setPincodeChecked(true)}
+                  onClick={() => {
+                    if (pincodeCheck && pincodeCheck.trim().length === 6 && /^\d+$/.test(pincodeCheck.trim())) {
+                      setPincodeChecked(true);
+                      showToast(`Pincode ${pincodeCheck.trim()} verified for express delivery!`);
+                    } else {
+                      showToast('Please enter a valid 6-digit Indian Pincode.');
+                    }
+                  }}
                   className="bg-neutral-800 hover:bg-neutral-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer"
                 >
                   Verify
                 </button>
               </div>
-              {pincodeChecked && (
+              {pincodeChecked && pincodeCheck ? (
                 <p className="text-xs text-emerald-400 font-medium mt-2.5 flex items-center gap-1.5">
                   <CheckCircle size={14} />
-                  Express Courier available for <strong>{location.city} ({pincodeCheck})</strong>: Arrives within 24-48 Hours.
+                  Express Courier available for {location.city ? <strong>{location.city} ({pincodeCheck})</strong> : <strong>Pincode {pincodeCheck}</strong>}: Arrives within 24-48 Hours.
                 </p>
-              )}
+              ) : null}
             </div>
 
             {/* Quantity Selector + High-Impact Dual CTAs */}

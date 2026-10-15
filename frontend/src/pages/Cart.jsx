@@ -22,12 +22,24 @@ export const Cart = () => {
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
   const [addressForm, setAddressForm] = useState({
-    name: user?.name || 'Sanjeev Kumar',
-    phone: user?.phone || '9876543210',
-    address: 'Near Main Market, Colony Rd',
-    city: location.city || 'New Delhi',
-    pincode: location.pincode || '110001',
+    name: user?.name || '',
+    phone: user?.phone || '',
+    address: '',
+    city: location.city || '',
+    pincode: location.pincode || '',
   });
+
+  useEffect(() => {
+    if (user?.name || user?.phone || location.city || location.pincode) {
+      setAddressForm(prev => ({
+        ...prev,
+        name: prev.name || user?.name || '',
+        phone: prev.phone || user?.phone || '',
+        city: prev.city || location.city || '',
+        pincode: prev.pincode || location.pincode || '',
+      }));
+    }
+  }, [user, location]);
 
   // Automatically open checkout if routed from "Instant Checkout"
   useEffect(() => {
@@ -56,9 +68,13 @@ export const Cart = () => {
   const handleConfirmOrder = (e) => {
     if (e) e.preventDefault();
 
-    if (!addressForm.name.trim() || !addressForm.phone.trim() || !addressForm.address.trim()) {
-      showToast('Please fill out all dispatch address details.');
+    if (!addressForm.name.trim() || !addressForm.phone.trim() || !addressForm.address.trim() || !addressForm.city.trim() || !addressForm.pincode.trim()) {
+      showToast('Please fill out all address details: Name, Phone, Address, City & Pincode.');
       return;
+    }
+
+    if (addressForm.city.trim() && addressForm.pincode.trim()) {
+      useUIStore.getState().setLocation(addressForm.city.trim(), addressForm.pincode.trim());
     }
 
     const orderId = `MZ-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -114,7 +130,11 @@ export const Cart = () => {
               <MapPin size={18} className="text-amber-400" />
               <div className="text-xs">
                 <span className="text-neutral-400">Dispatch Destination: </span>
-                <span className="font-bold text-white">{addressForm.city} - {addressForm.pincode}</span>
+                <span className="font-bold text-white">
+                  {addressForm.city && addressForm.pincode 
+                    ? `${addressForm.city} - ${addressForm.pincode}`
+                    : 'Not specified yet (Enter during checkout)'}
+                </span>
               </div>
             </div>
             <button
@@ -361,7 +381,7 @@ export const Cart = () => {
                         value={addressForm.name} 
                         onChange={(e) => setAddressForm({ ...addressForm, name: e.target.value })}
                         className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
-                        placeholder="e.g. Sanjeev Kumar"
+                        placeholder="Enter your full name"
                       />
                     </div>
 
@@ -373,7 +393,7 @@ export const Cart = () => {
                         value={addressForm.phone} 
                         onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })}
                         className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
-                        placeholder="10-digit mobile number"
+                        placeholder="Enter 10-digit mobile number"
                       />
                     </div>
 
@@ -385,7 +405,7 @@ export const Cart = () => {
                         value={addressForm.address} 
                         onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
                         className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
-                        placeholder="Apartment, Street address, Landmark"
+                        placeholder="House / Flat no., Building, Street address, Area"
                       />
                     </div>
 
@@ -397,7 +417,7 @@ export const Cart = () => {
                         value={addressForm.city} 
                         onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
                         className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
-                        placeholder="City"
+                        placeholder="Enter city"
                       />
                     </div>
 
@@ -409,7 +429,7 @@ export const Cart = () => {
                         value={addressForm.pincode} 
                         onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value })}
                         className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
-                        placeholder="6-digit pincode"
+                        placeholder="Enter 6-digit pincode"
                       />
                     </div>
                   </div>

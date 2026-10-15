@@ -20,11 +20,11 @@ export const LoginModal = () => {
 
   const handleVerify = (e) => {
     e.preventDefault();
-    const displayName = name.trim() || identifier.split('@')[0] || 'Sanjeev';
+    const displayName = name.trim() || identifier.split('@')[0] || 'Member';
     login({
       name: displayName,
       email: identifier.includes('@') ? identifier : `${displayName.toLowerCase()}@myzon.in`,
-      phone: !identifier.includes('@') ? identifier : '9876543210'
+      phone: !identifier.includes('@') ? identifier : ''
     });
     showToast(`Welcome to Myzon Studio, ${displayName}! ✦`);
     closeLoginModal();
@@ -33,11 +33,11 @@ export const LoginModal = () => {
     setName('');
   };
 
-  const handleQuickLogin = (demoName = 'Sanjeev Kumar') => {
+  const handleQuickLogin = (demoName = 'Guest Collector') => {
     login({
       name: demoName,
-      email: `${demoName.toLowerCase().replace(' ', '.')}@example.com`,
-      phone: '9876543210'
+      email: 'guest@myzon.in',
+      phone: ''
     });
     showToast(`Logged in as ${demoName}! ✦`);
     closeLoginModal();
@@ -115,7 +115,7 @@ export const LoginModal = () => {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Sanjeev"
+                    placeholder="Enter your name"
                     className="w-full bg-neutral-900 text-white rounded-xl border border-neutral-700 px-4 py-2.5 text-xs focus:outline-none focus:border-amber-400 transition-colors"
                   />
                 </div>
@@ -172,10 +172,10 @@ export const LoginModal = () => {
           <div className="mt-6 pt-4 border-t border-neutral-800">
             <button
               type="button"
-              onClick={() => handleQuickLogin('Sanjeev')}
+              onClick={() => handleQuickLogin('Guest Collector')}
               className="w-full bg-neutral-900 hover:bg-neutral-800 text-neutral-300 hover:text-white border border-neutral-700 font-semibold py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
             >
-              1-Click Demo Login as Sanjeev
+              1-Click Guest Collector Access
             </button>
           </div>
         </div>
