@@ -6,15 +6,16 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: [true, "Name is required"], trim: true },
     email: {
       type: String,
-      required: [true, "Email is required"],
+      required: false,
       unique: true,
+      sparse: true,
       lowercase: true,
       trim: true,
     },
-    password: { type: String, required: [true, "Password is required"], minlength: 6 },
+    password: { type: String, required: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     avatar: { type: String, default: "" },
-    phone: { type: String, default: "" },
+    phone: { type: String, default: "", index: true },
     addresses: [
       {
         label: { type: String, default: "Home" },
@@ -33,12 +34,13 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password") || !this.password) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
+  if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
 };
 

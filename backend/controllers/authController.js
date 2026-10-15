@@ -1,8 +1,83 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
+import { sendOtp, verifyOtpCode, sanitizePhone } from "../utils/otpService.js";
 
-// @desc    Register user
+// @desc    Send OTP to phone or email
+// @route   POST /api/auth/send-otp
+// @access  Public
+export const sendOtpController = asyncHandler(async (req, res) => {
+  const identifier = req.body.identifier || req.body.phone || req.body.email;
+  if (!identifier || !identifier.trim()) {
+    res.status(400);
+    throw new Error("Phone number or email is required");
+  }
+
+  try {
+    const result = await sendOtp(identifier.trim());
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message || "Failed to dispatch verification code");
+  }
+});
+
+// @desc    Verify OTP and log in / register
+// @route   POST /api/auth/verify-otp
+// @access  Public
+export const verifyOtpController = asyncHandler(async (req, res) => {
+  const { identifier, otp, name } = req.body;
+  if (!identifier || !otp) {
+    res.status(400);
+    throw new Error("Identifier and OTP are required");
+  }
+
+  const check = verifyOtpCode(identifier, otp);
+  if (!check.valid) {
+    res.status(400);
+    throw new Error(check.message);
+  }
+
+  const isPhone = !identifier.includes("@");
+  const target = isPhone ? sanitizePhone(identifier) : identifier.trim().toLowerCase();
+
+  // Find user by phone or email
+  let user = null;
+  if (isPhone) {
+    user = await User.findOne({ phone: target });
+  } else {
+    user = await User.findOne({ email: target });
+  }
+
+  // Create new user if not found
+  if (!user) {
+    const displayName = name?.trim() || (isPhone ? `Client +91-${target.slice(-4)}` : target.split("@")[0]);
+    user = await User.create({
+      name: displayName,
+      phone: isPhone ? target : "",
+      email: !isPhone ? target : `${target}@myzon.in`,
+      role: "user",
+    });
+  } else if (name && name.trim() && user.name.startsWith("Client +91-")) {
+    user.name = name.trim();
+    await user.save();
+  }
+
+  res.status(200).json({
+    success: true,
+    data: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      role: user.role,
+      avatar: user.avatar,
+      token: generateToken(user._id),
+    },
+  });
+});
+
+// @desc    Register user (Traditional email/password)
 // @route   POST /api/auth/register
 // @access  Public
 export const register = asyncHandler(async (req, res) => {
@@ -30,7 +105,7 @@ export const register = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Login user
+// @desc    Login user (Traditional email/password)
 // @route   POST /api/auth/login
 // @access  Public
 export const login = asyncHandler(async (req, res) => {
