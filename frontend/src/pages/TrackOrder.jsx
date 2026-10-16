@@ -10,6 +10,14 @@ export const TrackOrder = () => {
   const [tracking, setTracking] = useState(false);
   const [matchedOrder, setMatchedOrder] = useState(null);
 
+  const performTrack = (id) => {
+    const cleanId = id?.trim();
+    if (!cleanId) return;
+    const found = orders.find(o => o.id?.toLowerCase() === cleanId.toLowerCase());
+    setMatchedOrder(found || null);
+    setTracking(true);
+  };
+
   useEffect(() => {
     const idFromQuery = searchParams.get('orderId');
     if (idFromQuery) {
@@ -17,14 +25,6 @@ export const TrackOrder = () => {
       performTrack(idFromQuery);
     }
   }, [searchParams, orders]);
-
-  const performTrack = (id) => {
-    const cleanId = id.trim();
-    if (!cleanId) return;
-    const found = orders.find(o => o.id.toLowerCase() === cleanId.toLowerCase());
-    setMatchedOrder(found || null);
-    setTracking(true);
-  };
 
   const handleTrack = (e) => {
     e.preventDefault();

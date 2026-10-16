@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
-  Star, ShoppingBag, Heart, ArrowLeft, CheckCircle, ShieldCheck, 
-  Truck, RefreshCcw, MapPin, Tag, ChevronRight, Zap, Share2, 
-  ArrowUpRight, ChevronDown, ChevronUp, Gem
+  Star, ShoppingBag, Heart, CheckCircle, ShieldCheck, 
+  Truck, RefreshCcw, MapPin, ChevronRight, Zap, Share2, 
+  ChevronDown, ChevronUp, Gem
 } from 'lucide-react';
 import { useCartStore, useWishlistStore, useUIStore } from '../store/useStore';
 import productsData from '../data/products.json';
@@ -15,7 +15,7 @@ const allProducts = [...productsData, ...dealProducts, ...newArrivals];
 export const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = allProducts.find(p => p.id === parseInt(id));
+  const product = allProducts.find(p => p.id === parseInt(id) || String(p.id) === String(id));
 
   const { addToCart } = useCartStore();
   const { addToWishlist, wishlistItems } = useWishlistStore();
@@ -25,6 +25,10 @@ export const ProductDetail = () => {
   const [pincodeCheck, setPincodeCheck] = useState(location.pincode || '');
   const [pincodeChecked, setPincodeChecked] = useState(Boolean(location.pincode));
   const [activeAccordion, setActiveAccordion] = useState('specs');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   useEffect(() => {
     if (location.pincode) {
@@ -61,6 +65,7 @@ export const ProductDetail = () => {
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
+    showToast(`${quantity} x ${product.title} added to bag! 🛍️`);
   };
 
   const handleShare = () => {

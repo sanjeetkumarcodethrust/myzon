@@ -167,7 +167,10 @@ export const HeroCarousel = () => {
             </div>
 
             {/* Product Image Stage */}
-            <div className="h-56 sm:h-64 rounded-2xl bg-gradient-to-b from-neutral-800/30 to-neutral-900/60 p-4 flex items-center justify-center overflow-hidden mb-5 border border-neutral-800/50 relative">
+            <Link 
+              to={`/product/${drop.productId}`}
+              className="h-56 sm:h-64 rounded-2xl bg-gradient-to-b from-neutral-800/30 to-neutral-900/60 p-4 flex items-center justify-center overflow-hidden mb-5 border border-neutral-800/50 relative block cursor-pointer"
+            >
               <img
                 src={drop.image}
                 alt={drop.highlight}
@@ -176,13 +179,15 @@ export const HeroCarousel = () => {
               <span className="absolute bottom-3 left-3 bg-[#0a0b0d]/90 text-amber-400 border border-amber-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
                 {drop.discount}
               </span>
-            </div>
+            </Link>
 
             {/* Product Meta */}
             <div className="mb-5">
-              <h3 className="text-lg font-black text-white group-hover:text-amber-300 transition-colors line-clamp-1">
-                {drop.highlight}
-              </h3>
+              <Link to={`/product/${drop.productId}`} className="block">
+                <h3 className="text-lg font-black text-white group-hover:text-amber-300 transition-colors line-clamp-1 cursor-pointer">
+                  {drop.highlight}
+                </h3>
+              </Link>
               <div className="flex items-baseline gap-2.5 mt-1.5">
                 <span className="text-2xl font-black text-amber-400">
                   ₹{drop.price.toLocaleString()}
