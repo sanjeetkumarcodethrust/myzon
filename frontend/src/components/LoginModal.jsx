@@ -99,17 +99,18 @@ export const LoginModal = () => {
       setGatewayType(data.gateway || 'simulated');
       if (data.otp) {
         setSimulatedOtp(data.otp);
+        setOtp(data.otp); // Pre-fill OTP automatically so user can sign in instantly
       } else {
         setSimulatedOtp('');
+        setOtp('');
       }
 
       setIsOtpSent(true);
       setCountdown(30);
-      setOtp('');
       if (data.gateway === 'fast2sms' || data.gateway === 'twilio' || data.gateway === 'live_sms') {
         setSuccessMessage(`Real SMS successfully dispatched to +91 ${target}.`);
       } else {
-        setSuccessMessage(`OTP dispatched for +91 ${target}.`);
+        setSuccessMessage(`Code generated & auto-filled on screen for +91 ${target}.`);
       }
     } catch (err) {
       console.warn('Backend OTP API error, using intelligent client verification fallback:', err);
@@ -118,10 +119,10 @@ export const LoginModal = () => {
       setTargetIdentifier(target);
       setGatewayType('simulated');
       setSimulatedOtp(fallbackOtp);
+      setOtp(fallbackOtp);
       setIsOtpSent(true);
       setCountdown(30);
-      setOtp('');
-      setSuccessMessage(`OTP code generated for ${target}.`);
+      setSuccessMessage(`Code generated & auto-filled for ${target}.`);
     } finally {
       setIsLoading(false);
     }
@@ -315,8 +316,9 @@ export const LoginModal = () => {
                           </div>
                         )}
                       </div>
-                      <p className="text-[10px] text-neutral-500 mt-1">
-                        We will send a 6-digit OTP code directly to this mobile SIM.
+                      <p className="text-[10px] text-neutral-400 mt-1 flex items-center gap-1.5">
+                        <span className="text-amber-400 font-bold">ℹ️ Demo Mode:</span>
+                        <span>OTP will generate on-screen & auto-fill instantly.</span>
                       </p>
                     </div>
                   ) : (
@@ -401,33 +403,38 @@ export const LoginModal = () => {
 
                 {/* Simulated Mode Banner / Fast2SMS Status */}
                 {simulatedOtp ? (
-                  <div className="bg-gradient-to-r from-amber-950/40 via-amber-900/30 to-neutral-900 border border-amber-500/40 rounded-2xl p-3.5 mb-4 shadow-inner">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-1.5 text-amber-400 text-[11px] font-bold">
-                        <Smartphone size={13} />
-                        <span>SMS Gateway Dispatch</span>
+                  <div className="bg-gradient-to-r from-amber-950/50 via-amber-900/30 to-neutral-900 border border-amber-500/50 rounded-2xl p-4 mb-4 shadow-xl">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-1.5 text-amber-400 text-xs font-bold">
+                        <Smartphone size={14} />
+                        <span>Screen OTP Code (Demo Mode)</span>
                       </div>
-                      <span className="text-[10px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-full font-semibold border border-amber-500/30">
-                        Active Code
+                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">
+                        Auto-Filled Below ✓
                       </span>
                     </div>
-                    <div className="flex items-center justify-between bg-black/60 rounded-xl px-3 py-2 border border-neutral-700">
+
+                    <div className="flex items-center justify-between bg-black/70 rounded-xl px-3.5 py-2.5 border border-neutral-700 mb-2.5">
                       <div>
-                        <span className="text-[10px] text-neutral-400 block">Your 6-Digit OTP:</span>
-                        <span className="font-mono text-base font-black tracking-widest text-amber-300">
+                        <span className="text-[10px] text-neutral-400 block font-semibold">Your 6-Digit OTP:</span>
+                        <span className="font-mono text-xl font-black tracking-widest text-amber-300">
                           {simulatedOtp}
                         </span>
                       </div>
                       <button
                         type="button"
-                        onClick={() => setOtp(simulatedOtp)}
-                        className="bg-amber-400 hover:bg-amber-300 text-neutral-950 text-[11px] font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        onClick={() => {
+                          setOtp(simulatedOtp);
+                          showToast('OTP auto-filled! ✦');
+                        }}
+                        className="bg-amber-400 hover:bg-amber-300 text-neutral-950 text-xs font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer shadow-md active:scale-95"
                       >
                         Auto-Fill
                       </button>
                     </div>
-                    <p className="text-[10px] text-neutral-400 mt-2 leading-relaxed">
-                      💡 <em>To deliver live SMS directly to mobile SIM: configure <code className="text-amber-300 font-mono">FAST2SMS_API_KEY</code> in <code className="text-amber-300 font-mono">backend/.env</code>.</em>
+
+                    <p className="text-[10px] text-neutral-300 leading-relaxed">
+                      📌 <strong>Kyu nahi aaya phone par:</strong> Real mobile SIM par SMS tabhi deliver hota hai jab <code className="text-amber-300 font-mono">FAST2SMS_API_KEY</code> set ho. Abhi ke liye code screen par hi auto-fill ho chuka hai, bas niche <strong>"Verify & Sign In"</strong> par click karein.
                     </p>
                   </div>
                 ) : (
