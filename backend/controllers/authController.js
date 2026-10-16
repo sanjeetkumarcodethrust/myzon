@@ -58,7 +58,7 @@ export const verifyOtpController = asyncHandler(async (req, res) => {
       email: !isPhone ? target : `${target}@myzon.in`,
       role: "user",
     });
-  } else if (name && name.trim() && user.name.startsWith("Client +91-")) {
+  } else if (name && name.trim()) {
     user.name = name.trim();
     await user.save();
   }

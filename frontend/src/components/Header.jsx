@@ -223,13 +223,33 @@ export const Header = () => {
 
           {/* User Account Popover */}
           <div ref={accountRef} className="relative">
-            <button
-              onClick={() => setIsAccountOpen(!isAccountOpen)}
-              className="p-1.5 rounded-full text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-colors cursor-pointer border border-neutral-800"
-              title="Account"
-            >
-              <User size={18} />
-            </button>
+            {user ? (
+              <button
+                onClick={() => setIsAccountOpen(!isAccountOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900/90 border border-amber-500/40 hover:border-amber-400 text-neutral-100 transition-all cursor-pointer shadow-xs group"
+                title={`Account: ${user.name}`}
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-neutral-950 flex items-center justify-center font-black text-xs uppercase shadow-xs">
+                  {user.name ? user.name.trim()[0] : 'U'}
+                </div>
+                <span className="text-xs font-bold text-amber-300 max-w-[110px] truncate group-hover:text-amber-200">
+                  {user.name}
+                </span>
+                <ChevronDown size={13} className="text-neutral-400 group-hover:text-white" />
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setIsAccountOpen(false);
+                  openLoginModal();
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/80 border border-neutral-800 hover:border-amber-500/40 text-neutral-300 hover:text-white transition-all cursor-pointer text-xs font-bold"
+                title="Sign In"
+              >
+                <User size={15} className="text-amber-400" />
+                <span>Sign In</span>
+              </button>
+            )}
 
             {isAccountOpen && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-[#121316] text-neutral-200 rounded-2xl shadow-2xl border border-neutral-800 z-50 p-4 animate-in fade-in">

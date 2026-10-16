@@ -71,6 +71,11 @@ export const LoginModal = () => {
 
     const target = authMode === 'phone' ? phoneNumber.trim() : emailAddress.trim();
 
+    if (!name.trim()) {
+      setErrorMessage('Please enter your full name / कृपया अपना नाम दर्ज करें।');
+      return;
+    }
+
     if (authMode === 'phone' && !isPhoneValid) {
       setErrorMessage('Please enter a valid 10-digit Indian mobile number (starting with 6-9).');
       return;
@@ -99,18 +104,17 @@ export const LoginModal = () => {
       setGatewayType(data.gateway || 'simulated');
       if (data.otp) {
         setSimulatedOtp(data.otp);
-        setOtp(data.otp); // Pre-fill OTP automatically so user can sign in instantly
       } else {
         setSimulatedOtp('');
-        setOtp('');
       }
+      setOtp(''); // NO auto-fill: user types OTP manually
 
       setIsOtpSent(true);
       setCountdown(30);
       if (data.gateway === 'fast2sms' || data.gateway === 'twilio' || data.gateway === 'live_sms') {
         setSuccessMessage(`Real SMS successfully dispatched to +91 ${target}.`);
       } else {
-        setSuccessMessage(`Code generated & auto-filled on screen for +91 ${target}.`);
+        setSuccessMessage(`OTP code generated for +91 ${target}. Enter it below to sign in.`);
       }
     } catch (err) {
       console.warn('Backend OTP API error, using intelligent client verification fallback:', err);
@@ -119,10 +123,10 @@ export const LoginModal = () => {
       setTargetIdentifier(target);
       setGatewayType('simulated');
       setSimulatedOtp(fallbackOtp);
-      setOtp(fallbackOtp);
+      setOtp(''); // NO auto-fill: user types OTP manually
       setIsOtpSent(true);
       setCountdown(30);
-      setSuccessMessage(`Code generated & auto-filled for ${target}.`);
+      setSuccessMessage(`OTP code generated for ${target}. Enter it below to sign in.`);
     } finally {
       setIsLoading(false);
     }
@@ -338,15 +342,17 @@ export const LoginModal = () => {
                   )}
 
                   <div>
-                    <label className="block text-[10px] font-bold text-neutral-400 uppercase tracking-widest mb-1.5">
-                      Your Name (Optional for new clients)
+                    <label className="block text-xs font-bold text-neutral-300 mb-1.5 flex items-center justify-between">
+                      <span>Your Full Name / आपका नाम <span className="text-amber-400 font-bold">*</span></span>
+                      <span className="text-[10px] text-amber-400 font-semibold">Required</span>
                     </label>
                     <input
                       type="text"
+                      required
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Enter your name"
-                      className="w-full bg-neutral-900 text-white rounded-xl border border-neutral-700 px-4 py-2.5 text-xs focus:outline-none focus:border-amber-400 transition-colors"
+                      onChange={(e) => { setName(e.target.value); setErrorMessage(''); }}
+                      placeholder="e.g. Sanjeet Kumar"
+                      className="w-full bg-neutral-900 text-white rounded-xl border border-neutral-700 px-4 py-2.5 text-xs focus:outline-none focus:border-amber-400 transition-colors placeholder:text-neutral-500 font-medium"
                     />
                   </div>
 
@@ -359,7 +365,7 @@ export const LoginModal = () => {
 
                   <button
                     type="submit"
-                    disabled={isLoading || (authMode === 'phone' ? !isPhoneValid : !isEmailValid)}
+                    disabled={isLoading || (authMode === 'phone' ? !isPhoneValid : !isEmailValid) || !name.trim()}
                     className="w-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-neutral-950 font-black py-3 rounded-xl shadow-lg text-xs tracking-wider uppercase transition-all active:scale-98 cursor-pointer mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isLoading ? (
@@ -379,62 +385,65 @@ export const LoginModal = () => {
             ) : (
               /* OTP Verification Step */
               <div>
-                <button
-                  type="button"
-                  onClick={() => { setIsOtpSent(false); setErrorMessage(''); }}
-                  className="inline-flex items-center gap-1.5 text-xs text-neutral-400 hover:text-amber-400 mb-4 transition-colors cursor-pointer"
-                >
-                  <ArrowLeft size={14} />
-                  <span>Change number or email</span>
-                </button>
-
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <ShieldCheck size={18} className="text-amber-400" />
-                    <span>Enter Verification Code</span>
-                  </h3>
-                  <p className="text-xs text-neutral-400 mt-1">
-                    Code sent to{' '}
-                    <strong className="text-amber-300">
-                      {authMode === 'phone' ? `+91 ${targetIdentifier}` : targetIdentifier}
-                    </strong>
-                  </p>
+                {/* User Identity Banner */}
+                <div className="mb-4 bg-gradient-to-r from-neutral-900 via-neutral-900 to-[#181920] p-3.5 rounded-2xl border border-neutral-800 flex items-center justify-between shadow-md">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-400 to-amber-500 text-neutral-950 flex items-center justify-center font-black text-sm uppercase shadow-sm shrink-0">
+                      {name ? name.trim()[0] : 'U'}
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider block">Logging in as</span>
+                      <p className="text-sm font-black text-white truncate max-w-[170px]">{name.trim()}</p>
+                      <span className="text-[11px] text-neutral-400 font-mono">
+                        {authMode === 'phone' ? `+91 ${targetIdentifier}` : targetIdentifier}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => { setIsOtpSent(false); setErrorMessage(''); }}
+                    className="text-[11px] text-neutral-300 hover:text-amber-400 transition-colors cursor-pointer bg-neutral-800/90 hover:bg-neutral-800 px-3 py-1.5 rounded-xl border border-neutral-700 text-xs font-semibold"
+                  >
+                    Change
+                  </button>
                 </div>
 
                 {/* Simulated Mode Banner / Fast2SMS Status */}
                 {simulatedOtp ? (
-                  <div className="bg-gradient-to-r from-amber-950/50 via-amber-900/30 to-neutral-900 border border-amber-500/50 rounded-2xl p-4 mb-4 shadow-xl">
+                  <div className="bg-[#15161c] border border-amber-500/30 rounded-2xl p-4 mb-4 shadow-xl">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5 text-amber-400 text-xs font-bold">
                         <Smartphone size={14} />
-                        <span>Screen OTP Code (Demo Mode)</span>
+                        <span>Verification OTP</span>
                       </div>
-                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold border border-emerald-500/30">
-                        Auto-Filled Below ✓
+                      <span className="text-[10px] bg-neutral-800 text-neutral-300 px-2.5 py-0.5 rounded-full font-semibold border border-neutral-700">
+                        Type code manually
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between bg-black/70 rounded-xl px-3.5 py-2.5 border border-neutral-700 mb-2.5">
+                    <div className="bg-black/80 rounded-xl py-3 px-4 border border-neutral-700 mb-2 flex items-center justify-between">
                       <div>
-                        <span className="text-[10px] text-neutral-400 block font-semibold">Your 6-Digit OTP:</span>
-                        <span className="font-mono text-xl font-black tracking-widest text-amber-300">
+                        <span className="text-[10px] text-neutral-400 block font-medium">Your 6-Digit Code:</span>
+                        <span className="font-mono text-2xl font-black tracking-[0.25em] text-amber-400 select-all">
                           {simulatedOtp}
                         </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => {
-                          setOtp(simulatedOtp);
-                          showToast('OTP auto-filled! ✦');
+                          if (navigator.clipboard) {
+                            navigator.clipboard.writeText(simulatedOtp);
+                            showToast('OTP copied to clipboard! 📋');
+                          }
                         }}
-                        className="bg-amber-400 hover:bg-amber-300 text-neutral-950 text-xs font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer shadow-md active:scale-95"
+                        className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-neutral-700 transition-all cursor-pointer"
                       >
-                        Auto-Fill
+                        Copy Code
                       </button>
                     </div>
 
-                    <p className="text-[10px] text-neutral-300 leading-relaxed">
-                      📌 <strong>Kyu nahi aaya phone par:</strong> Real mobile SIM par SMS tabhi deliver hota hai jab <code className="text-amber-300 font-mono">FAST2SMS_API_KEY</code> set ho. Abhi ke liye code screen par hi auto-fill ho chuka hai, bas niche <strong>"Verify & Sign In"</strong> par click karein.
+                    <p className="text-[10px] text-neutral-400 leading-relaxed">
+                      💡 Yeh 6-digit code upar se dekh kar niche diye gaye box me enter karein aur <strong>"Verify & Sign In"</strong> dabayein.
                     </p>
                   </div>
                 ) : (
