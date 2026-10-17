@@ -15,16 +15,29 @@ import reviewRoutes from "./routes/reviewRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 await connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors({ origin: ["http://localhost:5173", "http://localhost:5174"], credentials: true }));
+// Middleware: allow all origins in development and local network
+app.use(cors({
+  origin: (origin, callback) => callback(null, true),
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
+// Static frontend dist files (if built)
+const distPath = path.resolve(__dirname, "../frontend/dist");
+app.use(express.static(distPath));
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -36,7 +49,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
 
-app.get("/", (req, res) => res.json({ message: "Myzon API is running..." }));
+app.get("/api", (req, res) => res.json({ message: "Myzon API is running..." }));
 
 // Error Middleware
 app.use(notFound);

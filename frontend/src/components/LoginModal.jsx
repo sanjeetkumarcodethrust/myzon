@@ -63,6 +63,62 @@ export const LoginModal = () => {
   const isPhoneValid = /^[6-9]\d{9}$/.test(phoneNumber);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 
+  // Safe API helper that handles proxy issues, direct backend fallback, and prevents HTML JSON parse errors
+  const requestAuthApi = async (path, payload) => {
+    // 1. Try relative path (Vite / Express proxy)
+    // 2. Try direct localhost:5000 Express backend
+    // 3. Try direct 127.0.0.1:5000 Express backend
+    const endpoints = [
+      path,
+      `http://localhost:5000${path}`,
+      `http://127.0.0.1:5000${path}`,
+    ];
+
+    let lastError = null;
+
+    for (let i = 0; i < endpoints.length; i++) {
+      const url = endpoints[i];
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        // Verify content-type to never call .json() on HTML error pages
+        const contentType = response.headers.get('content-type') || '';
+        const isJson = contentType.includes('application/json');
+
+        if (!isJson) {
+          // If server returned HTML (e.g. 404 from Live Server or static host) and we have fallbacks left, try next
+          if (i < endpoints.length - 1) {
+            continue;
+          }
+          throw new Error('Backend server is not responding on port 5000. Please ensure the backend is started.');
+        }
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || 'Request failed');
+        }
+
+        return data;
+      } catch (err) {
+        lastError = err;
+        // If this is a valid JSON error returned by backend (e.g. invalid OTP or unverified phone), throw immediately
+        if (err.message && !err.message.includes('Unexpected token') && !err.message.includes('Failed to fetch') && !err.message.includes('is not responding')) {
+          throw err;
+        }
+      }
+    }
+
+    throw lastError || new Error('Unable to connect to authentication server. Please check that port 5000 is running.');
+  };
+
   // Request OTP from backend
   const handleSendOtp = async (e, preferredChannel = 'sms') => {
     if (e && e.preventDefault) e.preventDefault();
@@ -88,17 +144,10 @@ export const LoginModal = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: target, channel: preferredChannel }),
+      const data = await requestAuthApi('/api/auth/send-otp', {
+        identifier: target,
+        channel: preferredChannel,
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Unable to send OTP. Please check your number.');
-      }
 
       setTargetIdentifier(target);
       setGatewayType(data.gateway || 'sms');
@@ -139,21 +188,11 @@ export const LoginModal = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identifier: targetIdentifier,
-          otp: cleanedOtp,
-          name: name.trim(),
-        }),
+      const data = await requestAuthApi('/api/auth/verify-otp', {
+        identifier: targetIdentifier,
+        otp: cleanedOtp,
+        name: name.trim(),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Invalid OTP code. Please check your phone and try again.');
-      }
 
       const userData = data.data;
       login(userData);
