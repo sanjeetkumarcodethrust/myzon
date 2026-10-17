@@ -64,8 +64,8 @@ export const LoginModal = () => {
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 
   // Request OTP from backend
-  const handleSendOtp = async (e) => {
-    if (e) e.preventDefault();
+  const handleSendOtp = async (e, preferredChannel = 'sms') => {
+    if (e && e.preventDefault) e.preventDefault();
     setErrorMessage('');
     setSuccessMessage('');
 
@@ -91,7 +91,7 @@ export const LoginModal = () => {
       const response = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ identifier: target }),
+        body: JSON.stringify({ identifier: target, channel: preferredChannel }),
       });
 
       const data = await response.json();
@@ -101,32 +101,25 @@ export const LoginModal = () => {
       }
 
       setTargetIdentifier(target);
-      setGatewayType(data.gateway || 'simulated');
-      if (data.otp) {
+      setGatewayType(data.gateway || 'sms');
+
+      // Only set simulatedOtp if gateway is simulated and no real SMS service configured
+      if (data.otp && data.gateway === 'simulated') {
         setSimulatedOtp(data.otp);
       } else {
         setSimulatedOtp('');
       }
-      setOtp(''); // NO auto-fill: user types OTP manually
 
+      setOtp(''); // User enters code manually
       setIsOtpSent(true);
       setCountdown(30);
-      if (data.gateway === 'fast2sms' || data.gateway === 'twilio' || data.gateway === 'live_sms') {
-        setSuccessMessage(`Real SMS successfully dispatched to +91 ${target}.`);
-      } else {
-        setSuccessMessage(`OTP code generated for +91 ${target}. Enter it below to sign in.`);
-      }
+      setSuccessMessage(
+        data.message ||
+          `Verification code sent to +91 ${target} via ${preferredChannel === 'whatsapp' ? 'WhatsApp' : 'SMS'}.`
+      );
     } catch (err) {
-      console.warn('Backend OTP API error, using intelligent client verification fallback:', err);
-      // Client-side fallback if backend API is unreachable
-      const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-      setTargetIdentifier(target);
-      setGatewayType('simulated');
-      setSimulatedOtp(fallbackOtp);
-      setOtp(''); // NO auto-fill: user types OTP manually
-      setIsOtpSent(true);
-      setCountdown(30);
-      setSuccessMessage(`OTP code generated for ${target}. Enter it below to sign in.`);
+      console.error('OTP Dispatch error:', err);
+      setErrorMessage(err.message || 'Failed to dispatch verification code to your phone.');
     } finally {
       setIsLoading(false);
     }
@@ -139,7 +132,7 @@ export const LoginModal = () => {
 
     const cleanedOtp = otp.trim();
     if (cleanedOtp.length !== 6) {
-      setErrorMessage('Please enter the full 6-digit verification code.');
+      setErrorMessage('Please enter the full 6-digit verification code received on your phone.');
       return;
     }
 
@@ -159,7 +152,7 @@ export const LoginModal = () => {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Invalid OTP code. Please try again.');
+        throw new Error(data.message || 'Invalid OTP code. Please check your phone and try again.');
       }
 
       const userData = data.data;
@@ -167,27 +160,7 @@ export const LoginModal = () => {
       showToast(`Welcome back, ${userData.name}! ✦`);
       resetAndClose();
     } catch (err) {
-      // If backend gave specific invalid OTP error, display it
-      if (err.message && (err.message.includes('Invalid') || err.message.includes('expired') || err.message.includes('attempts'))) {
-        setErrorMessage(err.message);
-      } else if (simulatedOtp && cleanedOtp !== simulatedOtp) {
-        setErrorMessage('Invalid OTP code. Please check the code and enter the exact 6 digits.');
-      } else if (simulatedOtp && cleanedOtp === simulatedOtp) {
-        // Fallback login
-        const displayName = name.trim() || (authMode === 'phone' ? `Client +91-${targetIdentifier.slice(-4)}` : targetIdentifier.split('@')[0]);
-        const fallbackUser = {
-          name: displayName,
-          email: authMode === 'email' ? targetIdentifier : `${targetIdentifier}@myzon.in`,
-          phone: authMode === 'phone' ? targetIdentifier : '',
-          role: 'user',
-          token: 'fallback_token_' + Date.now(),
-        };
-        login(fallbackUser);
-        showToast(`Welcome to Myzon Studio, ${displayName}! ✦`);
-        resetAndClose();
-      } else {
-        setErrorMessage(err.message || 'Verification failed. Please try again.');
-      }
+      setErrorMessage(err.message || 'Verification failed. Please check the OTP received on your mobile phone.');
     } finally {
       setIsLoading(false);
     }
@@ -321,8 +294,8 @@ export const LoginModal = () => {
                         )}
                       </div>
                       <p className="text-[10px] text-neutral-400 mt-1 flex items-center gap-1.5">
-                        <span className="text-amber-400 font-bold">ℹ️ Demo Mode:</span>
-                        <span>OTP will generate on-screen & auto-fill instantly.</span>
+                        <span className="text-emerald-400 font-bold">📱 Real SMS Delivery:</span>
+                        <span>6-digit OTP will be sent directly to your phone via SMS.</span>
                       </p>
                     </div>
                   ) : (
@@ -408,16 +381,16 @@ export const LoginModal = () => {
                   </button>
                 </div>
 
-                {/* Simulated Mode Banner / Fast2SMS Status */}
+                {/* Real SMS Delivery Status or Dev Simulation Banner */}
                 {simulatedOtp ? (
                   <div className="bg-[#15161c] border border-amber-500/30 rounded-2xl p-4 mb-4 shadow-xl">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-1.5 text-amber-400 text-xs font-bold">
                         <Smartphone size={14} />
-                        <span>Verification OTP</span>
+                        <span>Dev Mode Verification Code</span>
                       </div>
                       <span className="text-[10px] bg-neutral-800 text-neutral-300 px-2.5 py-0.5 rounded-full font-semibold border border-neutral-700">
-                        Type code manually
+                        Simulated
                       </span>
                     </div>
 
@@ -443,16 +416,19 @@ export const LoginModal = () => {
                     </div>
 
                     <p className="text-[10px] text-neutral-400 leading-relaxed">
-                      💡 Yeh 6-digit code upar se dekh kar niche diye gaye box me enter karein aur <strong>"Verify & Sign In"</strong> dabayein.
+                      💡 Enter this code in the input below and click <strong>"Verify & Sign In"</strong>.
                     </p>
                   </div>
                 ) : (
-                  successMessage && (
-                    <div className="flex items-center gap-2 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs mb-4">
-                      <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
-                      <span>{successMessage}</span>
+                  <div className="bg-[#15161c] border border-emerald-500/30 rounded-2xl p-4 mb-4 shadow-xl animate-in fade-in">
+                    <div className="flex items-center gap-2 mb-2 text-emerald-400 text-xs font-bold">
+                      <CheckCircle2 size={16} className="shrink-0" />
+                      <span>OTP Dispatched Directly to Your Mobile</span>
                     </div>
-                  )
+                    <p className="text-xs text-neutral-300 leading-relaxed">
+                      We have sent a 6-digit verification code to <strong className="text-amber-400 font-mono font-bold">+91 {targetIdentifier}</strong>. Please check your SMS messages and enter the code below.
+                    </p>
+                  </div>
                 )}
 
                 <form onSubmit={handleVerifyOtp} className="space-y-4">
@@ -508,14 +484,24 @@ export const LoginModal = () => {
                         Resend code in <span className="text-amber-400 font-bold">{countdown}s</span>
                       </p>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        className="text-xs text-amber-400 hover:text-amber-300 font-bold hover:underline cursor-pointer inline-flex items-center gap-1.5"
-                      >
-                        <RotateCw size={13} />
-                        <span>Resend OTP via SMS</span>
-                      </button>
+                      <div className="flex items-center justify-center gap-3 flex-wrap">
+                        <button
+                          type="button"
+                          onClick={(e) => handleSendOtp(e, 'sms')}
+                          className="text-xs text-amber-400 hover:text-amber-300 font-bold hover:underline cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                          <RotateCw size={13} />
+                          <span>Resend via SMS</span>
+                        </button>
+                        <span className="text-neutral-600">•</span>
+                        <button
+                          type="button"
+                          onClick={(e) => handleSendOtp(e, 'whatsapp')}
+                          className="text-xs text-emerald-400 hover:text-emerald-300 font-bold hover:underline cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                          <span>Send via WhatsApp</span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 </form>

@@ -8,13 +8,14 @@ import { sendOtp, verifyOtpCode, sanitizePhone } from "../utils/otpService.js";
 // @access  Public
 export const sendOtpController = asyncHandler(async (req, res) => {
   const identifier = req.body.identifier || req.body.phone || req.body.email;
+  const channel = req.body.channel || "sms";
   if (!identifier || !identifier.trim()) {
     res.status(400);
     throw new Error("Phone number or email is required");
   }
 
   try {
-    const result = await sendOtp(identifier.trim());
+    const result = await sendOtp(identifier.trim(), { channel });
     res.status(200).json(result);
   } catch (error) {
     res.status(400);
@@ -32,7 +33,7 @@ export const verifyOtpController = asyncHandler(async (req, res) => {
     throw new Error("Identifier and OTP are required");
   }
 
-  const check = verifyOtpCode(identifier, otp);
+  const check = await verifyOtpCode(identifier, otp);
   if (!check.valid) {
     res.status(400);
     throw new Error(check.message);
