@@ -63,21 +63,33 @@ export const LoginModal = () => {
   const isPhoneValid = /^[6-9]\d{9}$/.test(phoneNumber);
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailAddress);
 
-  // Safe API helper that handles proxy issues, direct backend fallback, and prevents HTML JSON parse errors
+  // Safe API helper that supports VITE_API_URL, relative proxy, direct backend fallback, and clean error messages
   const requestAuthApi = async (path, payload) => {
-    // 1. Try relative path (Vite / Express proxy)
-    // 2. Try direct localhost:5000 Express backend
-    // 3. Try direct 127.0.0.1:5000 Express backend
-    const endpoints = [
-      path,
-      `http://localhost:5000${path}`,
-      `http://127.0.0.1:5000${path}`,
-    ];
+    const rawEnvUrl = (import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '').trim();
+    const customBase = rawEnvUrl ? rawEnvUrl.replace(/\/+$/, '') : '';
+    const isLocalhost = typeof window !== 'undefined' && 
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+    const candidateUrls = [];
+
+    // 1. If explicit backend URL is provided (e.g. Render / Cloud backend)
+    if (customBase) {
+      candidateUrls.push(`${customBase}${path}`);
+    }
+
+    // 2. Relative path (works for Vite dev proxy or if backend is hosted on same domain / Vercel rewrites)
+    candidateUrls.push(path);
+
+    // 3. Localhost fallback (when developer runs locally on laptop)
+    if (isLocalhost) {
+      candidateUrls.push(`http://localhost:5000${path}`);
+      candidateUrls.push(`http://127.0.0.1:5000${path}`);
+    }
 
     let lastError = null;
 
-    for (let i = 0; i < endpoints.length; i++) {
-      const url = endpoints[i];
+    for (let i = 0; i < candidateUrls.length; i++) {
+      const url = candidateUrls[i];
       try {
         const response = await fetch(url, {
           method: 'POST',
@@ -88,35 +100,71 @@ export const LoginModal = () => {
           body: JSON.stringify(payload),
         });
 
-        // Verify content-type to never call .json() on HTML error pages
+        // If route not found (404) and more candidate URLs exist, try next candidate URL
+        if (response.status === 404 && i < candidateUrls.length - 1) {
+          continue;
+        }
+
         const contentType = response.headers.get('content-type') || '';
         const isJson = contentType.includes('application/json');
 
         if (!isJson) {
-          // If server returned HTML (e.g. 404 from Live Server or static host) and we have fallbacks left, try next
-          if (i < endpoints.length - 1) {
+          if (i < candidateUrls.length - 1) {
             continue;
           }
-          throw new Error('Backend server is not responding on port 5000. Please ensure the backend is started.');
+          if (!isLocalhost && !customBase) {
+            throw new Error(
+              'Backend server deploy nahi hai. Vercel me VITE_API_URL set karein ya backend ko Render par deploy karein.'
+            );
+          }
+          throw new Error('Backend server is not responding. Please make sure the backend is running.');
         }
 
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(data.message || 'Request failed');
+          // If status is 404 from a static host like Vercel (no backend found)
+          if (response.status === 404) {
+            if (i < candidateUrls.length - 1) {
+              continue;
+            }
+            if (!isLocalhost && !customBase) {
+              throw new Error(
+                'Backend API nahi mila (404). Please backend ko Render/Vercel par deploy karke Vercel Settings me VITE_API_URL add karein.'
+              );
+            }
+          }
+
+          const extractedMsg = data.message || (data.error && data.error.message) || data.error;
+          throw new Error(extractedMsg || 'Request failed');
         }
 
         return data;
       } catch (err) {
         lastError = err;
-        // If this is a valid JSON error returned by backend (e.g. invalid OTP or unverified phone), throw immediately
-        if (err.message && !err.message.includes('Unexpected token') && !err.message.includes('Failed to fetch') && !err.message.includes('is not responding')) {
+        // If it's a real business error from backend (like wrong OTP, invalid phone, twilio limit), throw immediately
+        const isNetworkOrNotFound = 
+          err.message && (
+            err.message.includes('Failed to fetch') ||
+            err.message.includes('NetworkError') ||
+            err.message.includes('is not responding') ||
+            err.message.includes('Unexpected token') ||
+            err.message.includes('404')
+          );
+
+        if (!isNetworkOrNotFound) {
           throw err;
         }
       }
     }
 
-    throw lastError || new Error('Unable to connect to authentication server. Please check that port 5000 is running.');
+    if (!isLocalhost && !customBase) {
+      throw new Error(
+        'Backend server deploy nahi hai. Please backend ko Render ya Vercel par deploy karein aur Vercel me VITE_API_URL set karein.'
+      );
+    }
+
+    throw lastError || new Error('Unable to connect to authentication server. Please check your backend connection.');
   };
 
   // Request OTP from backend

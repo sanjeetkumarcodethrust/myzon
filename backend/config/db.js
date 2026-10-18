@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
 
 let memoryServer;
 
 const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) {
+    return mongoose.connection;
+  }
+
   const atlasUri = process.env.MONGO_URI;
   const dbName = process.env.MONGO_DB_NAME || "myzon";
   const localUri = `mongodb://127.0.0.1:27017/${dbName}`;
@@ -15,11 +18,16 @@ const connectDB = async () => {
   };
 
   const tryMemoryFallback = async () => {
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+      throw new Error("MongoDB Atlas connection failed in production. Please check MONGO_URI in your environment variables.");
+    }
+
     if (memoryServer) {
       return await tryConnect(memoryServer.getUri(), "InMemory");
     }
 
     console.warn("⚠️ No MongoDB server detected. Starting an in-memory MongoDB instance for development...");
+    const { MongoMemoryServer } = await import("mongodb-memory-server");
     memoryServer = await MongoMemoryServer.create({ instance: { dbName } });
     return await tryConnect(memoryServer.getUri(), "InMemory");
   };
@@ -42,7 +50,10 @@ const connectDB = async () => {
   } catch (error) {
     console.error("❌ MongoDB Error:", error.message);
     console.error("Check your MONGO_URI, username/password, MongoDB service status, or your local environment.");
-    process.exit(1);
+    if (process.env.NODE_ENV !== "production" && !process.env.VERCEL) {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 

@@ -22,7 +22,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
-await connectDB();
 
 const app = express();
 
@@ -34,6 +33,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+
+// Ensure DB is connected before processing requests
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB connection error on request:", err.message);
+    next(err);
+  }
+});
 
 // Static frontend dist files (if built)
 const distPath = path.resolve(__dirname, "../frontend/dist");
@@ -56,6 +66,16 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+
+// Only listen if not imported as a serverless module (e.g. Vercel)
+if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
+  connectDB().catch((err) => {
+    console.warn("Initial DB connection warning:", err.message);
+  });
+
+  app.listen(PORT, () =>
+    console.log(`🚀 Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`)
+  );
+}
+
+export default app;
