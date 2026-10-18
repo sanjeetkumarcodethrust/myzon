@@ -34,20 +34,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
-// Ensure DB is connected before processing requests
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    console.error("DB connection error on request:", err.message);
-    next(err);
-  }
-});
+// Instant health check and root routes for Render / Uptime monitors (responds in <5ms without blocking on DB)
+app.get("/", (req, res) => res.status(200).send("Myzon Backend API is active and running"));
+app.get("/health", (req, res) => res.status(200).json({ status: "ok", timestamp: new Date().toISOString() }));
+app.get("/api", (req, res) => res.status(200).json({ message: "Myzon API is running..." }));
 
 // Static frontend dist files (if built)
 const distPath = path.resolve(__dirname, "../frontend/dist");
 app.use(express.static(distPath));
+
+// Ensure DB is connected before processing API requests
+app.use("/api", async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB connection error on API request:", err.message);
+    res.status(503).json({
+      success: false,
+      message: "Database connection failed. Please ensure MongoDB Atlas Network Access allows 0.0.0.0/0.",
+      error: err.message,
+    });
+  }
+});
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -58,8 +67,6 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/upload", uploadRoutes);
-
-app.get("/api", (req, res) => res.json({ message: "Myzon API is running..." }));
 
 // Error Middleware
 app.use(notFound);
@@ -73,8 +80,9 @@ if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
     console.warn("Initial DB connection warning:", err.message);
   });
 
-  app.listen(PORT, () =>
-    console.log(`🚀 Server running in ${process.env.NODE_ENV || "development"} mode on port ${PORT}`)
+  // Explicitly bind to 0.0.0.0 as required by Render, Railway, Docker, and Linux cloud hosts
+  app.listen(PORT, "0.0.0.0", () =>
+    console.log(`🚀 Server running on http://0.0.0.0:${PORT} in ${process.env.NODE_ENV || "development"} mode`)
   );
 }
 
