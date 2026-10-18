@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-let memoryServer;
-
 const connectDB = async () => {
   if (mongoose.connection.readyState >= 1) {
     return mongoose.connection;
@@ -21,21 +19,6 @@ const connectDB = async () => {
     return conn;
   };
 
-  const tryMemoryFallback = async () => {
-    if (isCloud) {
-      throw new Error("MongoDB Atlas connection failed in production. Please verify MONGO_URI and ensure MongoDB Atlas Network Access allows 0.0.0.0/0.");
-    }
-
-    if (memoryServer) {
-      return await tryConnect(memoryServer.getUri(), "InMemory");
-    }
-
-    console.warn("⚠️ No MongoDB server detected. Starting an in-memory MongoDB instance for development...");
-    const { MongoMemoryServer } = await import("mongodb-memory-server");
-    memoryServer = await MongoMemoryServer.create({ instance: { dbName } });
-    return await tryConnect(memoryServer.getUri(), "InMemory");
-  };
-
   try {
     if (atlasUri) {
       try {
@@ -53,17 +36,15 @@ const connectDB = async () => {
     }
 
     try {
+      const localUri = `mongodb://127.0.0.1:27017/${dbName}`;
       return await tryConnect(localUri, "Local");
     } catch (localError) {
-      console.warn("⚠️ Local MongoDB connection failed. Falling back to in-memory MongoDB...");
-      return await tryMemoryFallback();
+      console.warn("⚠️ Local MongoDB connection failed:", localError.message);
+      throw new Error("Unable to connect to MongoDB. Please ensure MongoDB service is running locally or provide a valid MONGO_URI.");
     }
   } catch (error) {
     console.error("❌ MongoDB Error:", error.message);
-    console.error("Check your MONGO_URI, username/password, MongoDB service status, or your local environment.");
-    if (!isCloud) {
-      process.exit(1);
-    }
+    console.error("💡 Tip: Agar Atlas se connect nahi ho raha to MongoDB Atlas > Network Access me jakar 0.0.0.0/0 whitelist karein.");
     throw error;
   }
 };

@@ -1,9 +1,10 @@
 {
   "name": "myzon-root",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
-    "build": "npm --prefix backend install",
-    "start": "npm --prefix backend start"
+    "build": "cd backend && npm install --omit=dev",
+    "start": "node backend/server.js"
   }
 }

@@ -75,15 +75,15 @@ export const LoginModal = () => {
     // 1. If explicit backend URL is provided (e.g. Render / Cloud backend)
     if (customBase) {
       candidateUrls.push(`${customBase}${path}`);
-    }
+    } else {
+      // 2. Relative path (works for Vite dev proxy or if backend is hosted on same domain / Vercel rewrites)
+      candidateUrls.push(path);
 
-    // 2. Relative path (works for Vite dev proxy or if backend is hosted on same domain / Vercel rewrites)
-    candidateUrls.push(path);
-
-    // 3. Localhost fallback (when developer runs locally on laptop)
-    if (isLocalhost) {
-      candidateUrls.push(`http://localhost:5000${path}`);
-      candidateUrls.push(`http://127.0.0.1:5000${path}`);
+      // 3. Localhost fallback (only when developer runs locally on laptop without customBase)
+      if (isLocalhost) {
+        candidateUrls.push(`http://localhost:5000${path}`);
+        candidateUrls.push(`http://127.0.0.1:5000${path}`);
+      }
     }
 
     let lastError = null;
@@ -100,6 +100,24 @@ export const LoginModal = () => {
           body: JSON.stringify(payload),
         });
 
+        // If status is 502 Bad Gateway
+        if (response.status === 502) {
+          if (isLocalhost && !customBase) {
+            throw new Error('Local backend server (port 5000) band hai! Terminal me "cd backend && npm run dev" chalakar backend start karein.');
+          }
+          throw new Error('Backend 502 Bad Gateway return kar raha hai. Render Free Tier par service sleep se wake-up ho rahi hai (30-45 sec lagte hain). Kripya 30 seconds baad dobara try karein.');
+        }
+
+        // If status is 503 (Database connecting)
+        if (response.status === 503) {
+          const contentType = response.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const errData = await response.json();
+            throw new Error(errData.message || 'Database connection error on server.');
+          }
+          throw new Error('Backend service starting up (503). Please retry in a few seconds.');
+        }
+
         // If route not found (404) and more candidate URLs exist, try next candidate URL
         if (response.status === 404 && i < candidateUrls.length - 1) {
           continue;
@@ -111,6 +129,9 @@ export const LoginModal = () => {
         if (!isJson) {
           if (i < candidateUrls.length - 1) {
             continue;
+          }
+          if (customBase) {
+            throw new Error(`Backend server (${customBase}) se invalid response mila. Status: ${response.status}. Please check Render logs.`);
           }
           if (!isLocalhost && !customBase) {
             throw new Error(
@@ -142,20 +163,23 @@ export const LoginModal = () => {
         return data;
       } catch (err) {
         lastError = err;
-        // If it's a real business error from backend (like wrong OTP, invalid phone, twilio limit), throw immediately
-        const isNetworkOrNotFound = 
-          err.message && (
-            err.message.includes('Failed to fetch') ||
-            err.message.includes('NetworkError') ||
-            err.message.includes('is not responding') ||
-            err.message.includes('Unexpected token') ||
-            err.message.includes('404')
-          );
-
-        if (!isNetworkOrNotFound) {
+        // If it's a 502/503 or business validation error, throw immediately
+        if (err.message && (
+          err.message.includes('502 Bad Gateway') ||
+          err.message.includes('Database connection') ||
+          (!err.message.includes('Failed to fetch') && 
+           !err.message.includes('NetworkError') && 
+           !err.message.includes('is not responding') && 
+           !err.message.includes('Unexpected token') && 
+           !err.message.includes('404'))
+        )) {
           throw err;
         }
       }
+    }
+
+    if (customBase) {
+      throw lastError || new Error(`Unable to connect to backend at ${customBase}. Please check Render service status.`);
     }
 
     if (!isLocalhost && !customBase) {

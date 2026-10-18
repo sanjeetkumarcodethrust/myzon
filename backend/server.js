@@ -43,8 +43,13 @@ app.get("/api", (req, res) => res.status(200).json({ message: "Myzon API is runn
 const distPath = path.resolve(__dirname, "../frontend/dist");
 app.use(express.static(distPath));
 
-// Ensure DB is connected before processing API requests
+// Ensure DB is connected before processing API requests (except send-otp which only needs SMS dispatch)
 app.use("/api", async (req, res, next) => {
+  if (req.originalUrl && req.originalUrl.includes("/auth/send-otp")) {
+    connectDB().catch((err) => console.warn("Background DB connection warning:", err.message));
+    return next();
+  }
+
   try {
     await connectDB();
     next();
