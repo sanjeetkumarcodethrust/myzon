@@ -12,7 +12,8 @@ import {
   AlertCircle, 
   CheckCircle2, 
   KeyRound,
-  ArrowLeft
+  ArrowLeft,
+  Link2
 } from 'lucide-react';
 import { useAuthStore, useUIStore } from '../store/useStore';
 
@@ -37,6 +38,18 @@ export const LoginModal = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [countdown, setCountdown] = useState(30);
+  const [backendUrlInput, setBackendUrlInput] = useState(() => {
+    return typeof window !== 'undefined' ? (localStorage.getItem('MYZON_API_URL') || '') : '';
+  });
+
+  // Helper to get active backend URL (supports Env variable, LocalStorage, or window variable)
+  const getBackendBaseUrl = () => {
+    const fromEnv = (import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '').trim();
+    const fromStorage = typeof window !== 'undefined' ? (localStorage.getItem('MYZON_API_URL') || '').trim() : '';
+    const fromWindow = typeof window !== 'undefined' && window.__MYZON_API_URL__ ? String(window.__MYZON_API_URL__).trim() : '';
+    const raw = fromEnv || fromStorage || fromWindow;
+    return raw ? raw.replace(/\/+$/, '') : '';
+  };
 
   // Countdown timer for Resend OTP
   useEffect(() => {
@@ -65,8 +78,7 @@ export const LoginModal = () => {
 
   // Safe API helper that supports VITE_API_URL, relative proxy, direct backend fallback, and clean error messages
   const requestAuthApi = async (path, payload) => {
-    const rawEnvUrl = (import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '').trim();
-    const customBase = rawEnvUrl ? rawEnvUrl.replace(/\/+$/, '') : '';
+    const customBase = getBackendBaseUrl();
     const isLocalhost = typeof window !== 'undefined' && 
       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
@@ -100,6 +112,16 @@ export const LoginModal = () => {
           body: JSON.stringify(payload),
         });
 
+        // If status is 405 Method Not Allowed (Vercel static server receiving POST because VITE_API_URL is missing)
+        if (response.status === 405) {
+          if (customBase) {
+            throw new Error(`Backend URL (${customBase}) par 405 Method Not Allowed mila. Kripya check karein ki backend URL sahi hai.`);
+          }
+          throw new Error(
+            'Error 405 (Method Not Allowed): Frontend Vercel par chal raha hai lekin ise Render Backend ka URL nahi mila. Vercel Settings me VITE_API_URL set karke Redeploy karein ya neeche direct Render backend URL connect karein.'
+          );
+        }
+
         // If status is 502 Bad Gateway
         if (response.status === 502) {
           if (isLocalhost && !customBase) {
@@ -131,11 +153,11 @@ export const LoginModal = () => {
             continue;
           }
           if (customBase) {
-            throw new Error(`Backend server (${customBase}) se invalid response mila. Status: ${response.status}. Please check Render logs.`);
+            throw new Error(`Backend server (${customBase}) se invalid response mila (Status: ${response.status}). Kripya Render backend logs check karein.`);
           }
           if (!isLocalhost && !customBase) {
             throw new Error(
-              'Backend server deploy nahi hai. Vercel me VITE_API_URL set karein ya backend ko Render par deploy karein.'
+              'Backend server deploy nahi hai ya frontend ko backend URL nahi mila. Vercel me VITE_API_URL set karein ya neeche Render URL connect karein.'
             );
           }
           throw new Error('Backend server is not responding. Please make sure the backend is running.');
@@ -151,7 +173,7 @@ export const LoginModal = () => {
             }
             if (!isLocalhost && !customBase) {
               throw new Error(
-                'Backend API nahi mila (404). Please backend ko Render/Vercel par deploy karke Vercel Settings me VITE_API_URL add karein.'
+                'Backend API nahi mila (404). Please backend ko Render/Vercel par deploy karke Vercel Settings me VITE_API_URL add karein ya neeche URL connect karein.'
               );
             }
           }
@@ -163,8 +185,9 @@ export const LoginModal = () => {
         return data;
       } catch (err) {
         lastError = err;
-        // If it's a 502/503 or business validation error, throw immediately
+        // If it's a 405, 502/503 or business validation error, throw immediately
         if (err.message && (
+          err.message.includes('405') ||
           err.message.includes('502 Bad Gateway') ||
           err.message.includes('Database connection') ||
           (!err.message.includes('Failed to fetch') && 
@@ -184,7 +207,7 @@ export const LoginModal = () => {
 
     if (!isLocalhost && !customBase) {
       throw new Error(
-        'Backend server deploy nahi hai. Please backend ko Render ya Vercel par deploy karein aur Vercel me VITE_API_URL set karein.'
+        'Backend server deploy nahi hai ya frontend ko backend URL nahi mila. Vercel me VITE_API_URL set karein ya neeche Render URL connect karein.'
       );
     }
 
@@ -441,9 +464,61 @@ export const LoginModal = () => {
                   </div>
 
                   {errorMessage && (
-                    <div className="flex items-center gap-2 p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs animate-in fade-in">
-                      <AlertCircle size={15} className="shrink-0 text-rose-400" />
-                      <span>{errorMessage}</span>
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-2 p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs animate-in fade-in">
+                        <AlertCircle size={15} className="shrink-0 text-rose-400 mt-0.5" />
+                        <span>{errorMessage}</span>
+                      </div>
+
+                      {/* Instant Render Backend Connector */}
+                      {(errorMessage.includes('VITE_API_URL') || errorMessage.includes('405') || errorMessage.includes('Backend') || errorMessage.includes('deploy')) && (
+                        <div className="p-3 bg-neutral-900/90 border border-amber-500/40 rounded-xl text-left shadow-lg">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[11px] font-bold text-amber-400 flex items-center gap-1.5">
+                              <Link2 size={13} />
+                              Direct Render Backend URL Connect Karein
+                            </span>
+                            {getBackendBaseUrl() && (
+                              <span className="text-[10px] text-emerald-400 font-mono font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">Connected</span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-neutral-400 mb-2 leading-relaxed">
+                            Render Web Service ka URL paste karein (e.g. <code className="text-amber-300 font-mono">https://myzon-backend.onrender.com</code>):
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="url"
+                              value={backendUrlInput}
+                              onChange={(e) => setBackendUrlInput(e.target.value)}
+                              placeholder="https://your-backend.onrender.com"
+                              className="flex-1 bg-neutral-800 text-white rounded-lg px-2.5 py-1.5 text-xs border border-neutral-700 focus:border-amber-400 focus:outline-none placeholder-neutral-500 font-mono"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const trimmed = backendUrlInput.trim().replace(/\/+$/, '');
+                                if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+                                  setErrorMessage('URL "https://" se shuru hona chahiye (jaise: https://your-backend.onrender.com)');
+                                  return;
+                                }
+                                localStorage.setItem('MYZON_API_URL', trimmed);
+                                setErrorMessage('');
+                                setSuccessMessage(`Backend URL connect ho gaya! (${trimmed}). Ab "Send 6-Digit OTP" dabayein.`);
+                              }}
+                              className="bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors shrink-0 cursor-pointer shadow"
+                            >
+                              Connect
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {successMessage && (
+                    <div className="flex items-center gap-2 p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs animate-in fade-in">
+                      <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+                      <span>{successMessage}</span>
                     </div>
                   )}
 
@@ -564,9 +639,61 @@ export const LoginModal = () => {
                   </div>
 
                   {errorMessage && (
-                    <div className="flex items-center gap-2 p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs animate-in fade-in">
-                      <AlertCircle size={15} className="shrink-0 text-rose-400" />
-                      <span>{errorMessage}</span>
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-2 p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-300 text-xs animate-in fade-in">
+                        <AlertCircle size={15} className="shrink-0 text-rose-400 mt-0.5" />
+                        <span>{errorMessage}</span>
+                      </div>
+
+                      {/* Instant Render Backend Connector */}
+                      {(errorMessage.includes('VITE_API_URL') || errorMessage.includes('405') || errorMessage.includes('Backend') || errorMessage.includes('deploy')) && (
+                        <div className="p-3 bg-neutral-900/90 border border-amber-500/40 rounded-xl text-left shadow-lg">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-[11px] font-bold text-amber-400 flex items-center gap-1.5">
+                              <Link2 size={13} />
+                              Direct Render Backend URL Connect Karein
+                            </span>
+                            {getBackendBaseUrl() && (
+                              <span className="text-[10px] text-emerald-400 font-mono font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">Connected</span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-neutral-400 mb-2 leading-relaxed">
+                            Render Web Service ka URL paste karein (e.g. <code className="text-amber-300 font-mono">https://myzon-backend.onrender.com</code>):
+                          </p>
+                          <div className="flex gap-2">
+                            <input
+                              type="url"
+                              value={backendUrlInput}
+                              onChange={(e) => setBackendUrlInput(e.target.value)}
+                              placeholder="https://your-backend.onrender.com"
+                              className="flex-1 bg-neutral-800 text-white rounded-lg px-2.5 py-1.5 text-xs border border-neutral-700 focus:border-amber-400 focus:outline-none placeholder-neutral-500 font-mono"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const trimmed = backendUrlInput.trim().replace(/\/+$/, '');
+                                if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+                                  setErrorMessage('URL "https://" se shuru hona chahiye (jaise: https://your-backend.onrender.com)');
+                                  return;
+                                }
+                                localStorage.setItem('MYZON_API_URL', trimmed);
+                                setErrorMessage('');
+                                setSuccessMessage(`Backend URL connect ho gaya! (${trimmed}). Ab "Send 6-Digit OTP" dabayein.`);
+                              }}
+                              className="bg-amber-400 hover:bg-amber-500 text-neutral-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors shrink-0 cursor-pointer shadow"
+                            >
+                              Connect
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {successMessage && (
+                    <div className="flex items-center gap-2 p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs animate-in fade-in">
+                      <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+                      <span>{successMessage}</span>
                     </div>
                   )}
 
