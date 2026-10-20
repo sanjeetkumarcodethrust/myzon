@@ -39,15 +39,15 @@ export const LoginModal = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [countdown, setCountdown] = useState(30);
   const [backendUrlInput, setBackendUrlInput] = useState(() => {
-    return typeof window !== 'undefined' ? (localStorage.getItem('MYZON_API_URL') || '') : '';
+    return typeof window !== 'undefined' ? (localStorage.getItem('MYZON_API_URL') || 'https://myzon-1.onrender.com') : 'https://myzon-1.onrender.com';
   });
 
-  // Helper to get active backend URL (supports Env variable, LocalStorage, or window variable)
+  // Helper to get active backend URL (supports Env variable, LocalStorage, window variable, or production Render URL)
   const getBackendBaseUrl = () => {
     const fromEnv = (import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL || '').trim();
     const fromStorage = typeof window !== 'undefined' ? (localStorage.getItem('MYZON_API_URL') || '').trim() : '';
     const fromWindow = typeof window !== 'undefined' && window.__MYZON_API_URL__ ? String(window.__MYZON_API_URL__).trim() : '';
-    const raw = fromEnv || fromStorage || fromWindow;
+    const raw = fromEnv || fromStorage || fromWindow || 'https://myzon-1.onrender.com';
     return raw ? raw.replace(/\/+$/, '') : '';
   };
 
