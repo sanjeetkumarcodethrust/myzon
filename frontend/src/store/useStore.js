@@ -142,6 +142,11 @@ export const useOrderStore = create((set, get) => ({
     localStorage.setItem('myzon_orders', JSON.stringify(updated));
     return { orders: updated };
   }),
+  updateOrder: (orderId, updates) => set((state) => {
+    const updated = state.orders.map((o) => (o.id === orderId ? { ...o, ...updates } : o));
+    localStorage.setItem('myzon_orders', JSON.stringify(updated));
+    return { orders: updated };
+  }),
   getOrder: (orderId) => {
     return get().orders.find((o) => o.id === orderId);
   },

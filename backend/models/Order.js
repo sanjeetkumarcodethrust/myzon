@@ -1,32 +1,35 @@
 import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema({
-  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+  product: { type: mongoose.Schema.Types.Mixed, required: false },
   name: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String, required: false, default: "" },
   price: { type: Number, required: true },
-  quantity: { type: Number, required: true, min: 1 },
+  quantity: { type: Number, required: true, min: 1, default: 1 },
 });
 
 const shippingAddressSchema = new mongoose.Schema({
+  name: String,
   label: String,
-  street: { type: String, required: true },
+  street: { type: String, required: false },
+  address: { type: String, required: false },
   city: { type: String, required: true },
-  state: { type: String, required: true },
-  zip: { type: String, required: true },
+  state: { type: String, required: false, default: "" },
+  zip: { type: String, required: false },
+  pincode: { type: String, required: false },
   country: { type: String, required: true, default: "India" },
-  phone: String,
+  phone: { type: String, required: true },
 });
 
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+    customOrderId: { type: String, default: "" },
     orderItems: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
     paymentMethod: {
       type: String,
       required: true,
-      enum: ["COD", "Stripe", "Razorpay"],
       default: "COD",
     },
     paymentResult: {
@@ -39,13 +42,14 @@ const orderSchema = new mongoose.Schema(
     shippingPrice: { type: Number, required: true, default: 0 },
     taxPrice: { type: Number, required: true, default: 0 },
     totalPrice: { type: Number, required: true, default: 0 },
+    deliveryOtp: { type: String, default: "" },
+    deliveryOtpVerified: { type: Boolean, default: false },
     isPaid: { type: Boolean, default: false },
     paidAt: Date,
     isDelivered: { type: Boolean, default: false },
     deliveredAt: Date,
     status: {
       type: String,
-      enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
     },
     trackingNumber: { type: String, default: "" },

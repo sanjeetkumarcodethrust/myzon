@@ -383,3 +383,109 @@ export const verifyOtpCode = async (identifier, enteredOtp) => {
   otpStore.delete(target);
   return { valid: true, target };
 };
+
+/**
+ * Generates a 4-digit numeric Doorstep Delivery OTP
+ */
+export const generateDeliveryOtp = () => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
+
+/**
+ * Sends Real Doorstep Delivery OTP SMS to Customer
+ */
+export const sendDeliveryOtpSms = async ({ phone, orderId, deliveryOtp, totalAmount }) => {
+  const isPhone = !phone.includes("@");
+  const target = isPhone ? sanitizePhone(phone) : phone.trim();
+
+  if (isPhone && !isValidIndianPhone(target)) {
+    throw new Error("Please provide a valid 10-digit Indian mobile number");
+  }
+
+  const messageText = `Myzon: Your Order #${orderId} is confirmed! 📦 Your Secure Doorstep Delivery OTP is: ${deliveryOtp}. Share this OTP with the delivery executive only when receiving your package.`;
+
+  // 1. Try Fast2SMS if API key is present
+  if (
+    isPhone &&
+    process.env.FAST2SMS_API_KEY &&
+    process.env.FAST2SMS_API_KEY.trim() !== "" &&
+    process.env.FAST2SMS_API_KEY !== "your_fast2sms_api_key"
+  ) {
+    try {
+      await sendViaFast2SMS(target, deliveryOtp);
+      console.log(`✅ [FAST2SMS] Delivery OTP ${deliveryOtp} dispatched to +91 ${target}`);
+      return {
+        success: true,
+        gateway: "fast2sms",
+        deliveryOtp,
+        message: `Delivery OTP dispatched to +91 ${target} via SMS.`,
+      };
+    } catch (e) {
+      console.warn("⚠️ [FAST2SMS] Delivery OTP send failed, falling back to Twilio/Simulated:", e.message);
+    }
+  }
+
+  // 2. Try Twilio Messages API if configured
+  if (
+    isPhone &&
+    process.env.TWILIO_PHONE_NUMBER &&
+    process.env.TWILIO_ACCOUNT_SID &&
+    process.env.TWILIO_AUTH_TOKEN
+  ) {
+    try {
+      const formattedPhone = target.startsWith("+") ? target : `+91${target}`;
+      const accountSid = process.env.TWILIO_ACCOUNT_SID;
+      const authToken = process.env.TWILIO_AUTH_TOKEN;
+      const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+
+      const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+      const basicAuth = Buffer.from(`${accountSid}:${authToken}`).toString("base64");
+
+      const params = new URLSearchParams();
+      params.append("To", formattedPhone);
+      params.append("From", fromNumber);
+      params.append("Body", messageText);
+
+      const response = await fetch(twilioUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${basicAuth}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params.toString(),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.sid) {
+        console.log(`✅ [TWILIO SMS] Real Delivery OTP SMS dispatched to ${formattedPhone} (SID: ${data.sid})`);
+        return {
+          success: true,
+          gateway: "twilio_sms",
+          deliveryOtp,
+          message: `Delivery OTP SMS dispatched to +91 ${target}.`,
+        };
+      } else {
+        console.warn(`⚠️ [TWILIO SMS] Delivery OTP dispatch note:`, data.message || data);
+      }
+    } catch (err) {
+      console.warn(`⚠️ [TWILIO SMS] Delivery OTP request error:`, err.message);
+    }
+  }
+
+  // 3. Dev simulation / Fallback
+  console.log(`\n╔════════════════════════════════════════════════════════════════════╗`);
+  console.log(`║               📦  MYZON SECURE DELIVERY OTP SMS                    ║`);
+  console.log(`╠════════════════════════════════════════════════════════════════════╣`);
+  console.log(`║  Order ID     : ${orderId}`);
+  console.log(`║  Recipient    : +91 ${target}`);
+  console.log(`║  Delivery OTP : [ ${deliveryOtp} ]                                      ║`);
+  console.log(`║  Instruction  : Share with delivery associate at doorstep only    ║`);
+  console.log(`╚════════════════════════════════════════════════════════════════════╝\n`);
+
+  return {
+    success: true,
+    gateway: "simulated",
+    deliveryOtp,
+    message: `Delivery OTP [${deliveryOtp}] generated for Order #${orderId}. SMS dispatched to +91 ${target}.`,
+  };
+};

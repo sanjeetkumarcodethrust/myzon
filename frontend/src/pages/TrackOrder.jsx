@@ -1,21 +1,102 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Package, Truck, CheckCircle2, Search, MapPin, Calendar, Clock, CreditCard, Sparkles, ShieldCheck } from 'lucide-react';
-import { useOrderStore } from '../store/useStore';
+import { 
+  Package, Truck, CheckCircle2, Search, MapPin, Calendar, Clock, 
+  CreditCard, Sparkles, ShieldCheck, KeyRound, Eye, EyeOff, Copy, Check, RotateCcw 
+} from 'lucide-react';
+import { useOrderStore, useUIStore } from '../store/useStore';
+import { requestApi, resendDeliveryOtpApi } from '../utils/api';
 
 export const TrackOrder = () => {
   const [searchParams] = useSearchParams();
-  const { orders } = useOrderStore();
+  const { orders, updateOrder } = useOrderStore();
+  const { showToast } = useUIStore();
   const [orderId, setOrderId] = useState('');
   const [tracking, setTracking] = useState(false);
   const [matchedOrder, setMatchedOrder] = useState(null);
+  const [showDeliveryOtp, setShowDeliveryOtp] = useState(false);
+  const [copiedOtp, setCopiedOtp] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const performTrack = (id) => {
+  useEffect(() => {
+    let timer;
+    if (resendCooldown > 0) {
+      timer = setInterval(() => setResendCooldown((p) => p - 1), 1000);
+    }
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
+  const performTrack = async (id) => {
     const cleanId = id?.trim();
     if (!cleanId) return;
-    const found = orders.find(o => o.id?.toLowerCase() === cleanId.toLowerCase());
-    setMatchedOrder(found || null);
-    setTracking(true);
+
+    // 1. Check local order store first
+    const foundLocal = orders.find(
+      (o) => o.id?.toLowerCase() === cleanId.toLowerCase() || o._id?.toLowerCase() === cleanId.toLowerCase()
+    );
+    if (foundLocal) {
+      setMatchedOrder(foundLocal);
+      setTracking(true);
+      return;
+    }
+
+    // 2. Fetch from backend if not found locally
+    try {
+      const res = await requestApi(`/api/orders/${cleanId}`);
+      if (res.data) {
+        const orderData = {
+          id: res.data.customOrderId || res.data._id,
+          _id: res.data._id,
+          date: new Date(res.data.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          }),
+          totalAmount: res.data.totalPrice,
+          totalItems: res.data.orderItems?.reduce((a, b) => a + (b.quantity || 1), 0),
+          shippingAddress: res.data.shippingAddress,
+          paymentMethod: res.data.paymentMethod,
+          status: res.data.status,
+          deliveryOtp: res.data.deliveryOtp,
+          trackingNumber: res.data.trackingNumber,
+        };
+        setMatchedOrder(orderData);
+      } else {
+        setMatchedOrder(null);
+      }
+    } catch (e) {
+      setMatchedOrder(null);
+    } finally {
+      setTracking(true);
+    }
+  };
+
+  const copyDeliveryOtp = (otp) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(otp);
+      setCopiedOtp(true);
+      showToast('Delivery OTP copied to clipboard!');
+      setTimeout(() => setCopiedOtp(false), 2000);
+    }
+  };
+
+  const handleResendDeliveryOtp = async () => {
+    if (!matchedOrder || resendCooldown > 0) return;
+    setIsResending(true);
+    try {
+      await resendDeliveryOtpApi({
+        orderId: matchedOrder.id,
+        phone: matchedOrder.shippingAddress?.phone,
+        deliveryOtp: matchedOrder.deliveryOtp,
+      });
+      setResendCooldown(30);
+      showToast(`Delivery OTP resent to +91 ${matchedOrder.shippingAddress?.phone} via SMS!`);
+    } catch (err) {
+      showToast(err.message || 'Could not resend Delivery OTP SMS.');
+    } finally {
+      setIsResending(false);
+    }
   };
 
   useEffect(() => {
@@ -101,23 +182,85 @@ export const TrackOrder = () => {
 
             {/* Matched Order Details Summary */}
             {matchedOrder && (
-              <div className="bg-neutral-900/60 rounded-2xl p-4 border border-neutral-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                <div>
-                  <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Client & Destination</span>
-                  <p className="font-bold text-white mt-1">{matchedOrder.shippingAddress.name}</p>
-                  <p className="text-neutral-400 truncate">{matchedOrder.shippingAddress.address}, {matchedOrder.shippingAddress.city}</p>
+              <>
+                <div className="bg-neutral-900/60 rounded-2xl p-4 border border-neutral-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                  <div>
+                    <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Client & Destination</span>
+                    <p className="font-bold text-white mt-1">{matchedOrder.shippingAddress?.name || 'Customer'}</p>
+                    <p className="text-neutral-400 truncate">{matchedOrder.shippingAddress?.address}, {matchedOrder.shippingAddress?.city}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Payment Method</span>
+                    <p className="font-bold text-white mt-1">{matchedOrder.paymentMethod}</p>
+                    <p className="text-amber-400 font-bold">Total: ₹{matchedOrder.totalAmount?.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Shipment Allocation</span>
+                    <p className="font-bold text-white mt-1">{matchedOrder.totalItems || matchedOrder.items?.length || 1} Item(s)</p>
+                    <p className="text-emerald-400 font-semibold">Expected: Within 24 Hours</p>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Payment Method</span>
-                  <p className="font-bold text-white mt-1">{matchedOrder.paymentMethod}</p>
-                  <p className="text-amber-400 font-bold">Total: ₹{matchedOrder.totalAmount?.toLocaleString()}</p>
-                </div>
-                <div>
-                  <span className="font-bold text-neutral-500 uppercase tracking-widest block text-[10px]">Shipment Allocation</span>
-                  <p className="font-bold text-white mt-1">{matchedOrder.totalItems || matchedOrder.items?.length} Item(s)</p>
-                  <p className="text-emerald-400 font-semibold">Expected: Within 24 Hours</p>
-                </div>
-              </div>
+
+                {/* Secure Doorstep Delivery OTP Banner */}
+                {matchedOrder.deliveryOtp && (
+                  <div className="bg-gradient-to-r from-amber-500/10 via-neutral-900 to-[#121316] border-2 border-amber-500/40 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 text-neutral-950 flex items-center justify-center font-bold shadow-md shadow-amber-400/20 shrink-0">
+                        <KeyRound size={20} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-black text-white uppercase tracking-wider">
+                            Secure Doorstep Delivery OTP
+                          </h4>
+                          <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            Active
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-neutral-400 mt-0.5">
+                          Share this OTP with courier associate only upon physical parcel handover
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
+                      <div className="bg-neutral-950 px-4 py-2 rounded-xl border border-neutral-800 font-mono text-lg font-black text-amber-400 tracking-[0.25em] shadow-inner">
+                        {showDeliveryOtp ? matchedOrder.deliveryOtp : '••••'}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowDeliveryOtp(!showDeliveryOtp)}
+                        className="text-neutral-400 hover:text-white p-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 cursor-pointer transition-colors"
+                        title={showDeliveryOtp ? 'Hide PIN' : 'Reveal PIN'}
+                      >
+                        {showDeliveryOtp ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => copyDeliveryOtp(matchedOrder.deliveryOtp)}
+                        className="text-neutral-400 hover:text-amber-400 p-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 cursor-pointer transition-colors"
+                        title="Copy OTP"
+                      >
+                        {copiedOtp ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleResendDeliveryOtp}
+                        disabled={resendCooldown > 0 || isResending}
+                        className={`text-xs font-bold px-3 py-2 rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
+                          resendCooldown > 0 || isResending
+                            ? 'bg-neutral-800 border-neutral-700 text-neutral-500 cursor-not-allowed'
+                            : 'bg-neutral-900 hover:bg-neutral-800 border-amber-500/40 text-amber-400'
+                        }`}
+                        title="Resend SMS"
+                      >
+                        <RotateCcw size={14} className={isResending ? 'animate-spin' : ''} />
+                        <span className="hidden md:inline">{resendCooldown > 0 ? `${resendCooldown}s` : 'Resend SMS'}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             {/* Stepper */}
