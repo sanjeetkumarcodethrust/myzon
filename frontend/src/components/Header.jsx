@@ -183,15 +183,15 @@ export const Header = () => {
             )}
           </div>
 
-          {/* Quick Location Badge */}
+          {/* Quick Location Badge (Visible on all screens) */}
           <button
             onClick={openPincodeModal}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/60 border border-neutral-800/80 text-xs text-neutral-300 hover:border-amber-500/40 hover:text-white transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-neutral-900/60 border border-neutral-800/80 text-xs text-neutral-300 hover:border-amber-500/40 hover:text-white transition-all cursor-pointer"
             title="Update Delivery Location"
           >
             <MapPin size={13} className="text-amber-400 shrink-0" />
-            <span className="truncate max-w-[120px] text-[11px] font-medium">
-              {location.city ? `${location.city}${location.pincode ? ` (${location.pincode})` : ''}` : 'Select Location'}
+            <span className="truncate max-w-[110px] sm:max-w-[180px] text-[10px] sm:text-[11px] font-medium">
+              {location.city ? `${location.city}${location.pincode ? ` (${location.pincode})` : ''}` : 'Location'}
             </span>
           </button>
 

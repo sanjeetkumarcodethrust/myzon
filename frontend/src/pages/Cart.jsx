@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useCartStore, useWishlistStore, useUIStore, useAuthStore, useOrderStore } from '../store/useStore';
 import { sendOtpApi, verifyOtpApi, createOrderApi, resendDeliveryOtpApi } from '../utils/api';
+import { lookupPincode } from '../utils/location';
 
 export const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCartStore();
@@ -44,15 +45,41 @@ export const Cart = () => {
 
   useEffect(() => {
     if (user?.name || user?.phone || location.city || location.pincode) {
-      setAddressForm(prev => ({
-        ...prev,
-        name: prev.name || user?.name || '',
-        phone: prev.phone || user?.phone || '',
-        city: prev.city || location.city || '',
-        pincode: prev.pincode || location.pincode || '',
-      }));
+      setAddressForm(prev => {
+        let cleanCity = prev.city || location.city || '';
+        if (cleanCity === 'India Delivery' || cleanCity === 'India') {
+          cleanCity = (location.pincode?.startsWith('411') || location.pincode?.startsWith('412')) ? 'Pune' : '';
+        }
+        return {
+          ...prev,
+          name: prev.name || user?.name || '',
+          phone: prev.phone || user?.phone || '',
+          city: cleanCity,
+          pincode: prev.pincode || location.pincode || '',
+        };
+      });
     }
   }, [user, location]);
+
+  const handleAddressPincodeChange = async (e) => {
+    const pin = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setAddressForm(prev => ({ ...prev, pincode: pin }));
+
+    if (pin.length === 6) {
+      try {
+        const res = await lookupPincode(pin);
+        if (res && res.city) {
+          setAddressForm(prev => ({
+            ...prev,
+            pincode: pin,
+            city: (!prev.city || prev.city === 'India Delivery' || prev.city === 'India') ? res.city : prev.city,
+          }));
+        }
+      } catch (err) {
+        // Ignored
+      }
+    }
+  };
 
   // Automatically scroll to top when Cart page loads
   useEffect(() => {
@@ -645,7 +672,7 @@ export const Cart = () => {
                           required
                           maxLength={6}
                           value={addressForm.pincode} 
-                          onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value.replace(/\D/g, '').slice(0, 6) })}
+                          onChange={handleAddressPincodeChange}
                           className="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-neutral-700 focus:border-amber-400 outline-none bg-neutral-900 text-white"
                           placeholder="Enter 6-digit pincode"
                         />

@@ -6,6 +6,7 @@ import {
   ChevronDown, ChevronUp, Gem
 } from 'lucide-react';
 import { useCartStore, useWishlistStore, useUIStore } from '../store/useStore';
+import { lookupPincode } from '../utils/location';
 import productsData from '../data/products.json';
 import { dealProducts } from './Deals';
 import { newArrivals } from './NewArrivals';
@@ -24,6 +25,7 @@ export const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [pincodeCheck, setPincodeCheck] = useState(location.pincode || '');
   const [pincodeChecked, setPincodeChecked] = useState(Boolean(location.pincode));
+  const [verifiedCity, setVerifiedCity] = useState(location.city || '');
   const [activeAccordion, setActiveAccordion] = useState('specs');
 
   useEffect(() => {
@@ -33,9 +35,10 @@ export const ProductDetail = () => {
   useEffect(() => {
     if (location.pincode) {
       setPincodeCheck(location.pincode);
+      setVerifiedCity(location.city || '');
       setPincodeChecked(true);
     }
-  }, [location.pincode]);
+  }, [location.pincode, location.city]);
 
   if (!product) {
     return (
@@ -236,10 +239,19 @@ export const ProductDetail = () => {
                 />
                 <button
                   type="button"
-                  onClick={() => {
-                    if (pincodeCheck && pincodeCheck.trim().length === 6 && /^\d+$/.test(pincodeCheck.trim())) {
-                      setPincodeChecked(true);
-                      showToast(`Pincode ${pincodeCheck.trim()} verified for express delivery!`);
+                  onClick={async () => {
+                    const pin = (pincodeCheck || '').trim();
+                    if (pin && pin.length === 6 && /^\d+$/.test(pin)) {
+                      try {
+                        const res = await lookupPincode(pin);
+                        const city = res?.city || location.city || 'Pune';
+                        setVerifiedCity(city);
+                        setPincodeChecked(true);
+                        showToast(`📍 Pincode ${pin} (${city}) verified for express delivery!`);
+                      } catch {
+                        setPincodeChecked(true);
+                        showToast(`Pincode ${pin} verified for express delivery!`);
+                      }
                     } else {
                       showToast('Please enter a valid 6-digit Indian Pincode.');
                     }
@@ -252,7 +264,7 @@ export const ProductDetail = () => {
               {pincodeChecked && pincodeCheck ? (
                 <p className="text-xs text-emerald-400 font-medium mt-2.5 flex items-center gap-1.5">
                   <CheckCircle size={14} />
-                  Express Courier available for {location.city ? <strong>{location.city} ({pincodeCheck})</strong> : <strong>Pincode {pincodeCheck}</strong>}: Arrives within 24-48 Hours.
+                  Express Courier available for <strong>{verifiedCity || location.city || 'Pune'} ({pincodeCheck})</strong>: Arrives within 24-48 Hours.
                 </p>
               ) : null}
             </div>

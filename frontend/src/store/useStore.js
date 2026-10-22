@@ -32,10 +32,25 @@ const getInitialLocation = () => {
     const raw = localStorage.getItem('myzon_location');
     if (!raw) return { city: '', pincode: '' };
     const parsed = JSON.parse(raw);
-    if (parsed && parsed.city === 'New Delhi' && parsed.pincode === '110001') {
+    if (!parsed) return { city: '', pincode: '' };
+
+    // Reset old dummy or invalid data
+    if (parsed.city === 'New Delhi' && parsed.pincode === '110001') {
       localStorage.removeItem('myzon_location');
       return { city: '', pincode: '' };
     }
+
+    // Auto-fix previously corrupted "India" or "India Delivery" values
+    if (parsed.city === 'India Delivery' || parsed.city === 'India' || !parsed.city) {
+      if (parsed.pincode && (parsed.pincode.startsWith('411') || parsed.pincode.startsWith('412') || parsed.pincode.startsWith('410'))) {
+        const fixedLoc = { city: 'Pune', pincode: parsed.pincode };
+        localStorage.setItem('myzon_location', JSON.stringify(fixedLoc));
+        return fixedLoc;
+      }
+      localStorage.removeItem('myzon_location');
+      return { city: '', pincode: '' };
+    }
+
     return parsed;
   } catch {
     return { city: '', pincode: '' };
@@ -51,9 +66,21 @@ export const useUIStore = create((set) => {
     isDrawerOpen: false,
     language: 'EN',
     toast: { show: false, message: '', type: 'cart' },
+    isDetectingLocation: false,
     
+    setIsDetectingLocation: (bool) => set({ isDetectingLocation: bool }),
     setLocation: (city, pincode) => {
-      const loc = { city, pincode };
+      let resolvedCity = city;
+      if (!resolvedCity || resolvedCity === 'India Delivery' || resolvedCity === 'India') {
+        if (pincode && (pincode.startsWith('411') || pincode.startsWith('412') || pincode.startsWith('410'))) {
+          resolvedCity = 'Pune';
+        } else if (pincode) {
+          resolvedCity = `Pincode ${pincode}`;
+        } else {
+          resolvedCity = 'Pune';
+        }
+      }
+      const loc = { city: resolvedCity, pincode };
       localStorage.setItem('myzon_location', JSON.stringify(loc));
       set({ location: loc, isPincodeModalOpen: false });
     },

@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { 
   X, User, ChevronRight, Flame, Laptop, Shirt, Home as HomeIcon, 
   Sparkles, Zap, Tag, Gift, HelpCircle, ShoppingBag, ShieldCheck,
-  Compass, Headphones, Watch, Gem
+  Compass, Headphones, Watch, Gem, MapPin 
 } from 'lucide-react';
 import { useUIStore, useAuthStore } from '../store/useStore';
 
 export const AmazonDrawer = () => {
-  const { isDrawerOpen, closeDrawer, openLoginModal } = useUIStore();
+  const { isDrawerOpen, closeDrawer, openLoginModal, location, openPincodeModal } = useUIStore();
   const { user, logout } = useAuthStore();
 
   if (!isDrawerOpen) return null;
@@ -55,6 +55,23 @@ export const AmazonDrawer = () => {
           >
             <X size={20} />
           </button>
+        </div>
+
+        {/* Live Delivery Location Banner */}
+        <div 
+          onClick={() => { closeDrawer(); openPincodeModal(); }}
+          className="bg-[#15161c] px-4 py-2.5 border-b border-neutral-800 flex items-center justify-between cursor-pointer hover:bg-neutral-900 transition-colors"
+        >
+          <div className="flex items-center gap-2 text-xs">
+            <MapPin size={14} className="text-amber-400 shrink-0" />
+            <span className="text-neutral-400">Deliver to:</span>
+            <strong className="text-white truncate max-w-[170px]">
+              {location.city ? `${location.city}${location.pincode ? ` (${location.pincode})` : ''}` : 'Detect Location'}
+            </strong>
+          </div>
+          <span className="text-[10px] text-amber-400 font-bold border border-amber-500/30 px-2 py-0.5 rounded-lg">
+            Change
+          </span>
         </div>
 
         {/* Scrollable Content */}

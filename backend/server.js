@@ -39,6 +39,56 @@ app.get("/", (req, res) => res.status(200).send("Myzon Backend API is active and
 app.get("/health", (req, res) => res.status(200).json({ status: "ok", timestamp: new Date().toISOString() }));
 app.get("/api", (req, res) => res.status(200).json({ message: "Myzon API is running..." }));
 
+// Real location IP auto-detection route (lightweight, responds without waiting for DB)
+app.get("/api/location/auto-ip", async (req, res) => {
+  try {
+    const forwarded = req.headers["x-forwarded-for"];
+    const clientIp = forwarded ? forwarded.split(",")[0].trim() : req.socket?.remoteAddress;
+
+    const isLocal = !clientIp || clientIp.includes("127.0.0.1") || clientIp.includes("::1") || clientIp.startsWith("192.168.");
+    const targetUrl = isLocal ? "http://ip-api.com/json/" : `http://ip-api.com/json/${clientIp}`;
+
+    const response = await fetch(targetUrl, { signal: AbortSignal.timeout(3500) });
+    const data = await response.json();
+
+    if (data && data.status === "success") {
+      let resolvedCity = data.city;
+      const cleanZip = String(data.zip || "").replace(/\D/g, "");
+      if (!resolvedCity || resolvedCity.toLowerCase() === "india") {
+        if (cleanZip.startsWith("411") || cleanZip.startsWith("412") || cleanZip.startsWith("410")) {
+          resolvedCity = "Pune";
+        } else if (cleanZip.startsWith("400") || cleanZip.startsWith("401")) {
+          resolvedCity = "Mumbai";
+        } else if (cleanZip.startsWith("110")) {
+          resolvedCity = "New Delhi";
+        } else {
+          resolvedCity = "Pune";
+        }
+      }
+
+      return res.status(200).json({
+        success: true,
+        city: resolvedCity,
+        pincode: cleanZip || "411001",
+        state: data.regionName || "Maharashtra",
+        country: data.country || "India",
+        source: "ip",
+      });
+    }
+  } catch (err) {
+    console.warn("Backend auto-ip note:", err.message);
+  }
+
+  res.status(200).json({
+    success: true,
+    city: "Pune",
+    pincode: "411001",
+    state: "Maharashtra",
+    country: "India",
+    source: "default",
+  });
+});
+
 // Static frontend dist files (if built)
 const distPath = path.resolve(__dirname, "../frontend/dist");
 app.use(express.static(distPath));
