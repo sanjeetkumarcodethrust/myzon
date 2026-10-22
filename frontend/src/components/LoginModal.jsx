@@ -587,18 +587,30 @@ export const LoginModal = () => {
                           {simulatedOtp}
                         </span>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (navigator.clipboard) {
-                            navigator.clipboard.writeText(simulatedOtp);
-                            showToast('OTP copied to clipboard! 📋');
-                          }
-                        }}
-                        className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-neutral-700 transition-all cursor-pointer"
-                      >
-                        Copy Code
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOtp(simulatedOtp);
+                            showToast('OTP auto-filled! ✨');
+                          }}
+                          className="bg-amber-400 hover:bg-amber-500 text-neutral-950 text-xs font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer shadow-sm active:scale-95"
+                        >
+                          Auto-Fill
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (navigator.clipboard) {
+                              navigator.clipboard.writeText(simulatedOtp);
+                              showToast('OTP copied to clipboard! 📋');
+                            }
+                          }}
+                          className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-bold px-3 py-1.5 rounded-lg border border-neutral-700 transition-all cursor-pointer"
+                        >
+                          Copy
+                        </button>
+                      </div>
                     </div>
 
                     <p className="text-[10px] text-neutral-400 leading-relaxed">

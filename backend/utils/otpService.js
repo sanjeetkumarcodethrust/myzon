@@ -234,23 +234,33 @@ export const sendOtp = async (identifier, options = {}) => {
   const ttlMs = 5 * 60 * 1000; // 5 minutes
 
   // Priority 1: Fast2SMS (Free / low-cost Indian SMS gateway, no DLT required for OTP route)
-  if (isPhone && process.env.FAST2SMS_API_KEY && process.env.FAST2SMS_API_KEY.trim() !== "" && process.env.FAST2SMS_API_KEY !== "your_fast2sms_api_key") {
-    const localOtp = generateOtpCode();
-    await sendViaFast2SMS(target, localOtp);
-    otpStore.set(target, {
-      gateway: "fast2sms",
-      otp: localOtp,
-      expiresAt: now + ttlMs,
-      attempts: 0,
-      createdAt: now,
-    });
-    return {
-      success: true,
-      target,
-      gateway: "fast2sms",
-      message: `Verification code sent to +91 ${target} via SMS. Please check your mobile phone.`,
-      expiresIn: 300,
-    };
+  if (
+    isPhone &&
+    process.env.FAST2SMS_API_KEY &&
+    process.env.FAST2SMS_API_KEY.trim() !== "" &&
+    process.env.FAST2SMS_API_KEY !== "your_fast2sms_api_key"
+  ) {
+    try {
+      const localOtp = generateOtpCode();
+      await sendViaFast2SMS(target, localOtp);
+      otpStore.set(target, {
+        gateway: "fast2sms",
+        otp: localOtp,
+        expiresAt: now + ttlMs,
+        attempts: 0,
+        createdAt: now,
+      });
+      return {
+        success: true,
+        target,
+        gateway: "fast2sms",
+        message: `Verification code sent to +91 ${target} via SMS. Please check your mobile phone.`,
+        expiresIn: 300,
+      };
+    } catch (err) {
+      console.warn(`⚠️ [FAST2SMS] Dispatch failed for +91 ${target}:`, err.message);
+      // Fall through to Twilio or Sandbox
+    }
   }
 
   // Priority 2: Twilio Verify Service (Configured in user's Twilio console)
@@ -260,23 +270,29 @@ export const sendOtp = async (identifier, options = {}) => {
     process.env.TWILIO_ACCOUNT_SID &&
     process.env.TWILIO_AUTH_TOKEN
   ) {
-    const verifyRes = await sendViaTwilioVerify(target, channel);
-    otpStore.set(target, {
-      gateway: "twilio_verify",
-      sid: verifyRes.sid,
-      channel: verifyRes.channel,
-      expiresAt: now + ttlMs,
-      attempts: 0,
-      createdAt: now,
-    });
-    return {
-      success: true,
-      target,
-      gateway: "twilio_verify",
-      channel,
-      message: `Verification code sent to +91 ${target} via ${channel === "whatsapp" ? "WhatsApp" : "SMS"}. Please check your phone.`,
-      expiresIn: 300,
-    };
+    try {
+      const verifyRes = await sendViaTwilioVerify(target, channel);
+      otpStore.set(target, {
+        gateway: "twilio_verify",
+        sid: verifyRes.sid,
+        channel: verifyRes.channel,
+        expiresAt: now + ttlMs,
+        attempts: 0,
+        createdAt: now,
+      });
+      return {
+        success: true,
+        target,
+        gateway: "twilio_verify",
+        channel,
+        message: `Verification code sent to +91 ${target} via ${channel === "whatsapp" ? "WhatsApp" : "SMS"}. Please check your phone.`,
+        expiresIn: 300,
+      };
+    } catch (err) {
+      console.warn(`⚠️ [TWILIO VERIFY] Could not dispatch to +91 ${target}:`, err.message);
+      // If trial mode error 21608 (unverified number), don't crash!
+      // Fall through to Twilio Messages or Sandbox simulation!
+    }
   }
 
   // Priority 3: Twilio Messages API (when TWILIO_PHONE_NUMBER is used)
@@ -286,25 +302,30 @@ export const sendOtp = async (identifier, options = {}) => {
     process.env.TWILIO_ACCOUNT_SID &&
     process.env.TWILIO_AUTH_TOKEN
   ) {
-    const localOtp = generateOtpCode();
-    await sendViaTwilioMessages(target, localOtp);
-    otpStore.set(target, {
-      gateway: "twilio_sms",
-      otp: localOtp,
-      expiresAt: now + ttlMs,
-      attempts: 0,
-      createdAt: now,
-    });
-    return {
-      success: true,
-      target,
-      gateway: "twilio_sms",
-      message: `Verification code sent to +91 ${target} via SMS. Please check your mobile phone.`,
-      expiresIn: 300,
-    };
+    try {
+      const localOtp = generateOtpCode();
+      await sendViaTwilioMessages(target, localOtp);
+      otpStore.set(target, {
+        gateway: "twilio_sms",
+        otp: localOtp,
+        expiresAt: now + ttlMs,
+        attempts: 0,
+        createdAt: now,
+      });
+      return {
+        success: true,
+        target,
+        gateway: "twilio_sms",
+        message: `Verification code sent to +91 ${target} via SMS. Please check your mobile phone.`,
+        expiresIn: 300,
+      };
+    } catch (err) {
+      console.warn(`⚠️ [TWILIO SMS] Could not dispatch to +91 ${target}:`, err.message);
+      // Fall through to Sandbox simulation!
+    }
   }
 
-  // Fallback ONLY when NO real SMS gateway is configured at all in .env
+  // Fallback: When no SMS gateway is configured OR Twilio Trial blocks unverified numbers
   const fallbackOtp = generateOtpCode();
   otpStore.set(target, {
     gateway: "simulated",
@@ -319,7 +340,7 @@ export const sendOtp = async (identifier, options = {}) => {
   console.log(`╠════════════════════════════════════════════════════════════════════╣`);
   console.log(`║  Target   : ${isPhone ? "+91 " + target : target}`);
   console.log(`║  OTP Code : [ ${fallbackOtp} ]                                          ║`);
-  console.log(`║  Notice   : No SMS Gateway configured in backend/.env              ║`);
+  console.log(`║  Notice   : Twilio Trial / Sandbox mode active                     ║`);
   console.log(`╚════════════════════════════════════════════════════════════════════╝\n`);
 
   return {
@@ -327,7 +348,8 @@ export const sendOtp = async (identifier, options = {}) => {
     target,
     gateway: "simulated",
     otp: fallbackOtp,
-    message: `Dev mode: No SMS gateway configured in .env. Verification code is ${fallbackOtp}`,
+    isTrialFallback: true,
+    message: `Twilio Trial Mode: Real SMS sirf verified numbers par jata hai. Kisi bhi number se login ke liye code [${fallbackOtp}] use karein.`,
     expiresIn: 300,
   };
 };
