@@ -54,6 +54,15 @@ export const Cart = () => {
     }
   }, [user, location]);
 
+  // Automatically scroll to top when Cart page loads
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'instant',
+    });
+  }, []);
+
   // Automatically open checkout if routed from "Instant Checkout"
   useEffect(() => {
     if (locationHook.state?.openCheckout && cartItems.length > 0) {
@@ -307,26 +316,24 @@ export const Cart = () => {
   };
 
   return (
-    <div className="bg-[#0a0b0e] text-neutral-100 min-h-screen py-8 select-none">
-      <div className="max-w-[1500px] mx-auto px-4 lg:px-8">
+    <div className="bg-[#0a0b0e] text-neutral-100 min-h-screen py-3 sm:py-6 select-none">
+      <div className="max-w-[1500px] mx-auto px-3 sm:px-4 lg:px-8">
         
-        {/* Deliver to address bar */}
+        {/* Deliver to address bar (compact & sleek) */}
         {cartItems.length > 0 && !orderSuccess && (
-          <div className="bg-[#121316] rounded-2xl border border-neutral-800 p-4 mb-6 flex items-center justify-between shadow-lg">
-            <div className="flex items-center gap-2.5">
-              <MapPin size={18} className="text-amber-400" />
-              <div className="text-xs">
-                <span className="text-neutral-400">Dispatch Destination: </span>
-                <span className="font-bold text-white">
-                  {addressForm.city && addressForm.pincode 
-                    ? `${addressForm.city} - ${addressForm.pincode}`
-                    : 'Not specified yet (Enter during checkout)'}
-                </span>
-              </div>
+          <div className="bg-[#121316] rounded-xl border border-neutral-800 px-3.5 py-2 sm:py-2.5 mb-3 sm:mb-4 flex items-center justify-between shadow-md">
+            <div className="flex items-center gap-2 text-xs">
+              <MapPin size={15} className="text-amber-400 shrink-0" />
+              <span className="text-neutral-400 hidden sm:inline">Dispatch Destination: </span>
+              <span className="font-bold text-white truncate max-w-[200px] sm:max-w-none">
+                {addressForm.city && addressForm.pincode 
+                  ? `${addressForm.city} - ${addressForm.pincode}`
+                  : 'Current Location'}
+              </span>
             </div>
             <button
               onClick={openPincodeModal}
-              className="text-amber-400 font-bold text-xs border border-amber-500/30 rounded-xl px-4 py-1.5 hover:bg-amber-400/10 transition-colors cursor-pointer"
+              className="text-amber-400 font-bold text-[11px] sm:text-xs border border-amber-500/30 rounded-lg px-2.5 py-1 hover:bg-amber-400/10 transition-colors cursor-pointer shrink-0"
             >
               Update Pincode
             </button>
@@ -334,18 +341,21 @@ export const Cart = () => {
         )}
 
         {cartItems.length > 0 ? (
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
             
             {/* Left Items Column */}
             <div className="flex-1 space-y-3">
               <div className="bg-[#121316] rounded-2xl border border-neutral-800 shadow-xl overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-neutral-800 flex items-center justify-between">
-                  <h1 className="text-lg font-black text-white flex items-center gap-2">
+                <div className="p-3 sm:p-4 border-b border-neutral-800 flex items-center justify-between">
+                  <h1 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
                     <span>Studio Bag</span>
-                    <span className="text-xs bg-neutral-900 border border-neutral-800 text-amber-400 font-bold px-2.5 py-0.5 rounded-full">
-                      {totalItemsCount} drops
+                    <span className="text-xs bg-neutral-900 border border-neutral-800 text-amber-400 font-bold px-2 py-0.5 rounded-full">
+                      {totalItemsCount} {totalItemsCount === 1 ? 'drop' : 'drops'}
                     </span>
                   </h1>
+                  <span className="text-xs text-neutral-400 hidden sm:inline">
+                    All items reserved & ready to ship
+                  </span>
                 </div>
 
                 <div className="divide-y divide-neutral-800/80">
@@ -354,11 +364,11 @@ export const Cart = () => {
                     const isWishlisted = wishlistItems.some(i => i.id === item.id);
 
                     return (
-                      <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+                      <div key={item.id} className="p-3.5 sm:p-5 flex flex-row gap-3.5 sm:gap-5 items-center">
                         {/* Image */}
                         <Link 
                           to={`/product/${item.id}`} 
-                          className="w-24 h-24 sm:w-28 sm:h-28 bg-neutral-900 rounded-2xl p-2.5 border border-neutral-800 shrink-0 flex items-center justify-center hover:border-amber-500/40 transition-colors"
+                          className="w-20 h-20 sm:w-28 sm:h-28 bg-neutral-900 rounded-xl sm:rounded-2xl p-2 border border-neutral-800 shrink-0 flex items-center justify-center hover:border-amber-500/40 transition-colors"
                         >
                           <img src={item.image} alt={item.title} className="max-h-full max-w-full object-contain" />
                         </Link>
@@ -366,12 +376,12 @@ export const Cart = () => {
                         {/* Title and details */}
                         <div className="flex-1 min-w-0">
                           <Link to={`/product/${item.id}`}>
-                            <h3 className="font-bold text-sm text-neutral-200 line-clamp-2 hover:text-amber-300 transition-colors leading-snug mb-1">
+                            <h3 className="font-bold text-xs sm:text-sm text-neutral-200 line-clamp-2 hover:text-amber-300 transition-colors leading-snug mb-1">
                               {item.title}
                             </h3>
                           </Link>
                           
-                          <div className="flex items-center gap-2 text-xs text-neutral-400 mb-2">
+                          <div className="flex items-center gap-2 text-[11px] sm:text-xs text-neutral-400 mb-1.5 sm:mb-2">
                             <span className="capitalize">{item.brand}</span>
                             <span>•</span>
                             <span className="text-amber-400 font-bold text-[10px] bg-amber-400/10 px-2 py-0.2 rounded-full border border-amber-500/20">
@@ -380,34 +390,34 @@ export const Cart = () => {
                           </div>
 
                           {/* Price */}
-                          <div className="flex items-baseline gap-2 mb-3">
-                            <span className="text-lg font-black text-amber-400">
+                          <div className="flex items-baseline gap-2 mb-2 sm:mb-3">
+                            <span className="text-base sm:text-lg font-black text-amber-400">
                               ₹{(item.price * item.qty).toLocaleString()}
                             </span>
-                            <span className="text-xs text-neutral-500 line-through">
+                            <span className="text-[11px] sm:text-xs text-neutral-500 line-through">
                               ₹{(orig * item.qty).toLocaleString()}
                             </span>
-                            <span className="text-xs font-bold text-emerald-400">
+                            <span className="text-[11px] sm:text-xs font-bold text-emerald-400">
                               Save ₹{((orig - item.price) * item.qty).toLocaleString()}
                             </span>
                           </div>
 
                           {/* Controls */}
-                          <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+                          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-semibold">
                             {/* Quantity stepper */}
                             <div className="flex items-center border border-neutral-800 rounded-xl overflow-hidden bg-neutral-900">
                               <button 
                                 onClick={() => updateQuantity(item.id, item.qty - 1)}
-                                className="px-3 py-1 hover:bg-neutral-800 text-neutral-300 transition-colors font-bold cursor-pointer"
+                                className="px-2.5 sm:px-3 py-1 hover:bg-neutral-800 text-neutral-300 transition-colors font-bold cursor-pointer"
                               >
                                 -
                               </button>
-                              <span className="px-3 py-1 font-bold bg-[#121316] text-white border-x border-neutral-800">
+                              <span className="px-2.5 sm:px-3 py-1 font-bold bg-[#121316] text-white border-x border-neutral-800">
                                 {item.qty}
                               </span>
                               <button 
                                 onClick={() => updateQuantity(item.id, item.qty + 1)}
-                                className="px-3 py-1 hover:bg-neutral-800 text-neutral-300 transition-colors font-bold cursor-pointer"
+                                className="px-2.5 sm:px-3 py-1 hover:bg-neutral-800 text-neutral-300 transition-colors font-bold cursor-pointer"
                               >
                                 +
                               </button>
@@ -415,26 +425,26 @@ export const Cart = () => {
 
                             <button 
                               onClick={() => addToWishlist(item)}
-                              className={`flex items-center gap-1 transition-colors cursor-pointer ${
+                              className={`flex items-center gap-1 transition-colors cursor-pointer text-xs ${
                                 isWishlisted ? 'text-rose-400 font-bold' : 'text-neutral-400 hover:text-rose-400'
                               }`}
                             >
-                              <Heart size={14} className={isWishlisted ? 'fill-current' : ''} />
-                              <span>{isWishlisted ? 'Saved in Wishlist' : 'Save for later'}</span>
+                              <Heart size={13} className={isWishlisted ? 'fill-current' : ''} />
+                              <span className="hidden sm:inline">{isWishlisted ? 'Saved' : 'Save for later'}</span>
                             </button>
 
                             <button 
                               onClick={() => removeFromCart(item.id)}
-                              className="text-neutral-500 hover:text-red-400 flex items-center gap-1 transition-colors cursor-pointer"
+                              className="text-neutral-500 hover:text-red-400 flex items-center gap-1 transition-colors cursor-pointer text-xs"
                             >
-                              <Trash2 size={14} />
+                              <Trash2 size={13} />
                               <span>Remove</span>
                             </button>
                           </div>
                         </div>
 
                         {/* Delivery Promise */}
-                        <div className="text-right shrink-0 hidden sm:block text-xs">
+                        <div className="text-right shrink-0 hidden md:block text-xs">
                           <p className="text-neutral-300 font-medium">Express Courier: <strong>Under 24h</strong></p>
                           <p className="text-amber-400 font-bold">Complimentary</p>
                         </div>

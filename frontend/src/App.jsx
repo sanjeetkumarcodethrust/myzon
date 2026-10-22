@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ScrollToTop } from './components/ScrollToTop';
 import { TopBar } from './components/TopBar';
 import { Header } from './components/Header';
 import { Navigation } from './components/Navigation';
@@ -23,6 +24,7 @@ import { Chatbot } from './components/Chatbot';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen bg-[#0a0b0e] text-neutral-100 flex flex-col font-sans selection:bg-amber-400 selection:text-neutral-950">
         <TopBar />
         <Header />
