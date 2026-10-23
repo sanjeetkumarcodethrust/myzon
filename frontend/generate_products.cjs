@@ -193,8 +193,8 @@ const categoryConfig = {
       'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&q=80&w=300&h=300',
-      'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&q=80&w=300&h=300',
+      'https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1583778176476-4a8b02a64c01?auto=format&fit=crop&q=80&w=300&h=300',
       'https://images.unsplash.com/photo-1558618047-3d7a7ef9a6cf?auto=format&fit=crop&q=80&w=300&h=300',
@@ -459,18 +459,79 @@ for (const cat of categoriesToGenerate) {
     seenTitles.add(title.toLowerCase());
 
     let originalPrice;
-    const priceCategory = Math.random();
+    let discountPercent;
+
     if (cat === 'pooja-samagri') {
       originalPrice = Math.floor(Math.random() * 800) + 99;
-    } else if (priceCategory < 0.3) {
-      originalPrice = Math.floor(Math.random() * 4000) + 500;
-    } else if (priceCategory < 0.7) {
-      originalPrice = Math.floor(Math.random() * 15000) + 6000;
+      discountPercent = Math.floor(Math.random() * 25) + 15;
+    } else if (cat === 'books-stationery') {
+      if (Math.random() < 0.75) {
+        originalPrice = Math.floor(Math.random() * 550) + 249; // ₹249 - ₹799
+      } else {
+        originalPrice = Math.floor(Math.random() * 600) + 800; // ₹800 - ₹1,399
+      }
+      discountPercent = Math.floor(Math.random() * 30) + 15;
+    } else if (cat === 'beauty-health') {
+      if (Math.random() < 0.7) {
+        originalPrice = Math.floor(Math.random() * 700) + 299; // ₹299 - ₹999
+      } else if (Math.random() < 0.9) {
+        originalPrice = Math.floor(Math.random() * 1000) + 1000; // ₹1,000 - ₹1,999
+      } else {
+        originalPrice = Math.floor(Math.random() * 1000) + 2000; // ₹2,000 - ₹2,999
+      }
+      discountPercent = Math.floor(Math.random() * 35) + 15;
+    } else if (cat === 'toys-games') {
+      if (Math.random() < 0.7) {
+        originalPrice = Math.floor(Math.random() * 1100) + 399; // ₹399 - ₹1,499
+      } else if (Math.random() < 0.9) {
+        originalPrice = Math.floor(Math.random() * 1000) + 1500; // ₹1,500 - ₹2,499
+      } else {
+        originalPrice = Math.floor(Math.random() * 1000) + 2500; // ₹2,500 - ₹3,499
+      }
+      discountPercent = Math.floor(Math.random() * 30) + 15;
+    } else if (cat === 'home-kitchen') {
+      if (noun === 'Appliance' || noun === 'Equipment') {
+        originalPrice = Math.floor(Math.random() * 2500) + 1499; // ₹1,499 - ₹3,999
+      } else {
+        originalPrice = Math.floor(Math.random() * 1300) + 499; // ₹499 - ₹1,799
+      }
+      discountPercent = Math.floor(Math.random() * 30) + 15;
+    } else if (cat === 'fashion') {
+      if (Math.random() < 0.65) {
+        originalPrice = Math.floor(Math.random() * 900) + 599; // ₹599 - ₹1,499
+      } else if (Math.random() < 0.9) {
+        originalPrice = Math.floor(Math.random() * 1200) + 1500; // ₹1,500 - ₹2,699
+      } else {
+        originalPrice = Math.floor(Math.random() * 1100) + 2700; // ₹2,700 - ₹3,799
+      }
+      discountPercent = Math.floor(Math.random() * 35) + 20;
+    } else if (cat === 'sports-outdoors') {
+      if (Math.random() < 0.7) {
+        originalPrice = Math.floor(Math.random() * 1000) + 499; // ₹499 - ₹1,499
+      } else if (Math.random() < 0.9) {
+        originalPrice = Math.floor(Math.random() * 1300) + 1500; // ₹1,500 - ₹2,799
+      } else {
+        originalPrice = Math.floor(Math.random() * 1200) + 2800; // ₹2,800 - ₹3,999
+      }
+      discountPercent = Math.floor(Math.random() * 30) + 15;
+    } else if (cat === 'electronics') {
+      const eleType = Math.random();
+      if (eleType < 0.45) {
+        originalPrice = Math.floor(Math.random() * 1500) + 499; // ₹499 - ₹1,999
+        discountPercent = Math.floor(Math.random() * 30) + 15;
+      } else if (eleType < 0.8) {
+        originalPrice = Math.floor(Math.random() * 5500) + 2499; // ₹2,499 - ₹7,999
+        discountPercent = Math.floor(Math.random() * 25) + 15;
+      } else {
+        originalPrice = Math.floor(Math.random() * 25000) + 9999; // ₹9,999 - ₹34,999
+        discountPercent = Math.floor(Math.random() * 20) + 10;
+      }
     } else {
-      originalPrice = Math.floor(Math.random() * 50000) + 25000;
+      originalPrice = Math.floor(Math.random() * 1500) + 499;
+      discountPercent = 20;
     }
-    const discountPercent = Math.floor(Math.random() * 50) + 10; 
-    const price = Math.floor(originalPrice * (1 - discountPercent / 100));
+
+    const price = Math.round(originalPrice * (1 - discountPercent / 100));
     
     const rating = (Math.random() * 2 + 3).toFixed(1); 
     const reviews = Math.floor(Math.random() * 5000) + 10;

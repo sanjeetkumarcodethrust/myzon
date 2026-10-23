@@ -6,7 +6,7 @@ import { useCartStore } from '../store/useStore';
 export const dealProducts = [
   {
     id: 90001, brand: 'boAt', title: 'Rockerz 450 Lossless Wireless Headphones',
-    price: 24990, originalPrice: 34990, discount: '29% OFF', rating: 4.8, reviews: '4.2k',
+    price: 1499, originalPrice: 1999, discount: '25% OFF', rating: 4.8, reviews: '4.2k',
     endsIn: 12400,
     image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400&h=400'
   },

@@ -18,7 +18,7 @@ export const newArrivals = [
   },
   {
     id: 90103, brand: 'Canon', title: 'EOS 200D II DSLR Creator Edition',
-    price: 189990, originalPrice: 199990, label: 'NEW ARRIVAL', rating: 4.9, reviews: '45',
+    price: 36990, originalPrice: 49990, label: 'NEW ARRIVAL', rating: 4.9, reviews: '45',
     date: 'Added 1 week ago',
     image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=400&h=400'
   },
