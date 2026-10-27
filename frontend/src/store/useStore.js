@@ -40,12 +40,21 @@ const getInitialLocation = () => {
       return { city: '', pincode: '' };
     }
 
-    // Auto-fix previously corrupted "India" or "India Delivery" values
-    if (parsed.city === 'India Delivery' || parsed.city === 'India' || !parsed.city) {
-      if (parsed.pincode && (parsed.pincode.startsWith('411') || parsed.pincode.startsWith('412') || parsed.pincode.startsWith('410'))) {
-        const fixedLoc = { city: 'Pune', pincode: parsed.pincode };
-        localStorage.setItem('myzon_location', JSON.stringify(fixedLoc));
-        return fixedLoc;
+    // Auto-fix previously corrupted "India", "India Delivery", or raw "District" values
+    if (
+      parsed.city === 'India Delivery' ||
+      parsed.city === 'India' ||
+      !parsed.city ||
+      /district/i.test(parsed.city) ||
+      /distric/i.test(parsed.city)
+    ) {
+      const cleanCity = (parsed.city || '')
+        .replace(/\s+(District|Subdistrict|Distric|Dist\.?)$/i, '')
+        .trim();
+      if (cleanCity && cleanCity.toLowerCase() !== 'india') {
+        const fixed = { city: cleanCity, pincode: parsed.pincode || '' };
+        localStorage.setItem('myzon_location', JSON.stringify(fixed));
+        return fixed;
       }
       localStorage.removeItem('myzon_location');
       return { city: '', pincode: '' };
@@ -70,7 +79,10 @@ export const useUIStore = create((set) => {
     
     setIsDetectingLocation: (bool) => set({ isDetectingLocation: bool }),
     setLocation: (city, pincode) => {
-      let resolvedCity = city;
+      let resolvedCity = (city || '')
+        .replace(/\s+(District|Subdistrict|Distric|Dist\.?)$/i, '')
+        .trim();
+
       if (!resolvedCity || resolvedCity === 'India Delivery' || resolvedCity === 'India') {
         if (pincode && (pincode.startsWith('411') || pincode.startsWith('412') || pincode.startsWith('410'))) {
           resolvedCity = 'Pune';
@@ -80,7 +92,7 @@ export const useUIStore = create((set) => {
           resolvedCity = 'Pune';
         }
       }
-      const loc = { city: resolvedCity, pincode };
+      const loc = { city: resolvedCity, pincode: pincode || '' };
       localStorage.setItem('myzon_location', JSON.stringify(loc));
       set({ location: loc, isPincodeModalOpen: false });
     },

@@ -66,6 +66,10 @@ app.get("/api/location/auto-ip", async (req, res) => {
         }
       }
 
+      if (resolvedCity) {
+        resolvedCity = resolvedCity.replace(/\s+(District|Subdistrict|Distric|Dist\.?)$/i, "").trim();
+      }
+
       return res.status(200).json({
         success: true,
         city: resolvedCity,

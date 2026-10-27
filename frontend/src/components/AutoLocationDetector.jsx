@@ -17,10 +17,29 @@ export const AutoLocationDetector = () => {
     if (hasTriggeredRef.current) return;
     hasTriggeredRef.current = true;
 
-    // Check if location is already saved in localStorage and valid
-    const hasExistingLocation = Boolean(location && location.city && location.pincode);
+    // Check if location is already saved in localStorage and valid (not corrupted by raw "District")
+    const isCorrupted = !location?.city || 
+      /district/i.test(location.city) || 
+      /distric/i.test(location.city) || 
+      location.city === 'India Delivery' || 
+      location.city === 'India';
 
-    // If already has saved location, we can still silently refresh or let user keep it
+    const hasExistingLocation = Boolean(location && location.city && location.pincode && !isCorrupted);
+
+    // If browser already has geolocation permission granted, silently update to live GPS
+    if (typeof navigator !== 'undefined' && navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: 'geolocation' }).then((status) => {
+        if (status.state === 'granted') {
+          detectRealLocation().then((result) => {
+            if (result && result.success && result.city) {
+              setLocation(result.city, result.pincode || '');
+            }
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    // If already has saved valid location, don't show prompt toast
     if (hasExistingLocation) {
       return;
     }

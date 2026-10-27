@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, X, Check, Navigation, Loader2, Sparkles } from 'lucide-react';
 import { useUIStore } from '../store/useStore';
-import { detectRealLocation, lookupPincode } from '../utils/location';
+import { detectRealLocation, lookupPincode, INDIAN_PINCODE_PREFIX_MAP } from '../utils/location';
 
 const POPULAR_CITIES = [
   { city: 'Pune', pincode: '411001' },
@@ -75,14 +75,15 @@ export const PincodeModal = () => {
 
     try {
       const res = await lookupPincode(cleanPin);
-      const cityName = res?.city || 'Pune';
+      const cityName = res?.city || (INDIAN_PINCODE_PREFIX_MAP[cleanPin.slice(0, 3)]?.city) || 'Pune';
       setLocation(cityName, cleanPin);
       showToast(`📍 Destination set to ${cityName} (${cleanPin})`, 'cart');
       closePincodeModal();
     } catch (err) {
       // Offline fallback
-      setLocation('Pune', cleanPin);
-      showToast(`📍 Destination set to Pune (${cleanPin})`, 'cart');
+      const fallbackCity = (INDIAN_PINCODE_PREFIX_MAP[cleanPin.slice(0, 3)]?.city) || 'Pune';
+      setLocation(fallbackCity, cleanPin);
+      showToast(`📍 Destination set to ${fallbackCity} (${cleanPin})`, 'cart');
       closePincodeModal();
     } finally {
       setIsResolving(false);

@@ -190,7 +190,7 @@ export const Header = () => {
             title="Update Delivery Location"
           >
             <MapPin size={13} className="text-amber-400 shrink-0" />
-            <span className="truncate max-w-[110px] sm:max-w-[180px] text-[10px] sm:text-[11px] font-medium">
+            <span className="truncate max-w-[125px] sm:max-w-[220px] text-[10px] sm:text-[11px] font-medium">
               {location.city ? `${location.city}${location.pincode ? ` (${location.pincode})` : ''}` : 'Location'}
             </span>
           </button>

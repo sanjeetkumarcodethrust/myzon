@@ -125,6 +125,45 @@ export const INDIAN_PINCODE_2DIGIT_MAP = {
 };
 
 /**
+ * Strips broad administrative suffixes like "District", "Subdistrict", "Distric", "Dist."
+ * e.g. "Pune District" -> "Pune"
+ * "pune distric" -> "Pune"
+ * "Mumbai Suburban District" -> "Mumbai Suburban"
+ */
+export const cleanDistrictName = (str) => {
+  if (!str) return '';
+  const cleaned = String(str)
+    .replace(/\s+(District|Subdistrict|Distric|Dist\.?|City Subdistrict)$/i, '')
+    .trim();
+  if (cleaned.toLowerCase() === 'india' || cleaned.toLowerCase() === 'india delivery') {
+    return '';
+  }
+  return cleaned;
+};
+
+/**
+ * Combines specific locality (suburb/neighborhood) with main city/town
+ * e.g. locality "Thergaon", city "Pune" -> "Thergaon, Pune"
+ * locality "Hinjawadi", city "Pune" -> "Hinjawadi, Pune"
+ * locality "Pune", city "Pune" -> "Pune"
+ */
+export const formatLocationCity = (locality, city) => {
+  const cleanLoc = cleanDistrictName(locality);
+  const cleanCty = cleanDistrictName(city);
+
+  if (cleanLoc && cleanCty) {
+    if (cleanLoc.toLowerCase() === cleanCty.toLowerCase()) {
+      return cleanLoc;
+    }
+    if (cleanCty.toLowerCase().includes(cleanLoc.toLowerCase())) {
+      return cleanCty;
+    }
+    return `${cleanLoc}, ${cleanCty}`;
+  }
+  return cleanLoc || cleanCty || 'Pune';
+};
+
+/**
  * Resolves any 6-digit Indian Pincode into its real City / District and State.
  * Multi-layer resolution:
  * 1. Instant 3-digit prefix mapping (e.g. 411xxx/412xxx -> Pune) - 0ms
@@ -154,10 +193,12 @@ export const lookupPincode = async (pincode) => {
       const data = await res.json();
       if (Array.isArray(data) && data[0]?.Status === 'Success' && Array.isArray(data[0].PostOffice) && data[0].PostOffice.length > 0) {
         const primary = data[0].PostOffice[0];
-        const district = primary.District || primary.Region || primary.Circle;
+        const rawDistrict = primary.District || primary.Region || primary.Circle || '';
+        const district = cleanDistrictName(rawDistrict);
         const area = primary.Name;
         const state = primary.State;
-        const city = knownPrefix?.city || district || area || 'Pune';
+        const rawCity = knownPrefix?.city || district || area || 'Pune';
+        const city = cleanDistrictName(rawCity);
         return {
           success: true,
           city,
@@ -247,37 +288,59 @@ export const reverseGeocodeCoordinates = async (latitude, longitude) => {
         },
       }
     );
-    const data = await res.json();
-    if (data && data.address) {
-      const addr = data.address;
-      const rawPin = (addr.postcode || '').replace(/\D/g, '');
-      const pincode = rawPin.length >= 6 ? rawPin.slice(0, 6) : rawPin;
-      
-      let city =
-        addr.city ||
-        addr.town ||
-        addr.state_district ||
-        addr.suburb ||
-        addr.village ||
-        addr.county;
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.address) {
+        const addr = data.address;
+        const rawPin = (addr.postcode || '').replace(/\D/g, '');
+        let pincode = rawPin.length >= 6 ? rawPin.slice(0, 6) : rawPin;
 
-      // If city name is missing or generic but we have a pincode, resolve through lookupPincode
-      if ((!city || city.toLowerCase() === 'india') && pincode && pincode.length === 6) {
-        const pinRes = await lookupPincode(pincode);
-        if (pinRes?.city) {
-          city = pinRes.city;
+        // Specific area / locality (suburb, neighbourhood, residential area, etc.)
+        const locality = cleanDistrictName(
+          addr.suburb ||
+          addr.neighbourhood ||
+          addr.residential ||
+          addr.subdistrict ||
+          addr.village ||
+          addr.city_district ||
+          addr.hamlet ||
+          ''
+        );
+
+        // Main city / town (Pune, Pimpri-Chinchwad, Mumbai, Delhi, etc.)
+        let city = cleanDistrictName(addr.city || addr.town || addr.municipality || '');
+
+        // If city is not set, extract cleaned district or county
+        if (!city) {
+          city = cleanDistrictName(addr.state_district || addr.county || '');
         }
+
+        // If still no city, but pincode is 6-digit, check prefix map or postal lookup
+        if ((!city || city.toLowerCase() === 'india') && pincode && pincode.length === 6) {
+          const prefix3 = pincode.slice(0, 3);
+          if (INDIAN_PINCODE_PREFIX_MAP[prefix3]) {
+            city = INDIAN_PINCODE_PREFIX_MAP[prefix3].city;
+          } else {
+            const pinRes = await lookupPincode(pincode);
+            if (pinRes?.city) {
+              city = cleanDistrictName(pinRes.city);
+            }
+          }
+        }
+
+        const resolvedCity = formatLocationCity(locality, city);
+
+        return {
+          success: true,
+          city: resolvedCity,
+          locality,
+          mainCity: city,
+          pincode,
+          state: addr.state || '',
+          formatted: `${resolvedCity}${pincode ? ` (${pincode})` : ''}`,
+          source: 'gps_nominatim',
+        };
       }
-
-      city = city || addr.state || 'Pune';
-
-      return {
-        city,
-        pincode,
-        state: addr.state || '',
-        formatted: `${city}${pincode ? ` (${pincode})` : ''}`,
-        source: 'gps',
-      };
     }
   } catch (e) {
     console.warn('Nominatim reverse geocode note:', e.message);
@@ -288,28 +351,40 @@ export const reverseGeocodeCoordinates = async (latitude, longitude) => {
     const bdcRes = await fetch(
       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
     );
-    const bdcData = await bdcRes.json();
-    if (bdcData) {
-      const rawPin = (bdcData.postcode || '').replace(/\D/g, '');
-      const pincode = rawPin.length >= 6 ? rawPin.slice(0, 6) : rawPin;
-      let city = bdcData.city || bdcData.locality;
+    if (bdcRes.ok) {
+      const bdcData = await bdcRes.json();
+      if (bdcData) {
+        const rawPin = (bdcData.postcode || '').replace(/\D/g, '');
+        let pincode = rawPin.length >= 6 ? rawPin.slice(0, 6) : rawPin;
 
-      if ((!city || city.toLowerCase() === 'india') && pincode && pincode.length === 6) {
-        const pinRes = await lookupPincode(pincode);
-        if (pinRes?.city) {
-          city = pinRes.city;
+        const admin = bdcData.localityInfo?.administrative || [];
+        const districtObj = admin.find((a) => a.adminLevel === 5);
+        const talukaObj = admin.find((a) => a.adminLevel === 6);
+        const localObj = admin.find((a) => a.adminLevel >= 7);
+
+        const locality = cleanDistrictName(bdcData.locality || localObj?.name || talukaObj?.name || '');
+        let city = cleanDistrictName(bdcData.city || districtObj?.name || '');
+
+        if ((!city || city.toLowerCase() === 'india') && pincode && pincode.length === 6) {
+          const prefix3 = pincode.slice(0, 3);
+          if (INDIAN_PINCODE_PREFIX_MAP[prefix3]) {
+            city = INDIAN_PINCODE_PREFIX_MAP[prefix3].city;
+          }
         }
+
+        const resolvedCity = formatLocationCity(locality, city);
+
+        return {
+          success: true,
+          city: resolvedCity,
+          locality,
+          mainCity: city,
+          pincode,
+          state: bdcData.principalSubdivision || '',
+          formatted: `${resolvedCity}${pincode ? ` (${pincode})` : ''}`,
+          source: 'gps_bdc',
+        };
       }
-
-      city = city || bdcData.principalSubdivision || 'Pune';
-
-      return {
-        city,
-        pincode,
-        state: bdcData.principalSubdivision || '',
-        formatted: `${city}${pincode ? ` (${pincode})` : ''}`,
-        source: 'gps',
-      };
     }
   } catch (e) {
     console.warn('BigDataCloud reverse geocode note:', e.message);
@@ -326,9 +401,10 @@ export const detectLocationByIp = async () => {
   try {
     const res = await requestApi('/api/location/auto-ip');
     if (res && res.success && res.city && res.city.toLowerCase() !== 'india') {
+      const cleanCity = cleanDistrictName(res.city);
       return {
         success: true,
-        city: res.city,
+        city: cleanCity,
         pincode: res.pincode || '',
         state: res.state || '',
         source: 'ip',
@@ -345,16 +421,16 @@ export const detectLocationByIp = async () => {
     if (data && (data.city || data.locality)) {
       const rawPin = (data.postcode || '').replace(/\D/g, '');
       const pincode = rawPin.length >= 6 ? rawPin.slice(0, 6) : rawPin;
-      let city = data.city || data.locality;
+      let city = cleanDistrictName(data.city || data.locality);
 
       if ((!city || city.toLowerCase() === 'india') && pincode && pincode.length === 6) {
         const pinRes = await lookupPincode(pincode);
         if (pinRes?.city) {
-          city = pinRes.city;
+          city = cleanDistrictName(pinRes.city);
         }
       }
 
-      city = city || data.principalSubdivision || 'Pune';
+      city = cleanDistrictName(city || data.principalSubdivision || 'Pune');
 
       return {
         success: true,
@@ -378,13 +454,13 @@ export const detectLocationByIp = async () => {
 };
 
 /**
- * Detects real location automatically when user opens the app or clicks "Detect Location"
- * 1. Requests Browser GPS
- * 2. If granted -> reverse geocodes to exact City + Pincode
- * 3. In parallel / on refusal -> fast IP fallback so location is never empty!
+ * Detects real location accurately when user opens the app or clicks "Detect Location"
+ * 1. Requests Browser GPS with high accuracy and 0 maximumAge (no stale cache)
+ * 2. Reverse geocodes to exact locality and city (e.g. "Thergaon, Pune", "Wakad, Pune", "Hinjawadi, Pune")
+ * 3. Never returns raw "District" or premature IP fallback while user is clicking "Allow"
  */
 export const detectRealLocation = async (options = {}) => {
-  const { onProgress } = options;
+  const { onProgress, timeoutMs = 15000 } = options;
 
   return new Promise((resolve) => {
     let hasResolved = false;
@@ -397,11 +473,21 @@ export const detectRealLocation = async (options = {}) => {
 
     // If browser supports Geolocation API
     if (typeof navigator !== 'undefined' && navigator.geolocation) {
-      if (onProgress) onProgress('Requesting GPS location...');
+      if (onProgress) onProgress('Requesting GPS location permission...');
+
+      // Safe fallback timer: give the user 15 seconds to allow the prompt
+      const timer = setTimeout(async () => {
+        if (!hasResolved) {
+          console.warn('GPS prompt timed out waiting for response, trying network IP fallback...');
+          const ipRes = await detectLocationByIp();
+          finish(ipRes);
+        }
+      }, timeoutMs);
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          if (onProgress) onProgress('Locating exact city & pincode...');
+          clearTimeout(timer);
+          if (onProgress) onProgress('Pinpointing exact area & pincode...');
           const { latitude, longitude } = position.coords;
           const geoRes = await reverseGeocodeCoordinates(latitude, longitude);
           if (geoRes && geoRes.city && geoRes.city.toLowerCase() !== 'india') {
@@ -413,36 +499,24 @@ export const detectRealLocation = async (options = {}) => {
           }
           // If reverse geocoding failed, fallback to IP
           const ipRes = await detectLocationByIp();
-          if (ipRes) finish(ipRes);
-          else finish({ success: true, city: 'Pune', pincode: '411001' });
+          finish(ipRes);
         },
         async (err) => {
-          console.warn('GPS position error or denied:', err.message);
+          clearTimeout(timer);
+          console.warn('GPS position error or denied:', err.code, err.message);
           if (onProgress) onProgress('Detecting city via network...');
           const ipRes = await detectLocationByIp();
-          if (ipRes) finish(ipRes);
-          else finish({ success: true, city: 'Pune', pincode: '411001' });
+          finish(ipRes);
         },
         {
           enableHighAccuracy: true,
-          timeout: 7000,
-          maximumAge: 120000,
+          timeout: timeoutMs,
+          maximumAge: 0, // Always get live real-time location
         }
       );
     } else {
       // Geolocation not supported, use IP
-      detectLocationByIp().then((ipRes) => {
-        if (ipRes) finish(ipRes);
-        else finish({ success: true, city: 'Pune', pincode: '411001' });
-      });
+      detectLocationByIp().then(finish);
     }
-
-    // Safety timeout: If browser prompt is pending or hanging, resolve via IP after 4 seconds
-    setTimeout(async () => {
-      if (!hasResolved) {
-        const ipRes = await detectLocationByIp();
-        if (ipRes) finish(ipRes);
-      }
-    }, 4000);
   });
 };
